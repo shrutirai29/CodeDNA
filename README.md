@@ -11,7 +11,14 @@
   <img src="https://img.shields.io/badge/Scikit--Learn-ML-F7931E?style=flat&logo=scikit-learn&logoColor=white" alt="Scikit-Learn" />
   <img src="https://img.shields.io/badge/Database-SQLite-003B57?style=flat&logo=sqlite&logoColor=white" alt="SQLite" />
   <img src="https://img.shields.io/badge/Power%20BI-Data%20Mart-F2C811?style=flat&logo=powerbi&logoColor=black" alt="Power BI" />
+  <img src="https://img.shields.io/badge/Vercel-Serverless%20Live-000000?style=flat&logo=vercel&logoColor=white" alt="Vercel" />
   <img src="https://img.shields.io/badge/Tests-Pytest%20Passing-10B981?style=flat&logo=pytest&logoColor=white" alt="Pytest" />
+</p>
+
+<p align="center">
+  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshrutirai29%2FCodeDNA">
+    <img src="https://vercel.com/button" alt="Deploy with Vercel" />
+  </a>
 </p>
 
 ---
@@ -225,9 +232,26 @@ python -m pytest tests/ -v
 
 ### 4. Launch the Interactive Dashboard
 ```bash
+# Option A: Flagship Web Application (Linear/Vercel Design)
+uvicorn api.index:app --reload --port 8000
+
+# Option B: Streamlit Analytical Dashboard
 streamlit run app/streamlit_app.py
 ```
-Open your browser at `http://localhost:8501`.
+Open your browser at `http://localhost:8000` (Flagship) or `http://localhost:8501` (Streamlit).
+
+---
+
+## 🚀 Continuous Auto-Deployment with Vercel
+
+The platform is engineered for zero-config **automatic continuous deployment**:
+Whenever you push changes to the `main` branch of this GitHub repository, Vercel automatically builds and redeploys the latest version in seconds.
+
+### Quick Setup for Auto-Deployment:
+1. Go to **[vercel.com/new](https://vercel.com/new)**.
+2. Select your GitHub repository: **`shrutirai29/CodeDNA`**.
+3. Click **Deploy**.
+4. That's it! Vercel links directly to the GitHub repository. Every future `git push origin main` will trigger an automated continuous deployment pipeline.
 
 ---
 
