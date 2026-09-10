@@ -1,0 +1,13 @@
+id,repo_id,user_id,language_name,bytes_count,percentage
+1,1,1,Python,1420000,84.27
+2,1,1,SQL,220000,13.06
+3,1,1,Shell,45000,2.67
+4,2,1,Python,980000,75.97
+5,2,1,Jupyter Notebook,310000,24.03
+6,3,1,Python,840000,84.0
+7,3,1,Jupyter Notebook,160000,16.0
+8,4,1,Python,520000,65.41
+9,4,1,R,180000,22.64
+10,4,1,SQL,95000,11.95
+11,5,1,SQL,340000,95.77
+12,5,1,Shell,15000,4.23

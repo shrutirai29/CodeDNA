@@ -1,0 +1,9 @@
+user_id,role_name,fit_percentage,strong_skills,missing_skills,rank
+1,Machine Learning Engineer,80.1,"Python, PyTorch, Scikit-Learn, Docker, Machine Learning, Deep Learning, CI/CD",FastAPI,1
+1,AI Research Engineer,76.1,"Python, PyTorch, Deep Learning, Transformers","Mathematics, NLP, Computer Vision",2
+1,Data Scientist,69.2,"Python, Pandas, Scikit-Learn, Machine Learning","SQL, Statistics, Data Visualization, Jupyter",3
+1,Backend Developer,51.6,"Python, Docker, CI/CD","Go, SQL, FastAPI, PostgreSQL, REST APIs",4
+1,Data Analyst,48.1,"Python, Pandas","SQL, Data Visualization, Statistics, Tableau, Excel",5
+1,DevOps & Cloud Engineer,44.5,"Docker, CI/CD","Kubernetes, Terraform, Go, Shell, Linux, AWS",6
+1,Full Stack Developer,24.3,,"TypeScript, JavaScript, React, Node.js, HTML, CSS, SQL, REST APIs",7
+1,Systems Engineer,21.2,,"Rust, C, C++, Linux, Concurrency, Networking, Operating Systems",8
