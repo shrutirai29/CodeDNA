@@ -985,6 +985,7 @@ async def chat_post(request: Request):
     except Exception:
         data = {}
     message = str(data.get("message", "")).strip()
+    history = data.get("history", [])
 
     if TrainedCodeDNAAgent is None:
         return {
@@ -995,7 +996,7 @@ async def chat_post(request: Request):
             "intent": "error"
         }
 
-    return TrainedCodeDNAAgent.answer(message)
+    return TrainedCodeDNAAgent.answer(message, history)
 
 
 @app.get("/api/chat")
@@ -2970,7 +2971,7 @@ def index_html():
                 if (!res.ok) throw new Error('API query failed');
                 const data = await res.json();
                 typing.classList.add('hidden');
-                appendBotMessage(data.response, data.in_scope, data.confidence, data.topic);
+                appendBotMessage(data.response, data.in_scope, data.confidence, data.topic, data.engine);
                 chatHistory.push({{ role: 'assistant', content: data.response }});
             }} catch (err) {{
                 typing.classList.add('hidden');
@@ -2991,7 +2992,7 @@ def index_html():
             scrollChatToBottom();
         }}
 
-        function appendBotMessage(markdownText, inScope = true, confidence = null, topic = null) {{
+        function appendBotMessage(markdownText, inScope = true, confidence = null, topic = null, engine = null) {{
             const container = document.getElementById('chatMessages');
             const div = document.createElement('div');
             div.className = 'flex justify-start';
@@ -2999,14 +3000,16 @@ def index_html():
             let metaHtml = '';
             if (confidence !== null && confidence !== undefined && confidence > 0) {{
                 const pct = Math.round(confidence * 100);
-                const tagLabel = inScope ? (topic || 'Trained ML Agent') : 'Out of Scope Guardrail';
-                const dotColor = inScope ? 'bg-emerald-400' : 'bg-rose-400';
+                const isGemini = engine === 'gemini_1.5_flash';
+                const tagLabel = inScope ? (isGemini ? '✨ Gemini 1.5 Flash' : (topic || 'Trained ML Agent')) : 'Out of Scope Guardrail';
+                const dotColor = inScope ? (isGemini ? 'bg-cyan-400' : 'bg-emerald-400') : 'bg-rose-400';
+                const confText = isGemini ? 'Generative AI' : `${{pct}}% conf`;
                 metaHtml = `<div class="mt-2.5 pt-1.5 border-t border-slate-700/20 text-[10px] flex items-center justify-between opacity-80 font-mono">
                     <span class="flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full ${{dotColor}}"></span>
                         <span>${{escapeHtml(tagLabel)}}</span>
                     </span>
-                    <span class="c-muted font-bold">${{pct}}% conf</span>
+                    <span class="c-muted font-bold">${{confText}}</span>
                 </div>`;
             }}
             div.innerHTML = `

@@ -11,6 +11,7 @@ import json
 import re
 from pathlib import Path
 from collections import Counter
+from typing import Optional, List, Dict, Any
 
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "models" / "codedna_chatbot_agent.joblib"
@@ -345,7 +346,7 @@ class TrainedCodeDNAAgent:
     CONFIDENCE_THRESHOLD = 0.18
     
     @classmethod
-    def answer(cls, user_message: str) -> dict:
+    def answer(cls, user_message: str, history: Optional[List[Dict[str, str]]] = None) -> dict:
         text = (user_message or "").strip()
         
         if not text:
@@ -357,6 +358,16 @@ class TrainedCodeDNAAgent:
                 "intent": "empty"
             }
             
+        # 1. Attempt Google Gemini Generative AI (if API key is configured)
+        try:
+            from .gemini_service import query_gemini
+            gemini_result = query_gemini(text, history)
+            if gemini_result:
+                return gemini_result
+        except Exception:
+            pass
+
+        # 2. Fallback to Local Trained Scikit-Learn ML Agent
         engine, engine_type = get_engine()
         
         if engine_type == "sklearn":
