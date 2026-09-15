@@ -992,6 +992,17 @@ def index_html():
     <meta name="description" content="Empirical developer career intelligence platform. Decode your GitHub digital twin through behavioral scoring, Scikit-Learn archetype clustering, and vector career matching.">
     <meta name="theme-color" content="#09090b">
     
+    <!-- Immediate Scroll & Hash Reset on Refresh: Always return to Main Page -->
+    <script>
+        if ('scrollRestoration' in history) {{
+            history.scrollRestoration = 'manual';
+        }}
+        if (window.location.hash) {{
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+        }}
+        window.scrollTo(0, 0);
+    </script>
+    
     <!-- Clean, World-Class Typography: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1229,7 +1240,7 @@ def index_html():
     <!-- ===================================================================== -->
     <nav class="floating-nav flex items-center justify-between gap-5 max-w-4xl w-[94%] sm:w-auto">
         <!-- Brand -->
-        <a href="#heroSection" class="flex items-center gap-2.5 group shrink-0">
+        <a href="#heroSection" onclick="navigateToSection(event, '#heroSection')" class="flex items-center gap-2.5 group shrink-0">
             <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-400 via-indigo-500 to-purple-500 flex items-center justify-center font-mono font-black text-black text-[10px] shadow-sm shadow-cyan-500/20 group-hover:scale-105 transition-transform">
                 DNA
             </div>
@@ -1244,9 +1255,9 @@ def index_html():
 
         <!-- Quick Jump Links -->
         <div class="hidden md:flex items-center gap-1 text-xs font-mono c-body">
-            <a href="#cockpitSection" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Cockpit</a>
-            <a href="#methodSection" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Pipeline</a>
-            <a href="#apiSection" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">API</a>
+            <a href="#cockpitSection" onclick="navigateToSection(event, '#cockpitSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Cockpit</a>
+            <a href="#methodSection" onclick="navigateToSection(event, '#methodSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Pipeline</a>
+            <a href="#apiSection" onclick="navigateToSection(event, '#apiSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">API</a>
         </div>
 
         <!-- Utility Buttons -->
@@ -2460,6 +2471,11 @@ def index_html():
             }}
         }}
 
+        function navigateToSection(e, selector) {{
+            if (e) e.preventDefault();
+            jumpToSection(selector);
+        }}
+
         function toggleCmdPalette() {{
             const cmd = document.getElementById('cmdPalette');
             cmd.classList.toggle('hidden');
@@ -2504,7 +2520,16 @@ def index_html():
             }}
         }});
 
+        window.addEventListener('beforeunload', () => {{
+            window.scrollTo(0, 0);
+        }});
+
         window.addEventListener('DOMContentLoaded', () => {{
+            window.scrollTo(0, 0);
+            if (window.location.hash) {{
+                history.replaceState(null, '', window.location.pathname + window.location.search);
+            }}
+
             const savedTheme = localStorage.getItem('codedna-theme') || 'dark';
             if (savedTheme === 'light') {{
                 document.documentElement.classList.remove('dark');
@@ -2515,6 +2540,10 @@ def index_html():
 
             init3DScene();
             renderProfile(currentProfile);
+
+            setTimeout(() => {{
+                window.scrollTo(0, 0);
+            }}, 0);
         }});
     </script>
 </body>
