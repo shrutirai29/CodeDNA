@@ -1,16 +1,27 @@
 """
 CodeDNA Trained Machine Learning AI Agent
 Classifies user queries using a trained Scikit-Learn NLP pipeline
+(with pure-Python TF-IDF vector centroid fallback for serverless runtimes)
 and provides intelligent, platform-scoped assistance.
 """
 
 import os
+import math
+import json
+import re
 from pathlib import Path
-import joblib
-import numpy as np
+from collections import Counter
 
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "models" / "codedna_chatbot_agent.joblib"
+DATA_PATH = BASE_DIR / "data" / "chatbot_training_corpus.json"
+
+try:
+    import joblib
+    import numpy as np
+    HAS_SKLEARN = True
+except ImportError:
+    HAS_SKLEARN = False
 
 RESPONSES = {
     "greeting": (
@@ -195,22 +206,128 @@ TOPIC_TITLES = {
     "out_of_scope": "Out of Domain Scope"
 }
 
-_MODEL_CACHE = None
+# =====================================================================
+# PURE-PYTHON TF-IDF VECTOR CLASSIFIER (ZERO-DEPENDENCY ML ENGINE)
+# =====================================================================
+class FallbackVectorClassifier:
+    """
+    Exact mathematical TF-IDF N-gram Centroid Classifier.
+    Trained directly on the labeled training corpus.
+    Requires 0 binary C-dependencies (runs everywhere including bare serverless).
+    """
+    def __init__(self):
+        self.idf = {}
+        self.centroids = {}
+        self._train()
 
-def get_model():
-    """Singleton loader for the trained ML pipeline."""
-    global _MODEL_CACHE
-    if _MODEL_CACHE is None:
-        if not MODEL_PATH.exists():
-            raise FileNotFoundError(f"Trained model not found at {MODEL_PATH}. Run ml/train_chatbot.py first.")
-        _MODEL_CACHE = joblib.load(MODEL_PATH)
-    return _MODEL_CACHE
+    def _tokenize(self, text: str):
+        text = text.lower().strip()
+        words = re.findall(r'\b\w+\b', text)
+        tokens = list(words)
+        # Word bigrams
+        for i in range(len(words) - 1):
+            tokens.append(f"{words[i]}_{words[i+1]}")
+        # Subword character trigrams
+        for w in words:
+            if len(w) >= 3:
+                for i in range(len(w) - 2):
+                    tokens.append(f"#{w[i:i+3]}")
+        return tokens
+
+    def _train(self):
+        corpus = {}
+        if DATA_PATH.exists():
+            with open(DATA_PATH, "r", encoding="utf-8") as f:
+                corpus = json.load(f)
+        else:
+            # Emergency minimal dataset
+            corpus = {
+                "greeting": ["hi", "hello", "hey", "namaste"],
+                "platform_overview": ["what is codedna", "explain codedna"],
+                "out_of_scope": ["weather", "cake", "cricket"]
+            }
+
+        docs = []
+        doc_labels = []
+        for label, samples in corpus.items():
+            for s in samples:
+                tokens = self._tokenize(s)
+                if tokens:
+                    docs.append(tokens)
+                    doc_labels.append(label)
+
+        n_docs = len(docs)
+        df = Counter()
+        for d in docs:
+            for t in set(d):
+                df[t] += 1
+
+        self.idf = {t: math.log((n_docs + 1) / (cnt + 1)) + 1.0 for t, cnt in df.items()}
+
+        raw_centroids = {}
+        for d, lbl in zip(docs, doc_labels):
+            vec = self._vectorize(d)
+            if lbl not in raw_centroids:
+                raw_centroids[lbl] = Counter()
+            for t, w in vec.items():
+                raw_centroids[lbl][t] += w
+
+        self.centroids = {}
+        for lbl, c in raw_centroids.items():
+            norm = math.sqrt(sum(w * w for w in c.values())) or 1.0
+            self.centroids[lbl] = {t: w / norm for t, w in c.items()}
+
+    def _vectorize(self, tokens):
+        tf = Counter(tokens)
+        vec = {}
+        norm_sq = 0.0
+        for t, count in tf.items():
+            if t in self.idf:
+                weight = (1 + math.log(count)) * self.idf[t]
+                vec[t] = weight
+                norm_sq += weight * weight
+        norm = math.sqrt(norm_sq) or 1.0
+        return {t: w / norm for t, w in vec.items()}
+
+    def predict(self, text: str):
+        tokens = self._tokenize(text)
+        q_vec = self._vectorize(tokens)
+        scores = {}
+        for lbl, c_vec in self.centroids.items():
+            scores[lbl] = sum(w * c_vec.get(t, 0.0) for t, w in q_vec.items())
+
+        if not scores or max(scores.values()) <= 0.0:
+            return "out_of_scope", 0.0
+
+        best_lbl = max(scores, key=scores.get)
+        confidence = float(scores[best_lbl])
+        return best_lbl, confidence
+
+
+_SKLEARN_MODEL = None
+_FALLBACK_MODEL = None
+
+def get_engine():
+    """Returns (engine, engine_type)."""
+    global _SKLEARN_MODEL, _FALLBACK_MODEL
+    if HAS_SKLEARN and MODEL_PATH.exists():
+        if _SKLEARN_MODEL is None:
+            try:
+                _SKLEARN_MODEL = joblib.load(MODEL_PATH)
+            except Exception:
+                _SKLEARN_MODEL = None
+        if _SKLEARN_MODEL is not None:
+            return _SKLEARN_MODEL, "sklearn"
+
+    if _FALLBACK_MODEL is None:
+        _FALLBACK_MODEL = FallbackVectorClassifier()
+    return _FALLBACK_MODEL, "vector_centroid"
 
 
 class TrainedCodeDNAAgent:
     """Trained NLP Classification & Inference Agent for CodeDNA."""
     
-    CONFIDENCE_THRESHOLD = 0.22
+    CONFIDENCE_THRESHOLD = 0.18
     
     @classmethod
     def answer(cls, user_message: str) -> dict:
@@ -225,21 +342,15 @@ class TrainedCodeDNAAgent:
                 "intent": "empty"
             }
             
-        try:
-            model = get_model()
-            pred_class = model.predict([text])[0]
-            probs = model.predict_proba([text])[0]
-            class_idx = list(model.classes_).index(pred_class)
+        engine, engine_type = get_engine()
+        
+        if engine_type == "sklearn":
+            pred_class = str(engine.predict([text])[0])
+            probs = engine.predict_proba([text])[0]
+            class_idx = list(engine.classes_).index(pred_class)
             confidence = float(probs[class_idx])
-        except Exception as e:
-            # Graceful fallback if model cannot be loaded
-            return {
-                "response": f"AI model inference error: {str(e)}. Please ensure the model is trained.",
-                "topic": "Inference Error",
-                "confidence": 0.0,
-                "in_scope": False,
-                "intent": "error"
-            }
+        else:
+            pred_class, confidence = engine.predict(text)
             
         # Check domain guardrails
         is_out_of_scope = (pred_class == "out_of_scope") or (confidence < cls.CONFIDENCE_THRESHOLD)
@@ -250,7 +361,8 @@ class TrainedCodeDNAAgent:
                 "topic": TOPIC_TITLES["out_of_scope"],
                 "confidence": round(confidence, 3),
                 "in_scope": False,
-                "intent": pred_class
+                "intent": pred_class,
+                "engine": engine_type
             }
             
         response_text = RESPONSES.get(pred_class, RESPONSES["platform_overview"])
@@ -261,11 +373,11 @@ class TrainedCodeDNAAgent:
             "topic": topic_title,
             "confidence": round(confidence, 3),
             "in_scope": True,
-            "intent": pred_class
+            "intent": pred_class,
+            "engine": engine_type
         }
 
 
-# Quick CLI test
 if __name__ == "__main__":
     queries = [
         "Hello!",
@@ -275,11 +387,10 @@ if __name__ == "__main__":
         "tell me a recipe for pancakes",
         "who is Shruti Rai?"
     ]
-    agent = TrainedCodeDNAAgent()
     print("Testing TrainedCodeDNAAgent:")
     for q in queries:
-        ans = agent.answer(q)
+        ans = TrainedCodeDNAAgent.answer(q)
         print(f"\nQuery: '{q}'")
-        print(f"Intent: {ans['intent']} | In-Scope: {ans['in_scope']} | Confidence: {ans['confidence']}")
+        print(f"Intent: {ans['intent']} | In-Scope: {ans['in_scope']} | Confidence: {ans['confidence']} | Engine: {ans.get('engine')}")
         print(f"Topic: {ans['topic']}")
         print(f"Response: {ans['response'][:90]}...")
