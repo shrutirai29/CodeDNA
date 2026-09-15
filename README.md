@@ -11,6 +11,7 @@
   <img src="https://img.shields.io/badge/Scikit--Learn-ML-F7931E?style=flat&logo=scikit-learn&logoColor=white" alt="Scikit-Learn" />
   <img src="https://img.shields.io/badge/Database-SQLite-003B57?style=flat&logo=sqlite&logoColor=white" alt="SQLite" />
   <img src="https://img.shields.io/badge/Power%20BI-Data%20Mart-F2C811?style=flat&logo=powerbi&logoColor=black" alt="Power BI" />
+  <img src="https://img.shields.io/badge/Three.js-3D%20WebGL-black?style=flat&logo=three.js&logoColor=white" alt="Three.js 3D WebGL" />
   <img src="https://img.shields.io/badge/Vercel-Serverless%20Live-000000?style=flat&logo=vercel&logoColor=white" alt="Vercel" />
   <img src="https://img.shields.io/badge/Tests-Pytest%20Passing-10B981?style=flat&logo=pytest&logoColor=white" alt="Pytest" />
 </p>
@@ -27,12 +28,12 @@
 
 Traditional GitHub dashboards merely report vanity counts: number of commits, total stars, or top lifetime languages. **Developer Career Intelligence & Analytics Platform** bridges the gap between raw version control data and meaningful engineering career intelligence.
 
-By synthesizing **Data Engineering**, **Exploratory Data Analysis**, **Statistical Profiling**, **Unsupervised Machine Learning**, and **Vector Space Modeling**, this platform evaluates:
+By synthesizing **Data Engineering**, **Exploratory Data Analysis**, **Statistical Profiling**, **Unsupervised Machine Learning**, **Interactive 3D WebGL Double-Helix Visualizations**, and **Vector Space Modeling**, this platform evaluates:
 - What technologies a developer actually uses and pushes in production vs. experiments.
 - How consistent their development cadence is (penalizing bursty commit spam).
 - Where they sit in the **Developer Archetype Space** using KMeans and PCA.
 - How closely their demonstrated skill footprint aligns with 8 industry career paths.
-- What happens to their role readiness if they learn targeted skills (Interactive What-If Simulation).
+- Interactive 3D Digital Twin representations and empirical repository intelligence.
 
 ---
 
