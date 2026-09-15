@@ -1204,6 +1204,15 @@ def index_html():
             border-color: var(--cyan-border);
             font-weight: 700;
         }}
+
+        /* SVG Node Pill Hover */
+        .dna-node-group {{
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }}
+        .dna-node-group:hover {{
+            transform: scale(1.06);
+        }}
     </style>
 </head>
 <body class="min-h-screen relative selection:bg-cyan-500 selection:text-black">
@@ -1486,15 +1495,24 @@ def index_html():
                 </div>
             </div>
 
-            <!-- ================= TAB 3: TECH DNA ================= -->
+            <!-- ================= TAB 3: TECH DNA (ZERO CLIPPING & NO OVERLAPS) ================= -->
             <div id="view-dna" class="cockpit-view hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                    <div class="lg:col-span-8 p-4 rounded-2xl glass-sub relative overflow-hidden h-96 flex items-center justify-center">
-                        <svg id="dnaNetworkSvg" class="w-full h-full" viewBox="0 0 500 300">
-                            <!-- Rendered dynamically -->
-                        </svg>
-                        <div id="dnaNodeTooltip" class="hidden absolute bottom-3 left-3 right-3 p-3 glass-card rounded-xl text-xs font-mono c-body flex items-center justify-between shadow-xl">
-                            <span id="dnaTooltipText"></span>
+                    <div class="lg:col-span-8 p-5 rounded-2xl glass-sub flex flex-col justify-between">
+                        <!-- Dedicated Live Inspector Strip (positioned above SVG, never overlaps nodes) -->
+                        <div id="dnaLiveInspector" class="p-3 px-4 rounded-xl glass-card text-xs font-mono flex items-center justify-between mb-3 border" style="border-color: var(--border-hairline);">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-2 h-2 rounded-full pulse-beacon" style="background-color: var(--cyan-accent);"></span>
+                                <span id="dnaInspectorText" class="c-body font-medium">Hover over any node to inspect technology mass, projects & momentum</span>
+                            </div>
+                            <span id="dnaInspectorBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full border" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border-color: var(--cyan-border);">8 NODES AUDITED</span>
+                        </div>
+
+                        <!-- Full Unobstructed SVG Graph Canvas -->
+                        <div class="w-full h-80 flex items-center justify-center relative overflow-visible">
+                            <svg id="dnaNetworkSvg" class="w-full h-full" viewBox="0 0 620 340">
+                                <!-- Rendered dynamically -->
+                            </svg>
                         </div>
                     </div>
 
@@ -2088,47 +2106,108 @@ def index_html():
             document.getElementById('radarHoverScore').textContent = '';
         }}
 
-        // --- 7. Technology DNA Network ---
+        // --- 7. Technology DNA Network (PERFECTED: ZERO CLIPPING & BESPOKE CAPSULES) ---
         function renderDnaNetwork(nodes) {{
             const svg = document.getElementById('dnaNetworkSvg');
-            if (!nodes || nodes.length === 0) return;
+            if (!svg || !nodes || nodes.length === 0) return;
 
             const isLight = document.documentElement.classList.contains('light');
-            const nodeFill = isLight ? '#FFFFFF' : '#121218';
-            const centerText = isLight ? '#09090B' : '#FFFFFF';
+            const nodeFill = isLight ? '#FFFFFF' : '#14141E';
+            const centerFill = isLight ? '#FFFFFF' : '#101018';
+            const textColor = isLight ? '#0F172A' : '#FFFFFF';
             const strokeColor = isLight ? '#0284C7' : '#00F0FF';
+            const shadowFilter = isLight ? 'filter="url(#nodeDropShadow)"' : '';
 
-            let html = '';
-            const cx = 250, cy = 150;
-
-            html += `<circle cx="${{cx}}" cy="${{cy}}" r="24" fill="${{nodeFill}}" stroke="${{strokeColor}}" stroke-width="2.5"/>`;
-            html += `<text x="${{cx}}" y="${{cy + 4}}" font-family="JetBrains Mono" font-weight="bold" font-size="9" fill="${{centerText}}" text-anchor="middle">CODEDNA</text>`;
-
+            const cx = 310, cy = 170;
+            const rx = 210, ry = 115;
             const childNodes = nodes.filter(n => n.id !== 'developer');
             const total = childNodes.length;
 
+            const badge = document.getElementById('dnaInspectorBadge');
+            if (badge) badge.textContent = `${{total}} NODES AUDITED`;
+
+            let defs = `
+                <defs>
+                    <filter id="nodeDropShadow" x="-10%" y="-10%" width="120%" height="130%">
+                        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+                    </filter>
+                </defs>
+            `;
+
+            let linesHtml = '';
+            let nodesHtml = '';
+
             childNodes.forEach((n, i) => {{
-                const angle = (Math.PI * 2 / total) * i;
-                const dist = n.type === 'primary' ? 85 : 120;
-                const nx = cx + Math.cos(angle) * dist;
-                const ny = cy + Math.sin(angle) * dist;
-                const color = n.momentum === 'RISING' ? (isLight ? '#059669' : '#10B981') : (n.momentum === 'NEW' ? strokeColor : '#6366F1');
+                const angle = (Math.PI * 2 / total) * i - Math.PI / 2;
+                const nx = cx + Math.cos(angle) * rx;
+                const ny = cy + Math.sin(angle) * ry;
 
-                html += `<line x1="${{cx}}" y1="${{cy}}" x2="${{nx}}" y2="${{ny}}" stroke="${{color}}" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="${{n.type === 'primary' ? 'none' : '3 3'}}"/>`;
+                const color = n.momentum === 'RISING' 
+                    ? (isLight ? '#059669' : '#10B981') 
+                    : (n.momentum === 'NEW' ? strokeColor : (isLight ? '#4F46E5' : '#818CF8'));
 
-                const r = Math.max(14, Math.min(22, (n.usage || 20) / 4 + 10));
-                html += `<circle cx="${{nx}}" cy="${{ny}}" r="${{r}}" fill="${{nodeFill}}" stroke="${{color}}" stroke-width="2" class="cursor-pointer hover:stroke-black dark:hover:stroke-white transition-all" onmouseover="showDnaTooltip('${{n.name}}', '${{n.usage}}%', '${{n.momentum}}', '${{n.projects}}')"/>`;
-                html += `<text x="${{nx}}" y="${{ny + 3}}" font-family="JetBrains Mono" font-size="8" fill="${{centerText}}" text-anchor="middle" pointer-events="none">${{n.name.substring(0, 7)}}</text>`;
+                // Connector line from center to node
+                linesHtml += `
+                    <line x1="${{cx}}" y1="${{cy}}" x2="${{nx}}" y2="${{ny}}" 
+                          stroke="${{color}}" stroke-opacity="${{isLight ? '0.35' : '0.4'}}" 
+                          stroke-width="1.5" stroke-dasharray="${{n.type === 'primary' ? 'none' : '4 3'}}"/>
+                `;
+
+                // Calculate capsule pill width dynamically based on full name length
+                const pillW = Math.max(102, n.name.length * 7 + 42);
+                const pillH = 26;
+
+                nodesHtml += `
+                    <g class="dna-node-group" transform="translate(${{nx}}, ${{ny}})" 
+                       onmouseover="showDnaTooltip('${{n.name}}', '${{n.usage}}', '${{n.momentum}}', '${{n.projects}}', '${{color}}')" 
+                       onmouseout="resetDnaTooltip()">
+                        <!-- Pill Background -->
+                        <rect x="${{-pillW / 2}}" y="${{-pillH / 2}}" width="${{pillW}}" height="${{pillH}}" rx="13" 
+                              fill="${{nodeFill}}" stroke="${{color}}" stroke-width="1.5" ${{shadowFilter}}/>
+                        
+                        <!-- Status dot -->
+                        <circle cx="${{-pillW / 2 + 12}}" cy="0" r="3.5" fill="${{color}}"/>
+                        
+                        <!-- Technology Full Name (Never Truncated!) -->
+                        <text x="${{-pillW / 2 + 22}}" y="3.5" font-family="Inter" font-size="10" font-weight="600" fill="${{textColor}}">${{n.name}}</text>
+                        
+                        <!-- Usage Percentage -->
+                        <text x="${{pillW / 2 - 10}}" y="3.5" font-family="JetBrains Mono" font-size="8.5" font-weight="bold" fill="${{color}}" text-anchor="end">${{n.usage}}%</text>
+                    </g>
+                `;
             }});
 
-            svg.innerHTML = html;
+            // Center Hub with Outer Pulsing Orbit
+            const centerHub = `
+                <circle cx="${{cx}}" cy="${{cy}}" r="34" fill="none" stroke="${{strokeColor}}" stroke-opacity="0.25" stroke-width="1.5"/>
+                <circle cx="${{cx}}" cy="${{cy}}" r="26" fill="${{centerFill}}" stroke="${{strokeColor}}" stroke-width="2.5" ${{shadowFilter}}/>
+                <text x="${{cx}}" y="${{cy + 3.5}}" font-family="Inter" font-size="9" font-weight="bold" fill="${{textColor}}" text-anchor="middle" letter-spacing="0.05em">CODEDNA</text>
+            `;
+
+            svg.innerHTML = defs + linesHtml + centerHub + nodesHtml;
         }}
 
-        function showDnaTooltip(name, usage, momentum, projects) {{
-            const tip = document.getElementById('dnaNodeTooltip');
-            const text = document.getElementById('dnaTooltipText');
-            tip.classList.remove('hidden');
-            text.innerHTML = `<strong>${{name}}</strong> • Usage: <span class="c-accent font-bold">${{usage}}</span> • Projects: <span class="c-head">${{projects}}</span> • Momentum: <span class="font-bold" style="color: var(--emerald-accent);">${{momentum}}</span>`;
+        function showDnaTooltip(name, usage, momentum, projects, color) {{
+            const text = document.getElementById('dnaInspectorText');
+            const badge = document.getElementById('dnaInspectorBadge');
+            if (text && badge) {{
+                text.innerHTML = `<strong>${{name}}</strong> • <span class="c-accent font-bold">${{usage}}% stack mass</span> • <strong>${{projects}}</strong> projects audited • Momentum: <span class="font-bold" style="color: ${{color}};">${{momentum}}</span>`;
+                badge.textContent = momentum === 'RISING' ? '↑ ACCELERATING' : (momentum === 'NEW' ? '✦ NEW STACK' : '→ STABLE');
+                badge.style.color = color;
+                badge.style.borderColor = color;
+            }}
+        }}
+
+        function resetDnaTooltip() {{
+            const text = document.getElementById('dnaInspectorText');
+            const badge = document.getElementById('dnaInspectorBadge');
+            if (text && badge) {{
+                text.innerHTML = 'Hover over any node to inspect technology mass, projects & momentum';
+                const count = (currentProfile && currentProfile.dna_nodes ? currentProfile.dna_nodes.filter(n => n.id !== 'developer').length : 8);
+                badge.textContent = `${{count}} NODES AUDITED`;
+                badge.style.color = 'var(--cyan-accent)';
+                badge.style.borderColor = 'var(--cyan-border)';
+            }}
         }}
 
         // --- 8. Growth Velocity Timeline ---
