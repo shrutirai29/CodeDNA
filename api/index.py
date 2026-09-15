@@ -975,10 +975,10 @@ async def simulate_career_path_post(request: Request):
 @app.get("/", response_class=HTMLResponse)
 def index_html():
     """
-    Renders the flagship CodeDNA Luxury Editorial Experience:
-    Synthesizing WeEvolveIT (floating pill capsule navbar, cursor candle-glow, ambient WebGL cosmos),
-    Spyker Cars (luxury editorial craftsmanship, dramatic typographic scale, razor hairline dividers, chapter-based narrative),
-    and Creche Tank (tactile frosted glassmorphism, instant visual clarity, zero textbook clutter).
+    Renders the clean, hyper-premium CodeDNA Developer Intelligence Platform:
+    Synthesizing WeEvolveIT (floating pill navbar, card candle-glow, ambient WebGL cosmos),
+    Spyker Cars (clean luxury craftsmanship, refined Swiss typography, razor hairlines, generous negative space),
+    and Creche Tank (interactive visual cockpit, tactile micro-states, zero textbook clutter).
     Default featured profile: Shruti Rai (@shrutirai29).
     """
     profiles_json = json.dumps(SAMPLE_PROFILES)
@@ -989,13 +989,13 @@ def index_html():
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeDNA • Developer Career Intelligence & Digital Twin</title>
-    <meta name="description" content="Haute-couture developer intelligence platform. Decode your GitHub digital twin through empirical behavioral scoring, Scikit-Learn archetype clustering, and vector career matching.">
+    <meta name="description" content="Empirical developer career intelligence platform. Decode your GitHub digital twin through behavioral scoring, Scikit-Learn archetype clustering, and vector career matching.">
     <meta name="theme-color" content="#09090b">
     
-    <!-- Modern Editorial Typography: Syne, Space Grotesk, & JetBrains Mono -->
+    <!-- Clean, World-Class Typography: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1005,8 +1005,7 @@ def index_html():
             theme: {{
                 extend: {{
                     fontFamily: {{
-                        sans: ['Space Grotesk', '-apple-system', 'sans-serif'],
-                        display: ['Syne', 'sans-serif'],
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     }}
                 }}
@@ -1017,47 +1016,47 @@ def index_html():
     <!-- Three.js (r128) WebGL 3D Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <!-- Luxury Editorial Haute-Couture Stylesheet -->
+    <!-- Hyper-Premium Design System (WeEvolveIT + Spyker + Creche Tank) -->
     <style>
         :root {{
-            /* Dark Mode: Luxury Obsidian Atelier */
+            /* Dark Mode: Luxury Obsidian Glass */
             --bg-base: #09090b;
-            --bg-card: rgba(18, 18, 24, 0.82);
-            --bg-card-hover: rgba(24, 24, 34, 0.95);
-            --bg-sub: rgba(12, 12, 16, 0.65);
+            --bg-card: rgba(18, 18, 24, 0.85);
+            --bg-card-hover: rgba(24, 24, 32, 0.95);
+            --bg-sub: rgba(12, 12, 16, 0.7);
             --border-hairline: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(0, 240, 255, 0.45);
+            --border-glow: rgba(0, 240, 255, 0.4);
             --text-head: #FFFFFF;
             --text-body: #D4D4D8;
             --text-sub: #71717A;
             --cyan-accent: #00F0FF;
             --cyan-bg: rgba(0, 240, 255, 0.12);
-            --cyan-border: rgba(0, 240, 255, 0.32);
+            --cyan-border: rgba(0, 240, 255, 0.3);
             --indigo-accent: #818CF8;
             --emerald-accent: #10B981;
             --amber-accent: #F59E0B;
             --rose-accent: #F43F5E;
-            --vignette-start: rgba(9, 9, 11, 0.50);
-            --vignette-end: rgba(9, 9, 11, 0.94);
-            --glow-color: rgba(0, 240, 255, 0.18);
-            --card-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
-            --pill-bg: rgba(18, 18, 24, 0.85);
+            --vignette-start: rgba(9, 9, 11, 0.55);
+            --vignette-end: rgba(9, 9, 11, 0.95);
+            --glow-color: rgba(0, 240, 255, 0.15);
+            --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            --pill-bg: rgba(18, 18, 24, 0.88);
             --pill-border: rgba(255, 255, 255, 0.12);
-            --bar-track: #18181B;
+            --bar-track: #1C1C22;
             --radar-grid: rgba(255, 255, 255, 0.08);
-            --radar-poly: rgba(0, 240, 255, 0.28);
+            --radar-poly: rgba(0, 240, 255, 0.25);
             --radar-stroke: #00F0FF;
             --node-fill: #121218;
         }}
 
         html.light {{
-            /* Bright Mode: Pristine Studio Alabaster Gallery */
+            /* Bright Mode: Pristine Studio Alabaster */
             --bg-base: #F8F9FA;
             --bg-card: rgba(255, 255, 255, 0.94);
             --bg-card-hover: #FFFFFF;
-            --bg-sub: rgba(243, 244, 246, 0.95);
+            --bg-sub: rgba(244, 245, 247, 0.95);
             --border-hairline: rgba(0, 0, 0, 0.08);
-            --border-glow: rgba(2, 132, 199, 0.45);
+            --border-glow: rgba(2, 132, 199, 0.4);
             --text-head: #09090B;
             --text-body: #27272A;
             --text-sub: #71717A;
@@ -1068,10 +1067,10 @@ def index_html():
             --emerald-accent: #059669;
             --amber-accent: #D97706;
             --rose-accent: #E11D48;
-            --vignette-start: rgba(248, 249, 250, 0.50);
+            --vignette-start: rgba(248, 249, 250, 0.55);
             --vignette-end: rgba(248, 249, 250, 0.92);
-            --glow-color: rgba(2, 132, 199, 0.20);
-            --card-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.07);
+            --glow-color: rgba(2, 132, 199, 0.18);
+            --card-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.06);
             --pill-bg: rgba(255, 255, 255, 0.92);
             --pill-border: rgba(0, 0, 0, 0.10);
             --bar-track: #E4E4E7;
@@ -1089,13 +1088,9 @@ def index_html():
         body {{
             background-color: var(--bg-base);
             color: var(--text-body);
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow-x: hidden;
             transition: background-color 0.25s ease, color 0.25s ease;
-        }}
-
-        .font-display {{
-            font-family: 'Syne', sans-serif;
         }}
 
         .c-head {{ color: var(--text-head) !important; }}
@@ -1103,7 +1098,7 @@ def index_html():
         .c-sub {{ color: var(--text-sub) !important; }}
         .c-accent {{ color: var(--cyan-accent) !important; }}
 
-        /* 3D WebGL Canvas */
+        /* 3D WebGL Background Canvas */
         #webglCanvas {{
             position: fixed;
             inset: 0;
@@ -1122,57 +1117,43 @@ def index_html():
             transition: background 0.3s ease;
         }}
 
-        /* WeEvolveIT Card Candle-Glow */
-        .editorial-card {{
+        /* Luxury Glass Card with WeEvolveIT Candle-Glow */
+        .glass-card {{
             position: relative;
             background: var(--bg-card);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border: 1px solid var(--border-hairline);
-            border-radius: 1.5rem;
+            border-radius: 1.25rem;
             box-shadow: var(--card-shadow);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
         }}
-        .editorial-card:hover {{
+        .glass-card:hover {{
             border-color: var(--border-glow);
             transform: translateY(-2px);
         }}
-        .editorial-card::before {{
+        .glass-card::before {{
             content: '';
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--glow-color), transparent 45%);
+            background: radial-gradient(450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--glow-color), transparent 45%);
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.4s ease;
         }}
-        .editorial-card:hover::before {{
+        .glass-card:hover::before {{
             opacity: 1;
         }}
 
-        /* Spyker Minimalist Corner Hairline */
-        .editorial-card::after {{
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 12px;
-            height: 12px;
-            border-top: 2px solid var(--cyan-accent);
-            border-left: 2px solid var(--cyan-accent);
-            border-top-left-radius: 1.5rem;
-            pointer-events: none;
-        }}
-
-        .editorial-sub {{
+        .glass-sub {{
             background-color: var(--bg-sub);
             border: 1px solid var(--border-hairline);
         }}
 
-        /* WeEvolveIT Floating Capsule Navbar */
-        .floating-capsule-nav {{
+        /* Floating Capsule Navbar */
+        .floating-nav {{
             position: fixed;
             top: 1.25rem;
             left: 50%;
@@ -1186,34 +1167,6 @@ def index_html():
             padding: 0.5rem 1.25rem;
             box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.3);
             transition: all 0.25s ease;
-        }}
-
-        /* Spyker Editorial Chapter Headings */
-        .editorial-chapter {{
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-hairline);
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-        }}
-        .chapter-num {{
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.25em;
-            color: var(--cyan-accent);
-            text-transform: uppercase;
-        }}
-        .chapter-title {{
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            color: var(--text-head);
-            text-transform: uppercase;
-            margin-top: 0.25rem;
         }}
 
         /* Radial Progress Ring */
@@ -1243,54 +1196,58 @@ def index_html():
         .pulse-beacon {{
             animation: pulseGlow 2.2s ease-in-out infinite;
         }}
+
+        /* Interactive Cockpit Tab Active State */
+        .cockpit-tab.active {{
+            background-color: var(--cyan-bg);
+            color: var(--cyan-accent);
+            border-color: var(--cyan-border);
+            font-weight: 700;
+        }}
     </style>
 </head>
 <body class="min-h-screen relative selection:bg-cyan-500 selection:text-black">
 
-    <!-- High-Precision Scroll Progress -->
+    <!-- Scroll Progress -->
     <div id="scrollProgressBar" class="fixed top-0 left-0 h-[2px] z-50 bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-500 w-0 transition-[width] duration-100 ease-out"></div>
 
-    <!-- Full-Screen Three.js WebGL Cosmos -->
+    <!-- 3D Three.js WebGL Helix Canvas -->
     <canvas id="webglCanvas"></canvas>
     <div class="vignette-overlay"></div>
 
     <!-- ===================================================================== -->
-    <!-- WEEVOLVEIT FLOATING CAPSULE NAVIGATION -->
+    <!-- FLOATING CAPSULE NAVIGATION (WEEVOLVEIT STYLE) -->
     <!-- ===================================================================== -->
-    <nav class="floating-capsule-nav flex items-center justify-between gap-5 max-w-5xl w-[94%] sm:w-auto">
+    <nav class="floating-nav flex items-center justify-between gap-5 max-w-4xl w-[94%] sm:w-auto">
         <!-- Brand -->
         <a href="#heroSection" class="flex items-center gap-2.5 group shrink-0">
             <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-400 via-indigo-500 to-purple-500 flex items-center justify-center font-mono font-black text-black text-[10px] shadow-sm shadow-cyan-500/20 group-hover:scale-105 transition-transform">
                 DNA
             </div>
-            <span class="font-display font-black tracking-tight c-head text-base">CODEDNA</span>
+            <span class="font-bold tracking-tight c-head text-sm">CODEDNA</span>
         </a>
 
-        <!-- Status Beacon -->
+        <!-- Live Status Pill -->
         <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">
             <span class="w-1.5 h-1.5 rounded-full pulse-beacon" style="background-color: var(--cyan-accent);"></span>
-            <span>EMPIRICAL ENGINE V2.5</span>
+            <span>DEVELOPER DIGITAL TWIN</span>
         </div>
 
-        <!-- Navigation Links -->
+        <!-- Quick Jump Links -->
         <div class="hidden md:flex items-center gap-1 text-xs font-mono c-body">
-            <a href="#architectureSection" class="px-2.5 py-1 rounded-full hover:opacity-80 transition-opacity">01 Pipeline</a>
-            <a href="#overviewSection" class="px-2.5 py-1 rounded-full hover:opacity-80 transition-opacity">02 Profile</a>
-            <a href="#twinSection" class="px-2.5 py-1 rounded-full hover:opacity-80 transition-opacity">03 Twin</a>
-            <a href="#dnaSection" class="px-2.5 py-1 rounded-full hover:opacity-80 transition-opacity">04 Ecosystem</a>
-            <a href="#rhythmSection" class="px-2.5 py-1 rounded-full hover:opacity-80 transition-opacity">05 Rhythm</a>
-            <a href="#projectsSection" class="px-2.5 py-1 rounded-full hover:opacity-80 transition-opacity">06 Projects</a>
-            <a href="#careerSection" class="px-2.5 py-1 rounded-full hover:opacity-80 transition-opacity">07 Careers</a>
+            <a href="#cockpitSection" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Cockpit</a>
+            <a href="#methodSection" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Pipeline</a>
+            <a href="#apiSection" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">API</a>
         </div>
 
         <!-- Utility Buttons -->
         <div class="flex items-center gap-2 shrink-0">
-            <button onclick="toggleCmdPalette()" class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono c-body editorial-sub rounded-full hover:border-cyan-500 transition-colors">
+            <button onclick="toggleCmdPalette()" class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono c-body glass-sub rounded-full hover:border-cyan-500 transition-colors">
                 <span>Search</span>
                 <kbd class="px-1 py-0.2 rounded bg-black/10 dark:bg-white/10 text-[9px] c-sub">⌘K</kbd>
             </button>
 
-            <button onclick="toggleTheme()" class="w-7 h-7 rounded-full flex items-center justify-center c-body editorial-sub hover:opacity-80 transition-colors" title="Toggle Theme" aria-label="Toggle Theme">
+            <button onclick="toggleTheme()" class="w-7 h-7 rounded-full flex items-center justify-center c-body glass-sub hover:opacity-80 transition-colors" title="Toggle Theme" aria-label="Toggle Theme">
                 <svg id="themeIconSun" class="w-3.5 h-3.5 hidden text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 <svg id="themeIconMoon" class="w-3.5 h-3.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
             </button>
@@ -1298,603 +1255,328 @@ def index_html():
     </nav>
 
     <!-- Main Container -->
-    <main class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
+    <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
 
         <!-- ===================================================================== -->
-        <!-- CHAPTER 00 // CINEMATIC HERO (SPYKER CARS SCALE + WEEVOLVEIT GLOW) -->
+        <!-- 1. CINEMATIC HERO (CLEAN, BOLD, HIGH-IMPACT) -->
         <!-- ===================================================================== -->
-        <section id="heroSection" class="min-h-[85vh] flex flex-col justify-center items-center text-center max-w-4xl mx-auto py-12">
+        <section id="heroSection" class="text-center max-w-3xl mx-auto mb-14">
             <!-- Eyebrow Pill -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-mono mb-8 shadow-sm" style="background-color: var(--cyan-bg); border: 1px solid var(--cyan-border); color: var(--cyan-accent);">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-mono mb-6 shadow-sm" style="background-color: var(--cyan-bg); border: 1px solid var(--cyan-border); color: var(--cyan-accent);">
                 <span class="w-1.5 h-1.5 rounded-full pulse-beacon" style="background-color: var(--cyan-accent);"></span>
-                <span>CHAPTER 00 // THE ATELIER • CODE GENOME SEQUENCING</span>
+                <span>EMPIRICAL DEVELOPER INTELLIGENCE</span>
             </div>
 
-            <!-- Spyker Dramatic Typography Headline -->
-            <h1 class="font-display font-black text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase tracking-[-0.04em] leading-[0.9] c-head mb-6">
-                DECODE YOUR<br>
-                <span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">CODE GENOME.</span>
+            <!-- Crisp Clean Headline -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] c-head mb-5">
+                Decode your developer<br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">digital twin.</span>
             </h1>
 
-            <p class="text-sm sm:text-base md:text-lg c-body font-normal leading-relaxed mb-10 max-w-2xl mx-auto">
-                Transform public GitHub commits, architectural topologies, and development cadence into an empirical 3D Developer Digital Twin and verifiable Career Trajectory.
+            <p class="text-sm sm:text-base c-body font-normal leading-relaxed mb-8 max-w-2xl mx-auto">
+                Turn public GitHub commits, code topologies, and development cadence into an empirical 3D developer genome and predictive career trajectory.
             </p>
 
-            <!-- Floating Terminal Input Capsule -->
-            <form onsubmit="handleAnalyzeSubmit(event)" class="editorial-card p-2 sm:p-2.5 flex flex-col sm:flex-row gap-2 max-w-xl w-full mx-auto mb-8">
+            <!-- Holographic Search Terminal -->
+            <form onsubmit="handleAnalyzeSubmit(event)" class="glass-card p-2 sm:p-2.5 flex flex-col sm:flex-row gap-2 max-w-lg w-full mx-auto mb-6">
                 <div class="relative flex-1 flex items-center">
-                    <span class="absolute left-4 font-mono text-sm font-bold c-accent">@</span>
+                    <span class="absolute left-3.5 font-mono text-sm font-bold c-accent">@</span>
                     <input 
                         type="text" 
                         id="githubUsernameInput" 
                         value="shrutirai29"
                         placeholder="Enter GitHub handle (e.g. shrutirai29)" 
-                        class="w-full pl-9 pr-4 py-3 bg-transparent text-sm c-head placeholder-slate-400 focus:outline-none font-mono"
+                        class="w-full pl-8 pr-4 py-2.5 bg-transparent text-sm c-head placeholder-slate-400 focus:outline-none font-mono"
                         required
                     />
                 </div>
-                <button type="submit" class="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white dark:text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg cursor-pointer group shrink-0 font-mono uppercase tracking-wider">
-                    <span>Sequence Genome ⚡</span>
+                <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white dark:text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer group shrink-0 font-mono uppercase">
+                    <span>Decode ⚡</span>
                     <span class="group-hover:translate-x-1 transition-transform">→</span>
                 </button>
             </form>
 
-            <!-- Quick-Switch Benchmark Selectors (Shruti Rai Default) -->
+            <!-- Benchmark Selectors -->
             <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
                 <span class="text-[11px] c-sub mr-1">Active Profile:</span>
-                <button onclick="loadProfile('shrutirai29')" class="preset-btn px-3.5 py-1.5 rounded-full font-bold transition-all flex items-center gap-1.5 shadow-sm" style="background-color: var(--cyan-bg); border: 1px solid var(--cyan-border); color: var(--cyan-accent);">
+                <button onclick="loadProfile('shrutirai29')" class="preset-btn px-3 py-1.5 rounded-full font-bold transition-all flex items-center gap-1.5 shadow-sm" style="background-color: var(--cyan-bg); border: 1px solid var(--cyan-border); color: var(--cyan-accent);">
                     <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--cyan-accent);"></span>
                     <span>Shruti Rai (Featured)</span>
                 </button>
-                <button onclick="loadProfile('alex-datascientist')" class="preset-btn px-3 py-1.5 rounded-full editorial-sub c-body hover:border-cyan-500 transition-all">Dr. Alex (Data Science)</button>
-                <button onclick="loadProfile('elena-mlops')" class="preset-btn px-3 py-1.5 rounded-full editorial-sub c-body hover:border-cyan-500 transition-all">Elena (MLOps)</button>
-                <button onclick="loadProfile('marcus-fullstack')" class="preset-btn px-3 py-1.5 rounded-full editorial-sub c-body hover:border-cyan-500 transition-all">Marcus (Full-Stack)</button>
-                <button onclick="loadProfile('sophia-systems')" class="preset-btn px-3 py-1.5 rounded-full editorial-sub c-body hover:border-cyan-500 transition-all">Sophia (Rust)</button>
+                <button onclick="loadProfile('alex-datascientist')" class="preset-btn px-2.5 py-1.5 rounded-full glass-sub c-body hover:border-cyan-500 transition-all">Dr. Alex</button>
+                <button onclick="loadProfile('elena-mlops')" class="preset-btn px-2.5 py-1.5 rounded-full glass-sub c-body hover:border-cyan-500 transition-all">Elena</button>
+                <button onclick="loadProfile('marcus-fullstack')" class="preset-btn px-2.5 py-1.5 rounded-full glass-sub c-body hover:border-cyan-500 transition-all">Marcus</button>
+                <button onclick="loadProfile('sophia-systems')" class="preset-btn px-2.5 py-1.5 rounded-full glass-sub c-body hover:border-cyan-500 transition-all">Sophia</button>
             </div>
         </section>
 
         <!-- ===================================================================== -->
-        <!-- CHAPTER 01 // EMPIRICAL ARCHITECTURE: 100% VISUAL PIPELINE -->
+        <!-- 2. THE UNIFIED INTERACTIVE TWIN COCKPIT (ALL DATA IN 1 POLISHED HUB) -->
         <!-- ===================================================================== -->
-        <section id="architectureSection" class="mb-20">
-            <div class="editorial-chapter">
-                <div>
-                    <span class="chapter-num">01 / EMPIRICAL ARCHITECTURE</span>
-                    <h2 class="chapter-title">The Three-Stage Method</h2>
+        <section id="cockpitSection" class="glass-card p-6 sm:p-8 mb-16">
+            <!-- Cockpit Navigation Bar (Tabs) -->
+            <div class="flex items-center justify-between border-b pb-4 mb-6 gap-2 overflow-x-auto" style="border-color: var(--border-hairline);">
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="switchTab('overview')" id="tab-overview" class="cockpit-tab active px-3.5 py-1.5 rounded-xl text-xs font-mono border transition-all">01 Overview</button>
+                    <button onclick="switchTab('radar')" id="tab-radar" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">02 7D Radar</button>
+                    <button onclick="switchTab('dna')" id="tab-dna" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">03 Tech DNA</button>
+                    <button onclick="switchTab('velocity')" id="tab-velocity" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">04 Velocity & Rhythm</button>
+                    <button onclick="switchTab('projects')" id="tab-projects" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">05 Projects</button>
+                    <button onclick="switchTab('careers')" id="tab-careers" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">06 Careers</button>
                 </div>
-                <span class="text-xs font-mono c-sub hidden sm:inline">Empirical Pipeline</span>
+
+                <div class="hidden sm:flex items-center gap-2 text-xs font-mono c-sub shrink-0">
+                    <span>Target:</span>
+                    <strong class="c-accent" id="cockpitTargetName">Shruti Rai</strong>
+                </div>
             </div>
 
-            <!-- 3-Phase Method Cards (WeEvolveIT Style) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- Phase 01 -->
-                <div class="editorial-card p-7 flex flex-col justify-between">
+            <!-- Profile Header Strip (Always Visible Inside Cockpit) -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl glass-sub mb-6">
+                <div class="flex items-center gap-4">
+                    <img id="profileAvatar" src="https://avatars.githubusercontent.com/u/167513467?v=4" alt="Avatar" class="w-14 h-14 rounded-2xl object-cover border shadow-md" style="border-color: var(--cyan-border);">
                     <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">01</span>
-                            <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full c-sub editorial-sub uppercase">Input Stage</span>
+                        <div class="flex items-center gap-2">
+                            <h2 id="profileName" class="text-xl font-black c-head tracking-tight">Shruti Rai</h2>
+                            <span id="profileHandle" class="text-xs font-mono font-bold c-accent">@shrutirai29</span>
+                            <span id="demoBadge" class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">Verified Live</span>
                         </div>
-                        <h3 class="font-display font-bold text-lg c-head mb-2">Ingest Git Artifacts</h3>
-                        <p class="text-xs c-body leading-relaxed mb-6">
-                            Crawls public repositories, commit intervals, language byte-mass, and project dependencies.
-                        </p>
-                    </div>
-                    <div class="pt-4 border-t flex items-center justify-between text-xs font-mono c-accent" style="border-color: var(--border-hairline);">
-                        <span>✓ 16+ Repos Audited</span>
-                        <span class="c-sub">Phase 1</span>
+                        <p id="profileTitle" class="text-xs c-body mt-0.5">Full-Stack Developer & CSE Engineer • Rashtriya Raksha University</p>
                     </div>
                 </div>
 
-                <!-- Phase 02 -->
-                <div class="editorial-card p-7 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs" style="background-color: rgba(99, 102, 241, 0.15); color: var(--indigo-accent); border: 1px solid rgba(99, 102, 241, 0.35);">02</span>
-                            <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full c-sub editorial-sub uppercase">Biological Engine</span>
-                        </div>
-                        <h3 class="font-display font-bold text-lg c-head mb-2">Biological Code Genome</h3>
-                        <p class="text-xs c-body leading-relaxed mb-6">
-                            Calculates anti-burstiness consistency (CV), Shannon polyglot entropy, and Scikit-Learn KMeans archetypes.
-                        </p>
+                <!-- 3 Quick Stats -->
+                <div class="flex items-center gap-4 text-xs font-mono">
+                    <div class="text-center px-2">
+                        <div id="statRepos" class="text-base font-bold c-head">16</div>
+                        <div class="text-[9px] uppercase c-sub">Repos</div>
                     </div>
-                    <div class="pt-4 border-t flex items-center justify-between text-xs font-mono" style="border-color: var(--border-hairline); color: var(--indigo-accent);">
-                        <span>✓ Anti-Burstiness Filtering</span>
-                        <span class="c-sub">Phase 2</span>
+                    <div class="text-center px-2">
+                        <div id="statFollowers" class="text-base font-bold c-head">17</div>
+                        <div class="text-[9px] uppercase c-sub">Followers</div>
                     </div>
-                </div>
-
-                <!-- Phase 03 -->
-                <div class="editorial-card p-7 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border: 1px solid rgba(16, 185, 129, 0.35);">03</span>
-                            <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full c-sub editorial-sub uppercase">Output Stage</span>
-                        </div>
-                        <h3 class="font-display font-bold text-lg c-head mb-2">Living 3D Intelligence</h3>
-                        <p class="text-xs c-body leading-relaxed mb-6">
-                            Renders the interactive 3D DNA model, 7D Digital Twin radar, and vector space career readiness fit.
-                        </p>
-                    </div>
-                    <div class="pt-4 border-t flex items-center justify-between text-xs font-mono" style="border-color: var(--border-hairline); color: var(--emerald-accent);">
-                        <span>✓ Predictive Career Radar</span>
-                        <span class="c-sub">Phase 3</span>
+                    <div class="text-center px-2">
+                        <div id="statAge" class="text-base font-bold c-accent">2.4y</div>
+                        <div class="text-[9px] uppercase c-sub">Active</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Visual Contrast Card: Vanity vs Intelligence -->
-            <div class="editorial-card p-7">
-                <div class="text-xs font-mono font-bold uppercase tracking-wider c-sub mb-6 text-center">
-                    Visual Paradigm: Why Traditional GitHub Metrics Fail
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="p-5 rounded-2xl border" style="background-color: rgba(244, 63, 94, 0.06); border-color: rgba(244, 63, 94, 0.22);">
-                        <div class="flex items-center gap-2 text-xs font-mono font-bold text-rose-500 dark:text-rose-400 mb-4">
-                            <span>✕ Traditional GitHub Vanity Metrics</span>
-                        </div>
-                        <ul class="text-xs font-mono c-body space-y-2.5">
-                            <li class="flex items-center gap-2"><span class="text-rose-500">✕</span> Raw Commit Count (vulnerable to script spam)</li>
-                            <li class="flex items-center gap-2"><span class="text-rose-500">✕</span> Green Calendar Grid (rewards superficial typo edits)</li>
-                            <li class="flex items-center gap-2"><span class="text-rose-500">✕</span> Star Vanity (measures social hype, not engineering)</li>
-                            <li class="flex items-center gap-2"><span class="text-rose-500">✕</span> Zero Career Insight (no actionable roadmap)</li>
-                        </ul>
-                    </div>
+            <!-- ================= TAB 1: OVERVIEW ================= -->
+            <div id="view-overview" class="cockpit-view">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mb-6">
+                    <!-- Circular Score (5 Cols) -->
+                    <div class="lg:col-span-5 p-6 rounded-2xl glass-sub flex flex-col items-center justify-center text-center relative overflow-hidden">
+                        <span class="text-[10px] font-mono uppercase tracking-wider c-sub font-bold mb-2">DEVELOPER INTELLIGENCE</span>
 
-                    <div class="p-5 rounded-2xl border" style="background-color: var(--cyan-bg); border-color: var(--cyan-border);">
-                        <div class="flex items-center gap-2 text-xs font-mono font-bold c-accent mb-4">
-                            <span>⚡ CodeDNA Empirical Intelligence</span>
-                        </div>
-                        <ul class="text-xs font-mono c-body space-y-2.5">
-                            <li class="flex items-center gap-2"><span class="c-accent font-bold">✓</span> Anti-Burstiness Filtering (penalizes commit dumps)</li>
-                            <li class="flex items-center gap-2"><span class="c-accent font-bold">✓</span> Shannon Polyglot Entropy (measures true stack breadth)</li>
-                            <li class="flex items-center gap-2"><span class="c-accent font-bold">✓</span> Architectural Rigor (tests, CI/CD, modularity)</li>
-                            <li class="flex items-center gap-2"><span class="c-accent font-bold">✓</span> Vector Career Fit (identifies highest leverage skill)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+                        <div class="relative w-48 h-48 flex items-center justify-center my-1">
+                            <svg class="w-full h-full radial-progress" viewBox="0 0 160 160">
+                                <circle cx="80" cy="80" r="70" stroke="rgba(128,128,128,0.15)" stroke-width="11" fill="transparent"/>
+                                <circle id="scoreProgressCircle" cx="80" cy="80" r="70" stroke="url(#scoreGradient)" stroke-width="11" fill="transparent" stroke-linecap="round" class="radial-progress-circle"/>
+                                <defs>
+                                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#06B6D4"/>
+                                        <stop offset="50%" stop-color="#6366F1"/>
+                                        <stop offset="100%" stop-color="#A855F7"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
 
-        <!-- ===================================================================== -->
-        <!-- CHAPTER 02 // GENOMIC PHENOTYPE: DOSSIER, SPEEDOMETER & DIMENSIONS -->
-        <!-- ===================================================================== -->
-        <section id="overviewSection" class="mb-20">
-            <div class="editorial-chapter">
-                <div>
-                    <span class="chapter-num">02 / GENOMIC PHENOTYPE</span>
-                    <h2 class="chapter-title">Developer Identity & Intelligence</h2>
-                </div>
-                <span class="text-xs font-mono c-sub hidden sm:inline">Shruti Rai Featured Profile</span>
-            </div>
-
-            <!-- Identity Dossier Card -->
-            <div class="editorial-card p-7 sm:p-9 mb-8">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                    <div class="flex items-center gap-6">
-                        <div class="relative">
-                            <img id="profileAvatar" src="https://avatars.githubusercontent.com/u/167513467?v=4" alt="Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-2 shadow-2xl" style="border-color: var(--cyan-border);">
-                            <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2" style="border-color: var(--bg-card);" title="Verified Live Developer"></span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                                <span id="demoBadge" class="text-[10px] font-mono uppercase tracking-wider font-bold px-3 py-0.5 rounded-full" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">Verified GitHub Identity</span>
-                                <span class="text-xs c-sub font-mono">Live Empirical Telemetry</span>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <span id="scoreNumber" class="text-5xl font-black font-mono tracking-tight c-head">0.0</span>
+                                <span class="text-[9px] font-mono uppercase tracking-widest c-sub mt-0.5">QUOTIENT</span>
                             </div>
-                            <h2 id="profileName" class="font-display font-black text-3xl sm:text-4xl c-head tracking-tight">Shruti Rai</h2>
-                            <div class="flex items-center gap-2 text-xs font-mono c-body mt-1 flex-wrap">
-                                <span id="profileHandle" class="font-bold c-accent">@shrutirai29</span>
-                                <span>•</span>
-                                <span id="profileTitle">Full-Stack Developer & CSE Engineer</span>
-                                <span>•</span>
-                                <span id="profileLocation">Rashtriya Raksha University</span>
-                            </div>
-                            <p id="profileBio" class="text-xs c-body mt-3 max-w-2xl line-clamp-2 leading-relaxed">BTech CSE student at Rashtriya Raksha University • Building scalable web applications, applied AI tools, and algorithmic systems.</p>
+                        </div>
+
+                        <div class="mt-2 flex items-center gap-2">
+                            <span id="scoreTierBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">Tier: High Momentum</span>
+                            <span id="scoreVelocityBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border: 1px solid rgba(16, 185, 129, 0.35);">+42% YoY</span>
                         </div>
                     </div>
 
-                    <!-- Telemetry Badges -->
-                    <div class="flex items-center gap-5 w-full md:w-auto border-t md:border-t-0 md:border-l pt-4 md:pt-0 md:pl-8" style="border-color: var(--border-hairline);">
-                        <div class="text-center px-3">
-                            <div id="statRepos" class="text-3xl font-black font-mono c-head">16</div>
-                            <div class="text-[10px] uppercase font-mono c-sub mt-1">Repositories</div>
+                    <!-- 6 Competency Dimensions (7 Cols) -->
+                    <div class="lg:col-span-7 p-6 rounded-2xl glass-sub flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">Competency Dimensions</h3>
+                            <span class="text-[11px] c-sub font-mono">Top: <strong class="c-accent" id="topPercentileStat">92nd percentile</strong></span>
                         </div>
-                        <div class="text-center px-3">
-                            <div id="statFollowers" class="text-3xl font-black font-mono c-head">17</div>
-                            <div class="text-[10px] uppercase font-mono c-sub mt-1">Followers</div>
+
+                        <div class="space-y-3" id="dimensionBars">
+                            <!-- Injected dynamically -->
                         </div>
-                        <div class="text-center px-3">
-                            <div id="statAge" class="text-3xl font-black font-mono c-accent">2.4y</div>
-                            <div class="text-[10px] uppercase font-mono c-sub mt-1">Velocity</div>
+                    </div>
+                </div>
+
+                <!-- KPI Triad & Archetype Strip -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Archetype -->
+                    <div class="p-4 rounded-xl glass-sub flex flex-col justify-between">
+                        <span class="text-[10px] font-mono uppercase c-sub font-bold">ARCHETYPE</span>
+                        <div class="my-1">
+                            <div class="text-sm font-bold c-head" id="archetypeName">The Technology Explorer</div>
+                            <div class="text-[11px] font-mono c-accent" id="archetypeTagline">Polyglot Architecture</div>
                         </div>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full border w-max" style="background-color: rgba(99, 102, 241, 0.15); color: var(--indigo-accent); border-color: rgba(99, 102, 241, 0.35);" id="archetypeBadge">HIGH MOMENTUM ↗</span>
+                    </div>
+
+                    <!-- Career Match -->
+                    <div class="p-4 rounded-xl glass-sub flex flex-col justify-between">
+                        <span class="text-[10px] font-mono uppercase c-sub font-bold">CAREER MATCH</span>
+                        <div class="my-1">
+                            <div class="text-2xl font-black font-mono c-accent" id="careerMatchKpiVal">89.5%</div>
+                            <div class="text-[11px] font-mono c-body" id="careerMatchKpiRole">Full-Stack Developer</div>
+                        </div>
+                        <span class="text-[10px] font-mono" style="color: var(--emerald-accent);">Optimal Fit</span>
+                    </div>
+
+                    <!-- Consistency -->
+                    <div class="p-4 rounded-xl glass-sub flex flex-col justify-between">
+                        <span class="text-[10px] font-mono uppercase c-sub font-bold">CONSISTENCY</span>
+                        <div class="my-1">
+                            <div class="text-2xl font-black font-mono" style="color: var(--amber-accent);" id="consistencyKpiVal">84 / 100</div>
+                            <div class="text-[11px] font-mono c-body">Disciplined Cadence</div>
+                        </div>
+                        <span class="text-[10px] font-mono c-sub">Low Volatility</span>
+                    </div>
+
+                    <!-- Portfolio Health -->
+                    <div class="p-4 rounded-xl glass-sub flex flex-col justify-between">
+                        <span class="text-[10px] font-mono uppercase c-sub font-bold">PORTFOLIO HEALTH</span>
+                        <div class="my-1">
+                            <div class="text-2xl font-black font-mono" style="color: var(--indigo-accent);" id="portfolioHealthKpiVal">92 / 100</div>
+                            <div class="text-[11px] font-mono c-body">16 Repos Audited</div>
+                        </div>
+                        <span class="text-[10px] font-mono" style="color: var(--indigo-accent);">Hygiene Score</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Master Scorecard & 6 Dimensions Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-                <!-- Centerpiece Circular Score (5 Cols) -->
-                <div class="lg:col-span-5 editorial-card p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
-                    <div class="text-xs font-mono uppercase tracking-widest c-sub font-bold mb-4 flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full pulse-beacon" style="background-color: var(--cyan-accent);"></span>
-                        Developer Intelligence Score
-                    </div>
-
-                    <!-- Radial Speedometer SVG with Orbiting Particles -->
-                    <div class="relative w-60 h-60 flex items-center justify-center my-2">
-                        <svg class="w-full h-full radial-progress" viewBox="0 0 160 160">
-                            <circle cx="80" cy="80" r="70" stroke="rgba(128,128,128,0.15)" stroke-width="12" fill="transparent"/>
-                            <circle id="scoreProgressCircle" cx="80" cy="80" r="70" stroke="url(#scoreGradient)" stroke-width="12" fill="transparent" stroke-linecap="round" class="radial-progress-circle"/>
-                            <defs>
-                                <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#06B6D4"/>
-                                    <stop offset="50%" stop-color="#6366F1"/>
-                                    <stop offset="100%" stop-color="#A855F7"/>
-                                </linearGradient>
-                                <filter id="particleGlow" x="-50%" y="-50%" width="200%" height="200%">
-                                    <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
-                                </filter>
-                            </defs>
-                        </svg>
-
-                        <!-- Orbiting Particles -->
-                        <div class="orbit-container">
-                            <svg class="orbit-ring-svg" viewBox="0 0 160 160">
-                                <g class="orbit-particles-group">
-                                    <circle cx="80" cy="10" r="3.5" fill="#06B6D4" filter="url(#particleGlow)"/>
-                                    <circle cx="150" cy="80" r="2.5" fill="#6366F1" filter="url(#particleGlow)"/>
-                                    <circle cx="80" cy="150" r="3" fill="#A855F7" filter="url(#particleGlow)"/>
-                                    <circle cx="10" cy="80" r="2.5" fill="#38BDF8" filter="url(#particleGlow)"/>
-                                </g>
+            <!-- ================= TAB 2: 7D RADAR ================= -->
+            <div id="view-radar" class="cockpit-view hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <div class="lg:col-span-7 flex flex-col items-center justify-center p-4 rounded-2xl glass-sub">
+                        <div class="w-full h-80 flex items-center justify-center">
+                            <svg id="radarSvg" class="w-full h-full max-w-md" viewBox="0 0 300 300">
+                                <!-- Rendered dynamically -->
                             </svg>
                         </div>
-
-                        <!-- Center Score Counter -->
-                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                            <span id="scoreNumber" class="text-6xl font-black font-mono tracking-tight c-head">0.0</span>
-                            <span class="text-[9px] font-mono uppercase tracking-widest c-sub mt-1">INTELLIGENCE QUOTIENT</span>
+                        <div id="radarTooltip" class="mt-2 p-2.5 rounded-xl glass-sub text-xs font-mono c-body w-full flex justify-between">
+                            <span id="radarHoverLabel">Hover on any vertex node to inspect empirical signals</span>
+                            <span id="radarHoverScore" class="font-bold c-accent"></span>
                         </div>
                     </div>
 
-                    <div class="mt-4 flex items-center gap-2">
-                        <span id="scoreTierBadge" class="px-3.5 py-1 rounded-full text-xs font-mono font-bold" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">Tier: High Momentum</span>
-                        <span id="scoreVelocityBadge" class="px-3.5 py-1 rounded-full text-xs font-mono font-bold" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border: 1px solid rgba(16, 185, 129, 0.35);">+42% YoY</span>
-                    </div>
-                </div>
-
-                <!-- 6 Dimensions Breakdown (7 Cols) -->
-                <div class="lg:col-span-7 editorial-card p-8 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-display font-bold text-base uppercase tracking-wider c-head">Competency Dimensions</h3>
-                        <span class="text-xs c-sub font-mono">Empirical Observables</span>
-                    </div>
-
-                    <div class="space-y-4" id="dimensionBars">
-                        <!-- Bars injected dynamically -->
-                    </div>
-
-                    <div class="mt-6 pt-4 border-t flex items-center justify-between text-xs c-sub" style="border-color: var(--border-hairline);">
-                        <span class="font-mono">Peer cohort percentile: <strong class="c-accent font-bold" id="topPercentileStat">92nd percentile</strong></span>
-                        <a href="#twinSection" class="c-accent hover:underline font-mono">Inspect in Digital Twin →</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KPI Triad Row -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- 1. Career Match KPI -->
-                <div class="editorial-card p-6 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[10px] font-mono uppercase tracking-wider c-sub font-bold">CAREER MATCH</span>
-                        <span class="text-xs font-mono font-semibold" style="color: var(--emerald-accent);">Optimal Fit</span>
-                    </div>
-                    <div class="my-2">
-                        <div class="text-3xl font-black font-mono c-accent" id="careerMatchKpiVal">89.5%</div>
-                        <div class="text-xs font-mono c-body font-semibold mt-0.5" id="careerMatchKpiRole">Full-Stack Developer</div>
-                    </div>
-                    <div class="w-full h-1.5 rounded-full overflow-hidden mt-2" style="background-color: var(--bar-track);">
-                        <div class="h-full rounded-full" style="width: 89.5%; background-color: var(--cyan-accent);"></div>
-                    </div>
-                </div>
-
-                <!-- 2. Consistency KPI -->
-                <div class="editorial-card p-6 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[10px] font-mono uppercase tracking-wider c-sub font-bold">CONSISTENCY INDEX</span>
-                        <span class="text-xs font-mono font-semibold" style="color: var(--amber-accent);">Low Variance</span>
-                    </div>
-                    <div class="my-2">
-                        <div class="text-3xl font-black font-mono" style="color: var(--amber-accent);" id="consistencyKpiVal">84 / 100</div>
-                        <div class="text-xs font-mono c-body font-semibold mt-0.5">Active Sprint Rhythm</div>
-                    </div>
-                    <div class="w-full h-1.5 rounded-full overflow-hidden mt-2" style="background-color: var(--bar-track);">
-                        <div class="h-full rounded-full" style="width: 84%; background-color: var(--amber-accent);"></div>
-                    </div>
-                </div>
-
-                <!-- 3. Portfolio Health KPI -->
-                <div class="editorial-card p-6 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[10px] font-mono uppercase tracking-wider c-sub font-bold">PORTFOLIO HEALTH</span>
-                        <span class="text-xs font-mono font-semibold" style="color: var(--indigo-accent);">Hygiene Score</span>
-                    </div>
-                    <div class="my-2">
-                        <div class="text-3xl font-black font-mono" style="color: var(--indigo-accent);" id="portfolioHealthKpiVal">92 / 100</div>
-                        <div class="text-xs font-mono c-body font-semibold mt-0.5">16 Repositories Audited</div>
-                    </div>
-                    <div class="w-full h-1.5 rounded-full overflow-hidden mt-2" style="background-color: var(--bar-track);">
-                        <div class="h-full rounded-full" style="width: 92%; background-color: var(--indigo-accent);"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===================================================================== -->
-        <!-- CHAPTER 03 // THE DIGITAL TWIN & BEHAVIORAL ARCHETYPE -->
-        <!-- ===================================================================== -->
-        <section id="twinSection" class="mb-20">
-            <div class="editorial-chapter">
-                <div>
-                    <span class="chapter-num">03 / THE DIGITAL TWIN</span>
-                    <h2 class="chapter-title">7D Fingerprint & Archetype</h2>
-                </div>
-                <span class="text-xs font-mono c-sub hidden sm:inline">Scikit-Learn KMeans Clustering</span>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- 7D Radar Visualization (7 Cols) -->
-                <div class="lg:col-span-7 editorial-card p-7 sm:p-8">
-                    <div class="flex items-center justify-between mb-4">
+                    <div class="lg:col-span-5 p-6 rounded-2xl glass-sub flex flex-col justify-between">
                         <div>
-                            <h3 class="font-display font-bold text-base c-head">Developer Digital Twin</h3>
-                            <p class="text-xs c-sub font-mono">7-Dimensional competency polygon</p>
-                        </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border" style="background-color: rgba(99, 102, 241, 0.15); color: var(--indigo-accent); border-color: rgba(99, 102, 241, 0.35);">Vector Space</span>
-                    </div>
-
-                    <!-- SVG Radar Chart -->
-                    <div class="relative w-full h-80 flex items-center justify-center">
-                        <svg id="radarSvg" class="w-full h-full max-w-md" viewBox="0 0 300 300">
-                            <!-- Rendered via JS -->
-                        </svg>
-                    </div>
-
-                    <!-- Hover Evidence Box -->
-                    <div id="radarTooltip" class="mt-3 p-3.5 rounded-xl editorial-sub text-xs font-mono c-body flex items-center justify-between">
-                        <span id="radarHoverLabel">Hover on any polygon node to inspect empirical signals</span>
-                        <span id="radarHoverScore" class="font-bold c-accent"></span>
-                    </div>
-                </div>
-
-                <!-- Behavioral Archetype Card (5 Cols) -->
-                <div class="lg:col-span-5 editorial-card p-7 sm:p-8 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-mono uppercase tracking-wider font-bold" style="color: var(--indigo-accent);">Clustered Archetype</span>
-                            <span id="archetypeBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold border" style="background-color: rgba(99, 102, 241, 0.15); color: var(--indigo-accent); border-color: rgba(99, 102, 241, 0.35);">HIGH MOMENTUM ↗</span>
-                        </div>
-
-                        <h3 id="archetypeName" class="font-display font-black text-2xl sm:text-3xl c-head tracking-tight mb-1">The Technology Explorer</h3>
-                        <p id="archetypeTagline" class="text-xs font-mono mb-4 c-accent">Polyglot Architecture & Cross-Stack Agility</p>
-
-                        <div class="p-4 rounded-xl editorial-sub mb-4">
-                            <div class="text-xs font-bold c-head uppercase tracking-wider font-mono mb-2">Clustering Rationale</div>
-                            <p id="archetypeReason" class="text-xs c-body leading-relaxed">
-                                Your repositories demonstrate rapid cross-stack adoption across modern TypeScript web ecosystems, Python applied analytics, and algorithmic C++ foundations.
+                            <span class="text-[10px] font-mono uppercase tracking-wider font-bold" style="color: var(--indigo-accent);">Clustering Analysis</span>
+                            <h3 class="text-lg font-bold c-head mt-1 mb-2">Mathematical Fingerprint</h3>
+                            <p id="archetypeReason" class="text-xs c-body leading-relaxed mb-4">
+                                Repositories demonstrate rapid cross-stack adoption across modern TypeScript web ecosystems, Python applied analytics, and algorithmic C++ foundations.
                             </p>
-                        </div>
-
-                        <div class="space-y-2">
-                            <div class="text-xs font-bold c-sub font-mono uppercase tracking-wider">Observable Strengths:</div>
+                            <div class="text-xs font-bold c-sub font-mono uppercase mb-2">Observable Strengths:</div>
                             <ul id="archetypeEvidenceList" class="text-xs c-body space-y-1.5 font-mono">
                                 <!-- Injected dynamically -->
                             </ul>
                         </div>
-                    </div>
-
-                    <div class="mt-6 pt-4 border-t text-xs c-sub font-mono flex justify-between" style="border-color: var(--border-hairline);">
-                        <span>KMeans ($k=6$) Archetype</span>
-                        <span class="c-accent font-bold">PCA Coords (0.68, 0.74)</span>
+                        <div class="pt-4 mt-6 border-t text-xs c-sub font-mono flex justify-between" style="border-color: var(--border-hairline);">
+                            <span>KMeans ($k=6$) Archetype</span>
+                            <span class="c-accent font-bold">PCA Coords (0.68, 0.74)</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- ===================================================================== -->
-        <!-- CHAPTER 04 // TECHNOLOGICAL ECOSYSTEM & MOMENTUM -->
-        <!-- ===================================================================== -->
-        <section id="dnaSection" class="mb-20">
-            <div class="editorial-chapter">
-                <div>
-                    <span class="chapter-num">04 / TECHNOLOGICAL ECOSYSTEM</span>
-                    <h2 class="chapter-title">Technology DNA & Momentum</h2>
-                </div>
-                <span class="text-xs font-mono c-sub hidden sm:inline">Interactive Hierarchical Network</span>
-            </div>
-
-            <div class="editorial-card p-7 sm:p-8">
+            <!-- ================= TAB 3: TECH DNA ================= -->
+            <div id="view-dna" class="cockpit-view hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                    <!-- Interactive Graph (8 cols) -->
-                    <div class="lg:col-span-8 editorial-sub rounded-2xl p-4 relative overflow-hidden h-96 flex items-center justify-center">
+                    <div class="lg:col-span-8 p-4 rounded-2xl glass-sub relative overflow-hidden h-96 flex items-center justify-center">
                         <svg id="dnaNetworkSvg" class="w-full h-full" viewBox="0 0 500 300">
                             <!-- Rendered dynamically -->
                         </svg>
-                        <!-- Node popover -->
-                        <div id="dnaNodeTooltip" class="hidden absolute bottom-3 left-3 right-3 p-3 editorial-card rounded-xl text-xs font-mono c-body flex items-center justify-between shadow-xl">
+                        <div id="dnaNodeTooltip" class="hidden absolute bottom-3 left-3 right-3 p-3 glass-card rounded-xl text-xs font-mono c-body flex items-center justify-between shadow-xl">
                             <span id="dnaTooltipText"></span>
                         </div>
                     </div>
 
-                    <!-- Momentum Board (4 cols) -->
-                    <div class="lg:col-span-4 space-y-3">
-                        <div class="text-xs font-mono uppercase tracking-wider c-sub font-bold mb-2">Active Shifts in Stack:</div>
+                    <div class="lg:col-span-4 p-5 rounded-2xl glass-sub space-y-3">
+                        <div class="text-xs font-mono uppercase tracking-wider c-sub font-bold mb-2">Stack Shifts & Momentum:</div>
                         <div id="momentumList" class="space-y-2.5">
                             <!-- Injected dynamically -->
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- ===================================================================== -->
-        <!-- CHAPTER 05 // TEMPORAL CHRONOMETRY & FOCUS RHYTHM -->
-        <!-- ===================================================================== -->
-        <section id="rhythmSection" class="mb-20">
-            <div class="editorial-chapter">
-                <div>
-                    <span class="chapter-num">05 / TEMPORAL CHRONOMETRY</span>
-                    <h2 class="chapter-title">Growth Velocity & Rhythm</h2>
-                </div>
-                <span class="text-xs font-mono c-sub hidden sm:inline">Cadence Analysis</span>
-            </div>
-
-            <!-- Growth Velocity Graph Card -->
-            <div class="editorial-card p-7 sm:p-8 mb-6">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                    <div>
-                        <h3 class="font-display font-bold text-base c-head">Developer Growth Velocity (DGV)</h3>
-                        <p class="text-xs c-sub font-mono">Multi-year trajectory tracking depth, complexity, and expansion</p>
+            <!-- ================= TAB 4: VELOCITY & RHYTHM ================= -->
+            <div id="view-velocity" class="cockpit-view hidden space-y-6">
+                <!-- Velocity Line Graph -->
+                <div class="p-6 rounded-2xl glass-sub">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">Annualized Growth Velocity (DGV)</h3>
+                        <div class="flex items-center gap-2 text-xs font-mono c-sub" id="velocityYearChips"></div>
                     </div>
-                    <div class="flex items-center gap-2 text-xs font-mono c-sub" id="velocityYearChips">
-                        <!-- Year chips -->
+                    <div class="w-full h-56 flex items-center justify-center mb-3">
+                        <svg id="velocitySvg" class="w-full h-full" viewBox="0 0 700 200"></svg>
                     </div>
-                </div>
-
-                <div class="w-full h-64 editorial-sub rounded-2xl p-4 relative flex items-center justify-center mb-4">
-                    <svg id="velocitySvg" class="w-full h-full" viewBox="0 0 700 200">
-                        <!-- Rendered dynamically -->
-                    </svg>
-                </div>
-
-                <div id="velocitySnapshotCard" class="p-4 rounded-xl editorial-sub text-xs font-mono flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                    <div>
-                        <span id="snapshotYear" class="c-accent font-bold text-sm">2026 Trajectory Snapshot:</span>
-                        <span id="snapshotNote" class="c-body ml-2">Applied AI architectures and gamified focus platforms</span>
-                    </div>
-                    <div class="flex items-center gap-4 c-sub">
-                        <span>Depth: <strong id="snapshotDepth" class="c-head">82</strong></span>
-                        <span>Complexity: <strong id="snapshotComplexity" class="c-accent">86</strong></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 7x24 Punchcard Focus Matrix -->
-            <div class="editorial-card p-7 sm:p-8">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                    <div>
-                        <h3 class="font-display font-bold text-base c-head">7x24 Focus Cadence Punchcard</h3>
-                        <p class="text-xs c-sub font-mono">Hourly commit density mapping deep-work sprint intervals</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs font-mono c-sub">Consistency Index:</span>
-                        <span id="consistencyScoreVal" class="text-sm font-bold font-mono" style="color: var(--amber-accent);">84 / 100</span>
-                    </div>
-                </div>
-
-                <div class="editorial-sub rounded-2xl p-4 sm:p-6 mb-4 overflow-x-auto">
-                    <div id="punchcardMatrix" class="space-y-2 min-w-[500px]">
-                        <!-- Rendered dynamically -->
-                    </div>
-                    <div class="flex justify-between items-center text-[10px] font-mono c-sub mt-4 pt-2 border-t" style="border-color: var(--border-hairline);">
-                        <span>00:00 (Midnight)</span>
-                        <span>06:00 (Dawn)</span>
-                        <span>12:00 (Noon)</span>
-                        <span>18:00 (Evening Peak)</span>
-                        <span>23:00</span>
-                    </div>
-                </div>
-
-                <div id="rhythmInsightBox" class="p-4 rounded-xl editorial-sub text-xs font-mono c-body">
-                    <!-- Insight text -->
-                </div>
-            </div>
-        </section>
-
-        <!-- ===================================================================== -->
-        <!-- CHAPTER 06 // AUDITED REPOSITORIES: THE PROJECT ATELIER -->
-        <!-- ===================================================================== -->
-        <section id="projectsSection" class="mb-20">
-            <div class="editorial-chapter">
-                <div>
-                    <span class="chapter-num">06 / AUDITED REPOSITORIES</span>
-                    <h2 class="chapter-title">Repository Atelier & Works</h2>
-                </div>
-                <span class="text-xs font-mono c-sub hidden sm:inline">16 Repositories Audited</span>
-            </div>
-
-            <!-- Project Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectCardsGrid">
-                <!-- Injected dynamically -->
-            </div>
-        </section>
-
-        <!-- ===================================================================== -->
-        <!-- CHAPTER 07 // SYNTHETIC CAREER RADAR & TRAJECTORY -->
-        <!-- ===================================================================== -->
-        <section id="careerSection" class="mb-20">
-            <div class="editorial-chapter">
-                <div>
-                    <span class="chapter-num">07 / SYNTHETIC CAREER RADAR</span>
-                    <h2 class="chapter-title">Career Role Leaderboard & Next Skill</h2>
-                </div>
-                <span class="text-xs font-mono c-sub hidden sm:inline">Vector Space Similarity</span>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Career Leaderboard (7 Cols) -->
-                <div class="lg:col-span-7 editorial-card p-7 sm:p-8 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 class="font-display font-bold text-base c-head">Role Match Leaderboard</h3>
-                                <p class="text-xs c-sub font-mono">Cosine similarity matching across target tech roles</p>
-                            </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-mono border" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border-color: rgba(16, 185, 129, 0.35);">Vector Fit</span>
+                    <div id="velocitySnapshotCard" class="p-3.5 rounded-xl glass-sub text-xs font-mono flex justify-between items-center">
+                        <div>
+                            <span id="snapshotYear" class="c-accent font-bold">2026 Snapshot:</span>
+                            <span id="snapshotNote" class="c-body ml-2">Applied AI architectures and gamified focus platforms</span>
                         </div>
-
-                        <div class="space-y-3.5" id="careerBarsContainer">
-                            <!-- Injected dynamically -->
+                        <div class="flex gap-4 c-sub">
+                            <span>Depth: <strong id="snapshotDepth" class="c-head">82</strong></span>
+                            <span>Complexity: <strong id="snapshotComplexity" class="c-accent">86</strong></span>
                         </div>
                     </div>
-
-                    <div class="mt-6 pt-4 border-t text-xs c-sub font-mono flex justify-between" style="border-color: var(--border-hairline);">
-                        <span>Evaluated against 8 Target Roles</span>
-                        <span class="c-accent font-bold">Top: Full-Stack (89.5%)</span>
-                    </div>
                 </div>
 
-                <!-- Next Best Skill & Gaps (5 Cols) -->
-                <div class="lg:col-span-5 space-y-6">
-                    <!-- Next Best Skill Card -->
-                    <div class="editorial-card p-7" style="background: linear-gradient(135deg, var(--cyan-bg) 0%, var(--bg-card) 100%);">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-mono uppercase tracking-wider c-accent font-bold">🚀 Next Best Skill Recommendation</span>
-                            <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full border" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border-color: var(--cyan-border);">MAX LEVERAGE</span>
-                        </div>
+                <!-- 7x24 Rhythm Matrix -->
+                <div class="p-6 rounded-2xl glass-sub">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">7x24 Focus Cadence Punchcard</h3>
+                        <span id="consistencyScoreVal" class="text-xs font-bold font-mono" style="color: var(--amber-accent);">Consistency: 84 / 100</span>
+                    </div>
+                    <div class="space-y-1.5 overflow-x-auto min-w-[500px]" id="punchcardMatrix"></div>
+                    <div id="rhythmInsightBox" class="mt-4 p-3 rounded-xl glass-sub text-xs font-mono c-body"></div>
+                </div>
+            </div>
 
-                        <h4 id="nextSkillName" class="font-display font-black text-xl c-head mb-2">Docker & Containerization</h4>
-                        <p id="nextSkillWhy" class="text-xs c-body leading-relaxed mb-4">
-                            Containerizing full-stack web applications and Python analytics engines enables 1-click cloud deployment and microservices architecture.
-                        </p>
+            <!-- ================= TAB 5: AUDITED PROJECTS ================= -->
+            <div id="view-projects" class="cockpit-view hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="projectCardsGrid">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
 
-                        <div class="p-3.5 rounded-xl editorial-sub text-xs font-mono flex items-center gap-2" style="color: var(--emerald-accent);">
-                            <span>⚡ Projected Lift:</span>
-                            <span id="nextSkillLeverage" class="font-bold">+10% readiness lift across Full-Stack & SDE roles</span>
-                        </div>
+            <!-- ================= TAB 6: CAREERS & NEXT SKILL ================= -->
+            <div id="view-careers" class="cockpit-view hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-7 p-6 rounded-2xl glass-sub">
+                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono mb-4">Target Role Leaderboard (Cosine Similarity)</h3>
+                        <div class="space-y-3" id="careerBarsContainer"></div>
                     </div>
 
-                    <!-- Categorized Skill Gaps -->
-                    <div class="editorial-card p-7">
-                        <h4 class="text-xs font-mono uppercase tracking-wider c-sub font-bold mb-3">Audited Skill Gaps:</h4>
-                        <div class="space-y-3" id="skillGapsList">
-                            <!-- Injected dynamically -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <!-- Next Best Skill -->
+                        <div class="p-5 rounded-2xl glass-sub border-l-4" style="border-left-color: var(--cyan-accent);">
+                            <span class="text-[10px] font-mono uppercase c-accent font-bold">🚀 Next Best Skill</span>
+                            <h4 id="nextSkillName" class="text-base font-bold c-head mt-1 mb-1">Docker & Containerization</h4>
+                            <p id="nextSkillWhy" class="text-xs c-body leading-relaxed mb-3">
+                                Containerizing full-stack web applications enables 1-click cloud deployment and microservices architecture.
+                            </p>
+                            <div class="text-xs font-mono font-bold" style="color: var(--emerald-accent);" id="nextSkillLeverage">+10% readiness lift across Full-Stack & SDE roles</div>
                         </div>
-                    </div>
 
-                    <!-- Peer Percentiles -->
-                    <div class="editorial-card p-7">
-                        <h4 class="text-xs font-mono uppercase tracking-wider c-sub font-bold mb-3">Peer Cohort Percentiles:</h4>
-                        <div class="space-y-3" id="benchmarkPercentiles">
-                            <!-- Injected dynamically -->
+                        <!-- Gaps -->
+                        <div class="p-5 rounded-2xl glass-sub">
+                            <span class="text-[10px] font-mono uppercase c-sub font-bold">Audited Skill Gaps:</span>
+                            <div class="space-y-2 mt-2" id="skillGapsList"></div>
+                        </div>
+
+                        <!-- Peer Benchmark Percentiles -->
+                        <div class="p-5 rounded-2xl glass-sub">
+                            <span class="text-[10px] font-mono uppercase c-sub font-bold">Peer Percentiles:</span>
+                            <div class="space-y-2 mt-2" id="benchmarkPercentiles"></div>
                         </div>
                     </div>
                 </div>
@@ -1902,109 +1584,147 @@ def index_html():
         </section>
 
         <!-- ===================================================================== -->
-        <!-- CHAPTER 08 // PROGRAMMATIC INTERFACE & REST API -->
+        <!-- 3. THE 3-PHASE EMPIRICAL PIPELINE (CLEAN INFOGRAPHIC) -->
         <!-- ===================================================================== -->
-        <section class="mb-20">
-            <div class="editorial-chapter">
-                <div>
-                    <span class="chapter-num">08 / PROGRAMMATIC INTERFACE</span>
-                    <h2 class="chapter-title">Developer API & JSON Mart</h2>
-                </div>
-                <span class="text-xs font-mono c-sub hidden sm:inline">REST Specification</span>
+        <section id="methodSection" class="mb-16">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <span class="text-[10px] font-mono uppercase tracking-widest c-accent font-bold">THE CODEDNA METHOD</span>
+                <h2 class="text-2xl sm:text-3xl font-black c-head tracking-tight mt-1">How We Sequence Any Developer</h2>
+                <p class="text-xs sm:text-sm c-body mt-1.5">Replacing superficial vanity counters with 3-stage empirical intelligence.</p>
             </div>
 
-            <div class="editorial-card p-7 sm:p-8">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+                <div class="glass-card p-6 flex flex-col justify-between">
                     <div>
-                        <h3 class="text-sm font-bold c-head font-mono flex items-center gap-2">
-                            <span class="c-accent">GET</span>
-                            <span>/api/profile?username=<span id="apiTerminalUser">shrutirai29</span></span>
-                        </h3>
-                        <p class="text-xs c-sub font-mono mt-1">Live JSON payload accessible by recruiting pipelines, automated screening bots, and analytics marts.</p>
+                        <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs mb-3" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">01</span>
+                        <h3 class="text-base font-bold c-head mb-1.5">Ingest Git Artifacts</h3>
+                        <p class="text-xs c-body leading-relaxed">Audits public repositories, commit cadence, language byte-mass, dependencies, and code hygiene.</p>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="copyApiUrl()" class="px-4 py-2 rounded-full editorial-sub text-xs font-mono c-body hover:opacity-80 transition-opacity flex items-center gap-1.5">
-                            <span id="copyBtnText">Copy Endpoint</span>
-                        </button>
-                        <a id="viewJsonLink" href="/api/profile?username=shrutirai29" target="_blank" class="px-4 py-2 rounded-full text-xs font-mono c-accent font-bold transition-opacity hover:opacity-80" style="background-color: var(--cyan-bg); border: 1px solid var(--cyan-border);">
-                            View Raw JSON ↗
-                        </a>
-                    </div>
+                    <span class="text-[11px] font-mono c-accent pt-3 border-t mt-4" style="border-color: var(--border-hairline);">✓ 16+ Repos Audited</span>
                 </div>
 
-                <pre class="bg-zinc-950 p-5 rounded-2xl border border-white/10 text-xs font-mono text-cyan-400 overflow-x-auto"><code id="apiSnippetPreview">Loading live payload...</code></pre>
+                <div class="glass-card p-6 flex flex-col justify-between">
+                    <div>
+                        <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs mb-3" style="background-color: rgba(99, 102, 241, 0.15); color: var(--indigo-accent); border: 1px solid rgba(99, 102, 241, 0.35);">02</span>
+                        <h3 class="text-base font-bold c-head mb-1.5">Biological Code Genome</h3>
+                        <p class="text-xs c-body leading-relaxed">Evaluates anti-burstiness consistency (CV), Shannon polyglot entropy, and Scikit-Learn KMeans clustering.</p>
+                    </div>
+                    <span class="text-[11px] font-mono pt-3 border-t mt-4" style="border-color: var(--border-hairline); color: var(--indigo-accent);">✓ Anti-Burstiness Filter</span>
+                </div>
+
+                <div class="glass-card p-6 flex flex-col justify-between">
+                    <div>
+                        <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs mb-3" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border: 1px solid rgba(16, 185, 129, 0.35);">03</span>
+                        <h3 class="text-base font-bold c-head mb-1.5">Predictive Trajectory</h3>
+                        <p class="text-xs c-body leading-relaxed">Calculates multi-dimensional vector career similarity, optimal role matches, and high-leverage skill recommendations.</p>
+                    </div>
+                    <span class="text-[11px] font-mono pt-3 border-t mt-4" style="border-color: var(--border-hairline); color: var(--emerald-accent);">✓ Predictive Radar</span>
+                </div>
             </div>
+
+            <!-- Comparison Widget -->
+            <div class="glass-card p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl border" style="background-color: rgba(244, 63, 94, 0.05); border-color: rgba(244, 63, 94, 0.2);">
+                        <div class="text-xs font-mono font-bold text-rose-500 mb-2">✕ Standard GitHub Vanity Metrics</div>
+                        <ul class="text-xs font-mono c-body space-y-1.5">
+                            <li>✕ Raw Commit Counts (easily spammed by bots)</li>
+                            <li>✕ Green Calendar Grid (rewards empty typo fixes)</li>
+                            <li>✕ Social Star Vanity (measures hype, not architecture)</li>
+                            <li>✕ Zero Career Guidance (no trajectory advice)</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 rounded-xl border" style="background-color: var(--cyan-bg); border-color: var(--cyan-border);">
+                        <div class="text-xs font-mono font-bold c-accent mb-2">⚡ CodeDNA Empirical Intelligence</div>
+                        <ul class="text-xs font-mono c-body space-y-1.5">
+                            <li>✓ Anti-Burstiness Filtering (penalizes commit dumps)</li>
+                            <li>✓ Shannon Polyglot Entropy (measures stack breadth)</li>
+                            <li>✓ Architectural Rigor (evaluates CI/CD and tests)</li>
+                            <li>✓ Vector Career Fit (identifies highest leverage skill)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- 4. LIVE DEVELOPER REST API MART -->
+        <!-- ===================================================================== -->
+        <section id="apiSection" class="glass-card p-6 sm:p-8 mb-16">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                <div>
+                    <h3 class="text-sm font-bold c-head font-mono flex items-center gap-2">
+                        <span class="c-accent">GET</span>
+                        <span>/api/profile?username=<span id="apiTerminalUser">shrutirai29</span></span>
+                    </h3>
+                    <p class="text-xs c-sub font-mono mt-0.5">Live JSON payload accessible by recruiting pipelines, automated screening bots, and analytics marts.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="copyApiUrl()" class="px-3.5 py-1.5 rounded-full glass-sub text-xs font-mono c-body hover:opacity-80 transition-opacity">
+                        <span id="copyBtnText">Copy Endpoint</span>
+                    </button>
+                    <a id="viewJsonLink" href="/api/profile?username=shrutirai29" target="_blank" class="px-3.5 py-1.5 rounded-full text-xs font-mono c-accent font-bold transition-opacity hover:opacity-80" style="background-color: var(--cyan-bg); border: 1px solid var(--cyan-border);">
+                        View Raw JSON ↗
+                    </a>
+                </div>
+            </div>
+
+            <pre class="bg-zinc-950 p-4 rounded-xl border border-white/10 text-xs font-mono text-cyan-400 overflow-x-auto"><code id="apiSnippetPreview">Loading live payload...</code></pre>
         </section>
 
     </main>
 
-    <!-- Floating Dock (Bottom Navigation) -->
-    <div class="floating-capsule-nav !top-auto bottom-6 hidden sm:flex items-center gap-1 font-mono text-xs shadow-2xl">
-        <button onclick="jumpToSection('#heroSection')" class="px-3 py-1 rounded-full hover:opacity-75 transition-opacity" title="Hero">Atelier</button>
-        <button onclick="jumpToSection('#architectureSection')" class="px-3 py-1 rounded-full hover:opacity-75 transition-opacity c-accent font-bold" title="Architecture">Pipeline</button>
-        <button onclick="jumpToSection('#overviewSection')" class="px-3 py-1 rounded-full hover:opacity-75 transition-opacity" title="Profile">Profile</button>
-        <button onclick="jumpToSection('#twinSection')" class="px-3 py-1 rounded-full hover:opacity-75 transition-opacity" title="Digital Twin">Twin</button>
-        <button onclick="jumpToSection('#dnaSection')" class="px-3 py-1 rounded-full hover:opacity-75 transition-opacity" title="Tech DNA">DNA</button>
-        <button onclick="jumpToSection('#projectsSection')" class="px-3 py-1 rounded-full hover:opacity-75 transition-opacity" title="Projects">Projects</button>
-        <button onclick="jumpToSection('#careerSection')" class="px-3 py-1 rounded-full hover:opacity-75 transition-opacity" title="Careers">Careers</button>
-        <div class="w-[1px] h-4 mx-1" style="background-color: var(--border-hairline);"></div>
-        <button onclick="toggleTheme()" class="px-2.5 py-1 hover:opacity-75" title="Toggle Theme">🌓</button>
-    </div>
-
-    <!-- Editorial Footer -->
-    <footer class="border-t py-12 text-center text-xs font-mono c-sub" style="border-color: var(--border-hairline);">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <!-- Footer -->
+    <footer class="border-t py-10 text-center text-xs font-mono c-sub" style="border-color: var(--border-hairline);">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-                <strong class="font-display font-black c-head tracking-wider text-sm">CODEDNA</strong> • Developer Career Intelligence Platform
+                <strong class="c-head">CODEDNA</strong> • Developer Career Intelligence Platform
             </div>
             <div>
-                Engineered with Python 3.11 • Three.js WebGL • Scikit-Learn • FastAPI Serverless
+                Python 3.11 • Three.js WebGL • Scikit-Learn • FastAPI Serverless
             </div>
         </div>
     </footer>
 
     <!-- Command Palette (⌘K) Modal -->
     <div id="cmdPalette" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start justify-center pt-24 p-4">
-        <div class="max-w-lg w-full editorial-card shadow-2xl p-5 overflow-hidden">
-            <div class="flex items-center gap-2 border-b pb-3 mb-4" style="border-color: var(--border-hairline);">
+        <div class="max-w-lg w-full glass-card shadow-2xl p-4 overflow-hidden">
+            <div class="flex items-center gap-2 border-b pb-3 mb-3" style="border-color: var(--border-hairline);">
                 <span class="font-mono font-bold c-accent">⌘</span>
                 <input 
                     type="text" 
                     id="cmdSearchInput" 
-                    placeholder="Jump to a section or load a profile..." 
+                    placeholder="Search section or switch persona..." 
                     oninput="filterCmdPalette()"
                     class="w-full bg-transparent text-sm c-head font-mono focus:outline-none placeholder-zinc-500"
                 />
                 <button onclick="toggleCmdPalette()" class="c-sub hover:opacity-80 text-xs font-mono">ESC</button>
             </div>
             <div class="space-y-1 font-mono text-xs max-h-64 overflow-y-auto" id="cmdResults">
-                <div onclick="jumpToSection('#architectureSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body editorial-sub">
-                    <span>01 / Empirical Architecture</span>
-                    <span class="c-sub">Pipeline</span>
+                <div onclick="switchTab('overview'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
+                    <span>01 Overview & Intelligence Score</span>
+                    <span class="c-sub">Cockpit</span>
                 </div>
-                <div onclick="jumpToSection('#overviewSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body editorial-sub">
-                    <span>02 / Genomic Phenotype</span>
-                    <span class="c-sub">Profile</span>
+                <div onclick="switchTab('radar'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
+                    <span>02 7D Digital Twin Radar</span>
+                    <span class="c-sub">Cockpit</span>
                 </div>
-                <div onclick="jumpToSection('#twinSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body editorial-sub">
-                    <span>03 / The Digital Twin</span>
-                    <span class="c-sub">7D Radar</span>
+                <div onclick="switchTab('dna'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
+                    <span>03 Technology Ecosystem</span>
+                    <span class="c-sub">Cockpit</span>
                 </div>
-                <div onclick="jumpToSection('#dnaSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body editorial-sub">
-                    <span>04 / Technological Ecosystem</span>
-                    <span class="c-sub">DNA Graph</span>
+                <div onclick="switchTab('velocity'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
+                    <span>04 Growth Velocity & Rhythm</span>
+                    <span class="c-sub">Cockpit</span>
                 </div>
-                <div onclick="jumpToSection('#rhythmSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body editorial-sub">
-                    <span>05 / Temporal Chronometry</span>
-                    <span class="c-sub">Rhythm</span>
+                <div onclick="switchTab('projects'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
+                    <span>05 Audited Repositories</span>
+                    <span class="c-sub">Cockpit</span>
                 </div>
-                <div onclick="jumpToSection('#projectsSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body editorial-sub">
-                    <span>06 / Audited Repositories</span>
-                    <span class="c-sub">Projects</span>
-                </div>
-                <div onclick="jumpToSection('#careerSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body editorial-sub">
-                    <span>07 / Synthetic Career Radar</span>
-                    <span class="c-sub">Careers</span>
+                <div onclick="switchTab('careers'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
+                    <span>06 Career Role Matching</span>
+                    <span class="c-sub">Cockpit</span>
                 </div>
             </div>
         </div>
@@ -2017,7 +1737,7 @@ def index_html():
 
         // --- 1. WeEvolveIT Card Candle Glow Cursor Tracking ---
         document.addEventListener('mousemove', (e) => {{
-            const cards = document.querySelectorAll('.editorial-card');
+            const cards = document.querySelectorAll('.glass-card');
             cards.forEach(card => {{
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -2027,7 +1747,27 @@ def index_html():
             }});
         }});
 
-        // --- 2. Full-Screen Interactive 3D WebGL Cosmos (Three.js) ---
+        // --- 2. Interactive Cockpit Tab Switcher ---
+        function switchTab(tabId) {{
+            document.querySelectorAll('.cockpit-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.cockpit-view').forEach(v => v.classList.add('hidden'));
+
+            const activeBtn = document.getElementById('tab-' + tabId);
+            const activeView = document.getElementById('view-' + tabId);
+            if (activeBtn) activeBtn.classList.add('active');
+            if (activeView) activeView.classList.remove('hidden');
+
+            if (currentProfile) {{
+                if (tabId === 'radar') renderRadarChart(currentProfile.dimensions);
+                if (tabId === 'dna') renderDnaNetwork(currentProfile.dna_nodes || []);
+                if (tabId === 'velocity') {{
+                    renderVelocityTimeline(currentProfile.growth_timeline || []);
+                    renderPunchcard(currentProfile.rhythm);
+                }}
+            }}
+        }}
+
+        // --- 3. Full-Screen Three.js WebGL Helix Cosmos ---
         let helixGroup, scene, camera, renderer, starPoints, matA, matB, lineMat, starMat;
         let mouseX = 0, mouseY = 0;
         let targetRotationX = 0, targetRotationY = 0;
@@ -2072,21 +1812,18 @@ def index_html():
                 const y = (t - 0.5) * helixHeight;
                 const angle = t * Math.PI * 2 * turns;
 
-                // Strand A
                 const xA = Math.cos(angle) * radius;
                 const zA = Math.sin(angle) * radius;
                 const nodeA = new THREE.Mesh(geomA, matA);
                 nodeA.position.set(xA, y, zA);
                 helixGroup.add(nodeA);
 
-                // Strand B
                 const xB = Math.cos(angle + Math.PI) * radius;
                 const zB = Math.sin(angle + Math.PI) * radius;
                 const nodeB = new THREE.Mesh(geomB, matB);
                 nodeB.position.set(xB, y, zB);
                 helixGroup.add(nodeB);
 
-                // Connecting Base Pairs
                 if (i % 2 === 0) {{
                     const lineGeom = new THREE.BufferGeometry().setFromPoints([
                         new THREE.Vector3(xA, y, zA),
@@ -2148,20 +1885,18 @@ def index_html():
             starMat.opacity = isLight ? 0.65 : 0.55;
         }}
 
-        // --- 3. Profile Rendering Machine ---
+        // --- 4. Profile Machine ---
         function renderProfile(p) {{
             currentProfile = p;
 
-            // Identity Dossier
+            document.getElementById('cockpitTargetName').textContent = p.name;
             document.getElementById('profileAvatar').src = p.avatar_url || 'https://avatars.githubusercontent.com/u/167513467?v=4';
             document.getElementById('profileName').textContent = p.name;
             document.getElementById('profileHandle').textContent = '@' + p.username;
-            document.getElementById('profileTitle').textContent = p.title || 'Software Engineer';
-            document.getElementById('profileLocation').textContent = p.location || 'India';
-            document.getElementById('profileBio').textContent = p.bio || 'Public GitHub profile.';
+            document.getElementById('profileTitle').textContent = (p.title || 'Software Engineer') + ' • ' + (p.location || 'India');
             document.getElementById('statRepos').textContent = p.public_repos;
             document.getElementById('statFollowers').textContent = p.followers;
-            document.getElementById('statAge').textContent = p.account_age || '2.4 years';
+            document.getElementById('statAge').textContent = p.account_age || '2.4y';
 
             const demoBadge = document.getElementById('demoBadge');
             if (p.is_demo) {{
@@ -2170,13 +1905,12 @@ def index_html():
                 demoBadge.style.backgroundColor = 'rgba(245, 158, 11, 0.15)';
                 demoBadge.style.borderColor = 'rgba(245, 158, 11, 0.35)';
             }} else {{
-                demoBadge.textContent = 'Verified GitHub Identity';
+                demoBadge.textContent = 'Verified Live';
                 demoBadge.style.color = 'var(--cyan-accent)';
                 demoBadge.style.backgroundColor = 'var(--cyan-bg)';
                 demoBadge.style.borderColor = 'var(--cyan-border)';
             }}
 
-            // Score Wheel
             animateNumber('scoreNumber', p.score);
             const circle = document.getElementById('scoreProgressCircle');
             const circumference = 440;
@@ -2185,19 +1919,14 @@ def index_html():
 
             document.getElementById('scoreVelocityBadge').textContent = p.velocity_growth || '+42% YoY';
 
-            // KPI Showcase values
             animateNumber('careerMatchKpiVal', p.top_fit || 89.5, '%');
             document.getElementById('careerMatchKpiRole').textContent = p.top_career || 'Full-Stack Developer';
             animateNumber('consistencyKpiVal', p.consistency || 84, ' / 100');
             animateNumber('portfolioHealthKpiVal', p.portfolio_health || 92, ' / 100');
 
-            // Competency Dimension Bars
             renderDimensionBars(p.dimensions);
-
-            // 7D Radar Chart
             renderRadarChart(p.dimensions);
 
-            // Archetype
             document.getElementById('archetypeName').textContent = p.archetype;
             document.getElementById('archetypeTagline').textContent = p.archetype_tagline;
             document.getElementById('archetypeBadge').textContent = p.archetype_badge;
@@ -2205,43 +1934,36 @@ def index_html():
             const evList = document.getElementById('archetypeEvidenceList');
             evList.innerHTML = (p.strengths || []).map(s => `<li>✓ ${{s}}</li>`).join('');
 
-            // Technology DNA Network
             renderDnaNetwork(p.dna_nodes || []);
 
-            // Skill Momentum Board
             const momList = document.getElementById('momentumList');
             momList.innerHTML = (p.momentum || []).map(m => `
-                <div class="p-3 rounded-xl editorial-sub flex items-center justify-between text-xs font-mono">
+                <div class="p-2.5 rounded-xl glass-sub flex items-center justify-between text-xs font-mono">
                     <div>
                         <strong class="c-head">${{m.skill}}</strong>
                         <div class="text-[11px] c-sub">${{m.recent}}</div>
                     </div>
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold" style="background: ${{m.color}}20; color: ${{m.color}}; border: 1px solid ${{m.color}}40;">${{m.trend}}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background: ${{m.color}}20; color: ${{m.color}}; border: 1px solid ${{m.color}}40;">${{m.trend}}</span>
                 </div>
             `).join('');
 
-            // Growth Velocity Timeline
             renderVelocityTimeline(p.growth_timeline || []);
-
-            // Rhythm Heatmap
             renderPunchcard(p.rhythm);
 
-            // Consistency Index
-            document.getElementById('consistencyScoreVal').textContent = `${{p.consistency}} / 100`;
+            document.getElementById('consistencyScoreVal').textContent = `Consistency: ${{p.consistency}} / 100`;
 
-            // Audited Projects
             const projGrid = document.getElementById('projectCardsGrid');
             projGrid.innerHTML = (p.projects || []).map(pr => `
-                <div class="editorial-card p-6 flex flex-col justify-between group">
+                <div class="glass-card p-5 flex flex-col justify-between group">
                     <div>
-                        <div class="flex items-center justify-between gap-2 mb-3">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">${{pr.complexity}} COMPLEXITY</span>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">${{pr.complexity}}</span>
                             <span class="text-amber-500 font-bold text-xs">${{pr.rating}}</span>
                         </div>
-                        <h4 class="font-display font-bold text-lg c-head tracking-tight mb-2 group-hover:opacity-80 transition-opacity">${{pr.name}}</h4>
-                        <p class="text-xs c-body mb-4 leading-relaxed">${{pr.description}}</p>
+                        <h4 class="font-bold text-base c-head tracking-tight mb-1 group-hover:opacity-80 transition-opacity">${{pr.name}}</h4>
+                        <p class="text-xs c-body mb-3 leading-relaxed">${{pr.description}}</p>
                     </div>
-                    <div class="pt-4 border-t text-[11px] font-mono c-sub space-y-1.5" style="border-color: var(--border-hairline);">
+                    <div class="pt-3 border-t text-[11px] font-mono c-sub space-y-1" style="border-color: var(--border-hairline);">
                         <div>Tech: <span class="c-head font-medium">${{pr.tech}}</span></div>
                         <div class="flex justify-between c-sub">
                             <span>⭐ ${{pr.stars}} stars</span>
@@ -2251,10 +1973,8 @@ def index_html():
                 </div>
             `).join('');
 
-            // Career Leaderboard
             renderCareerBars(p.careers || []);
 
-            // Skill Gaps & Next Best Skill
             renderSkillGaps(p.gaps_categorized || {{}});
             if (p.next_best_skill) {{
                 document.getElementById('nextSkillName').textContent = p.next_best_skill.skill;
@@ -2262,10 +1982,8 @@ def index_html():
                 document.getElementById('nextSkillLeverage').textContent = p.next_best_skill.leverage;
             }}
 
-            // Peer Percentiles
             renderPeerBenchmarking(p.peer_percentiles || {{}});
 
-            // API Terminal Preview
             document.getElementById('apiTerminalUser').textContent = p.username;
             document.getElementById('viewJsonLink').href = `/api/profile?username=${{p.username}}`;
             document.getElementById('apiSnippetPreview').textContent = JSON.stringify({{
@@ -2278,7 +1996,7 @@ def index_html():
             }}, null, 2);
         }}
 
-        // --- 4. Dimension Bars Animation ---
+        // --- 5. Dimension Bars ---
         function renderDimensionBars(dims) {{
             const container = document.getElementById('dimensionBars');
             const labels = [
@@ -2292,18 +2010,18 @@ def index_html():
 
             container.innerHTML = labels.map(([label, val, color]) => `
                 <div>
-                    <div class="flex justify-between text-xs font-mono mb-1.5">
+                    <div class="flex justify-between text-xs font-mono mb-1">
                         <span class="c-body font-medium">${{label}}</span>
                         <span class="font-bold c-head">${{val}} / 100</span>
                     </div>
-                    <div class="w-full h-2 rounded-full overflow-hidden" style="background-color: var(--bar-track);">
+                    <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: var(--bar-track);">
                         <div class="h-full rounded-full transition-all duration-1000 ease-out" style="width: ${{val}}%; background-color: ${{color}};"></div>
                     </div>
                 </div>
             `).join('');
         }}
 
-        // --- 5. Radar SVG Visualizer ---
+        // --- 6. Radar Visualizer ---
         function renderRadarChart(dims) {{
             const svg = document.getElementById('radarSvg');
             const cx = 150, cy = 150, maxR = 105;
@@ -2313,7 +2031,7 @@ def index_html():
 
             const isLight = document.documentElement.classList.contains('light');
             const gridColor = isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)';
-            const polyFill = isLight ? 'rgba(2, 132, 199, 0.22)' : 'rgba(0, 240, 255, 0.28)';
+            const polyFill = isLight ? 'rgba(2, 132, 199, 0.22)' : 'rgba(0, 240, 255, 0.25)';
             const polyStroke = isLight ? '#0284C7' : '#00F0FF';
             const nodeStroke = isLight ? '#FFFFFF' : '#09090B';
             const textColor = isLight ? '#52525B' : '#D4D4D8';
@@ -2362,15 +2080,15 @@ def index_html():
         }}
 
         function showRadarTooltip(label, val) {{
-            document.getElementById('radarHoverLabel').textContent = `Metric: ${{label}} — Empirical observable signals verified`;
+            document.getElementById('radarHoverLabel').textContent = `Metric: ${{label}} — Empirical signal verified`;
             document.getElementById('radarHoverScore').textContent = `${{val}} / 100`;
         }}
         function resetRadarTooltip() {{
-            document.getElementById('radarHoverLabel').textContent = 'Hover on any polygon node to inspect empirical signals';
+            document.getElementById('radarHoverLabel').textContent = 'Hover on any vertex node to inspect empirical signals';
             document.getElementById('radarHoverScore').textContent = '';
         }}
 
-        // --- 6. Technology DNA Interactive SVG Network ---
+        // --- 7. Technology DNA Network ---
         function renderDnaNetwork(nodes) {{
             const svg = document.getElementById('dnaNetworkSvg');
             if (!nodes || nodes.length === 0) return;
@@ -2383,7 +2101,7 @@ def index_html():
             let html = '';
             const cx = 250, cy = 150;
 
-            html += `<circle cx="${{cx}}" cy="${{cy}}" r="25" fill="${{nodeFill}}" stroke="${{strokeColor}}" stroke-width="2.5"/>`;
+            html += `<circle cx="${{cx}}" cy="${{cy}}" r="24" fill="${{nodeFill}}" stroke="${{strokeColor}}" stroke-width="2.5"/>`;
             html += `<text x="${{cx}}" y="${{cy + 4}}" font-family="JetBrains Mono" font-weight="bold" font-size="9" fill="${{centerText}}" text-anchor="middle">CODEDNA</text>`;
 
             const childNodes = nodes.filter(n => n.id !== 'developer');
@@ -2413,7 +2131,7 @@ def index_html():
             text.innerHTML = `<strong>${{name}}</strong> • Usage: <span class="c-accent font-bold">${{usage}}</span> • Projects: <span class="c-head">${{projects}}</span> • Momentum: <span class="font-bold" style="color: var(--emerald-accent);">${{momentum}}</span>`;
         }}
 
-        // --- 7. Growth Velocity Timeline Graph ---
+        // --- 8. Growth Velocity Timeline ---
         function renderVelocityTimeline(timeline) {{
             const svg = document.getElementById('velocitySvg');
             if (!timeline || timeline.length === 0) return;
@@ -2463,7 +2181,7 @@ def index_html():
 
             const chipBox = document.getElementById('velocityYearChips');
             chipBox.innerHTML = timeline.map(t => `
-                <button onclick="selectTimelineYear('${{t.year}}')" class="px-3 py-1 rounded-full editorial-sub hover:border-cyan-500 c-body font-mono transition-colors">${{t.year}}</button>
+                <button onclick="selectTimelineYear('${{t.year}}')" class="px-2.5 py-0.5 rounded-full glass-sub hover:border-cyan-500 c-body font-mono transition-colors text-[11px]">${{t.year}}</button>
             `).join('');
 
             selectTimelineYear(timeline[timeline.length - 1].year);
@@ -2471,13 +2189,13 @@ def index_html():
 
         function selectTimelineYear(yr) {{
             const item = (currentProfile.growth_timeline || []).find(t => t.year === yr) || currentProfile.growth_timeline[currentProfile.growth_timeline.length - 1];
-            document.getElementById('snapshotYear').textContent = `${{item.year}} Trajectory Snapshot:`;
+            document.getElementById('snapshotYear').textContent = `${{item.year}} Snapshot:`;
             document.getElementById('snapshotNote').textContent = item.note;
             document.getElementById('snapshotDepth').textContent = item.depth;
             document.getElementById('snapshotComplexity').textContent = item.complexity;
         }}
 
-        // --- 8. Rhythm 7x24 Heatmap Matrix ---
+        // --- 9. Rhythm Heatmap ---
         function renderPunchcard(rhythm) {{
             const container = document.getElementById('punchcardMatrix');
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -2492,11 +2210,11 @@ def index_html():
                     const isPeakDay = (rhythm.peak_day && rhythm.peak_day.toLowerCase().includes(d.toLowerCase()));
                     const isPeakHour = (h >= 17 && h <= 22);
                     const opacity = isPeakDay && isPeakHour ? 0.95 : (isPeakHour ? 0.55 : 0.15);
-                    cells += `<span class="w-full h-3 rounded-[2px] transition-all hover:scale-125" style="background-color: ${{cellBase}}${{opacity}});" title="${{d}} ${{h}}:00"></span>`;
+                    cells += `<span class="w-full h-2.5 rounded-[2px] transition-all hover:scale-125" style="background-color: ${{cellBase}}${{opacity}});" title="${{d}} ${{h}}:00"></span>`;
                 }}
                 html += `
                     <div class="flex items-center gap-2">
-                        <span class="text-[10px] font-mono c-sub w-6">${{d}}</span>
+                        <span class="text-[9px] font-mono c-sub w-6">${{d}}</span>
                         <div class="grid grid-cols-24 gap-1 flex-1">${{cells}}</div>
                     </div>
                 `;
@@ -2504,54 +2222,54 @@ def index_html():
 
             container.innerHTML = html;
             if (rhythm.insight) {{
-                document.getElementById('rhythmInsightBox').innerHTML = `<strong>Focus Rhythm:</strong> ${{rhythm.insight}}`;
+                document.getElementById('rhythmInsightBox').innerHTML = `<strong>Focus Observation:</strong> ${{rhythm.insight}}`;
             }}
         }}
 
-        // --- 9. Career Role Progress Bars ---
+        // --- 10. Career Bars ---
         function renderCareerBars(careers) {{
             const container = document.getElementById('careerBarsContainer');
             container.innerHTML = careers.map(c => `
-                <div class="p-4 rounded-xl editorial-sub">
-                    <div class="flex justify-between items-center text-xs font-mono mb-2">
+                <div class="p-3.5 rounded-xl glass-sub">
+                    <div class="flex justify-between items-center text-xs font-mono mb-1.5">
                         <span class="c-head font-bold text-sm">${{c.role}}</span>
                         <span class="c-accent font-black font-mono text-sm">${{c.fit}}%</span>
                     </div>
-                    <div class="w-full h-2 rounded-full overflow-hidden mb-2.5" style="background-color: var(--bar-track);">
+                    <div class="w-full h-1.5 rounded-full overflow-hidden mb-2" style="background-color: var(--bar-track);">
                         <div class="bg-gradient-to-r from-cyan-500 to-indigo-500 h-full rounded-full" style="width: ${{c.fit}}%;"></div>
                     </div>
                     <div class="flex flex-wrap gap-1.5 text-[10px] font-mono">
-                        ${{(c.strengths || []).map(s => `<span class="px-2 py-0.5 rounded-full border" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border-color: rgba(16, 185, 129, 0.35);">✓ ${{s}}</span>`).join('')}}
-                        ${{(c.gaps || []).map(g => `<span class="px-2 py-0.5 rounded-full border" style="background-color: rgba(244, 63, 94, 0.15); color: var(--rose-accent); border-color: rgba(244, 63, 94, 0.35);">gap: ${{g}}</span>`).join('')}}
+                        ${{(c.strengths || []).map(s => `<span class="px-1.5 py-0.5 rounded-full border" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border-color: rgba(16, 185, 129, 0.35);">✓ ${{s}}</span>`).join('')}}
+                        ${{(c.gaps || []).map(g => `<span class="px-1.5 py-0.5 rounded-full border" style="background-color: rgba(244, 63, 94, 0.15); color: var(--rose-accent); border-color: rgba(244, 63, 94, 0.35);">gap: ${{g}}</span>`).join('')}}
                     </div>
                 </div>
             `).join('');
         }}
 
-        // --- 10. Categorized Skill Gaps ---
+        // --- 11. Skill Gaps ---
         function renderSkillGaps(gaps) {{
             const box = document.getElementById('skillGapsList');
             let html = '';
             if (gaps.critical) {{
                 html += `
-                    <div class="p-3.5 rounded-xl border" style="background-color: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.28);">
-                        <span class="text-[10px] font-bold uppercase font-mono tracking-wider" style="color: var(--rose-accent);">Critical Gaps:</span>
-                        <div class="text-xs c-body font-mono mt-1">${{gaps.critical.join(' • ')}}</div>
+                    <div class="p-2.5 rounded-lg border" style="background-color: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.28);">
+                        <span class="text-[9px] font-bold uppercase font-mono tracking-wider" style="color: var(--rose-accent);">Critical:</span>
+                        <div class="text-xs c-body font-mono mt-0.5">${{gaps.critical.join(' • ')}}</div>
                     </div>
                 `;
             }}
             if (gaps.important) {{
                 html += `
-                    <div class="p-3.5 rounded-xl border" style="background-color: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.28);">
-                        <span class="text-[10px] font-bold uppercase font-mono tracking-wider" style="color: var(--amber-accent);">Important Gaps:</span>
-                        <div class="text-xs c-body font-mono mt-1">${{gaps.important.join(' • ')}}</div>
+                    <div class="p-2.5 rounded-lg border" style="background-color: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.28);">
+                        <span class="text-[9px] font-bold uppercase font-mono tracking-wider" style="color: var(--amber-accent);">Important:</span>
+                        <div class="text-xs c-body font-mono mt-0.5">${{gaps.important.join(' • ')}}</div>
                     </div>
                 `;
             }}
             box.innerHTML = html;
         }}
 
-        // --- 11. Peer Benchmarking Percentiles ---
+        // --- 12. Peer Benchmarks ---
         function renderPeerBenchmarking(pcts) {{
             const box = document.getElementById('benchmarkPercentiles');
             const items = [
@@ -2562,18 +2280,18 @@ def index_html():
             ];
             box.innerHTML = items.map(([k, v]) => `
                 <div>
-                    <div class="flex justify-between text-xs font-mono mb-1.5">
+                    <div class="flex justify-between text-xs font-mono mb-1">
                         <span class="c-body">${{k}}</span>
                         <span class="c-accent font-bold">${{v}}th %ile</span>
                     </div>
-                    <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: var(--bar-track);">
+                    <div class="w-full h-1 rounded-full overflow-hidden" style="background-color: var(--bar-track);">
                         <div class="h-full rounded-full" style="width: ${{v}}%; background-color: var(--cyan-accent);"></div>
                     </div>
                 </div>
             `).join('');
         }}
 
-        // --- 12. Utilities & Interaction Helpers ---
+        // --- 13. Utilities ---
         function animateNumber(elementId, target, suffix = '') {{
             const el = document.getElementById(elementId);
             if (!el) return;
