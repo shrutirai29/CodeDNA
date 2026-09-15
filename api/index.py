@@ -944,13 +944,33 @@ def simulate_career_path(role: str = Query("Data Scientist"), skills: str = Quer
 # =====================================================================
 # CODEDNA TRAINED MACHINE LEARNING AI AGENT INTEGRATION
 # =====================================================================
+TRAINED_AGENT_ERROR = None
+TrainedCodeDNAAgent = None
+
 try:
     from ml.chatbot_agent import TrainedCodeDNAAgent
-except ImportError:
-    import sys
-    from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from ml.chatbot_agent import TrainedCodeDNAAgent
+except Exception as _e1:
+    try:
+        import sys
+        from pathlib import Path
+        _root = Path(__file__).resolve().parent.parent
+        if str(_root) not in sys.path:
+            sys.path.insert(0, str(_root))
+        from ml.chatbot_agent import TrainedCodeDNAAgent
+    except Exception as _e2:
+        TRAINED_AGENT_ERROR = f"direct={_e1}; parent={_e2}"
+
+
+@app.get("/api/diagnostic")
+def get_diagnostic():
+    import sys, os
+    return {
+        "agent_loaded": TrainedCodeDNAAgent is not None,
+        "error": TRAINED_AGENT_ERROR,
+        "cwd": os.getcwd(),
+        "files_in_cwd": os.listdir(".") if os.path.exists(".") else [],
+        "sys_path": sys.path[:5]
+    }
 
 
 @app.post("/api/chat")
@@ -965,13 +985,30 @@ async def chat_post(request: Request):
     except Exception:
         data = {}
     message = str(data.get("message", "")).strip()
-    result = TrainedCodeDNAAgent.answer(message)
-    return result
+
+    if TrainedCodeDNAAgent is None:
+        return {
+            "response": f"AI Assistant is initializing or encountered an environment loading issue: {TRAINED_AGENT_ERROR}",
+            "topic": "Environment Error",
+            "confidence": 0.0,
+            "in_scope": False,
+            "intent": "error"
+        }
+
+    return TrainedCodeDNAAgent.answer(message)
 
 
 @app.get("/api/chat")
 def chat_get(message: str = Query(default="hi", description="User question")):
     """GET endpoint for CodeDNA Trained AI Assistant for quick testing."""
+    if TrainedCodeDNAAgent is None:
+        return {
+            "response": f"AI Assistant is initializing or encountered an environment loading issue: {TRAINED_AGENT_ERROR}",
+            "topic": "Environment Error",
+            "confidence": 0.0,
+            "in_scope": False,
+            "intent": "error"
+        }
     return TrainedCodeDNAAgent.answer(message)
 
 @app.post("/api/simulate")
