@@ -57,6 +57,12 @@ def test_trained_agent_platform_queries():
     assert res_key["intent"] == "api_key_auth"
     assert "No API key" in res_key["response"] or "API" in res_key["response"]
 
+    # Analysis process question
+    res_analysis = TrainedCodeDNAAgent.answer("how is the analysis happening")
+    assert res_analysis["in_scope"] is True
+    assert res_analysis["intent"] == "how_to_analyze"
+    assert "3" in res_analysis["response"] or "Scan" in res_analysis["response"]
+
 
 def test_trained_agent_out_of_scope_rejection():
     # Unrelated queries must be classified as out_of_scope or below confidence threshold
