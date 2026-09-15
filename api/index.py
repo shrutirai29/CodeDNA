@@ -971,6 +971,7 @@ class CodeDNAChatEngine:
         ("shruti_rai", re.compile(r'\b(shruti|shruti rai|creator|shrutirai29|featured profile|rashtriya raksha)\b', re.IGNORECASE)),
         ("projects", re.compile(r'\b(projects|repos|repositories|study-roulette|code4nature|leetcode|fleetra|sih)\b', re.IGNORECASE)),
         ("career_matching", re.compile(r'\b(career(\s*match(ing)?)?|career recommendation|target role|roles|job readiness|next best skill|next skill|skill gap(s)?)\b', re.IGNORECASE)),
+        ("api_key", re.compile(r'\b(api\s*key|api\s*token|secret\s*key|access\s*token|auth|authentication|bearer|authorization)\b', re.IGNORECASE)),
         ("api", re.compile(r'\b(api|rest api|endpoint|json|curl|fetch|integration|webhook)\b', re.IGNORECASE)),
         ("analyze_search", re.compile(r'\b(how to (analyze|decode|search|use)|enter username|input|different profile|another user|search bar)\b', re.IGNORECASE)),
         ("theme", re.compile(r'\b(theme|light mode|dark mode|toggle theme|studio light|dark void)\b', re.IGNORECASE)),
@@ -1078,10 +1079,20 @@ class CodeDNAChatEngine:
             "• **Backend Engineer:** 80.0% fit\n\n"
             "🚀 **Next Best Skill:** **Docker & Containerization** — provides a +10% readiness lift across SDE & Full-Stack roles by enabling 1-click cloud deployments."
         ),
+        "api_key": (
+            "🔑 **No API Key Required (Open Access)**\n\n"
+            "The **CodeDNA Developer REST API is 100% public, free, and unauthenticated** — no API key, bearer token, or registration is required!\n\n"
+            "You can query public developer digital twins directly from your browser, terminal, or backend code:\n"
+            "• **Public Endpoint:** `GET /api/profile?username={handle}`\n"
+            "• **Live Example:** `/api/profile?username=shrutirai29`\n"
+            "• **Headers Needed:** None! No `Authorization` or `X-API-Key` headers are needed.\n\n"
+            "Just send an HTTP GET request using `fetch`, `requests`, or `curl` to receive live empirical JSON payloads."
+        ),
         "api": (
-            "⚡ **CodeDNA Developer REST API**\n\n"
-            "CodeDNA exposes a high-performance REST API for recruiting tools and analytics marts:\n\n"
+            "⚡ **CodeDNA Developer REST API (No API Key Required)**\n\n"
+            "CodeDNA exposes a high-performance, open REST API for recruiting tools and analytics marts without requiring any API key or authentication:\n\n"
             "• **Endpoint:** `GET /api/profile?username={handle}`\n"
+            "• **Authentication:** None (100% Free & Open Access)\n"
             "• **Example:** `/api/profile?username=shrutirai29`\n"
             "• **Output:** Clean, empirical JSON with intelligence quotient, 7D dimensions, technology DNA nodes, growth timeline, and career matches.\n\n"
             "You can click **'Copy Endpoint'** or **'View Raw JSON ↗'** in Section 04 of the page to test it live!"

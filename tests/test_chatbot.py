@@ -47,6 +47,12 @@ def test_engine_platform_queries():
     assert res_api["in_scope"] is True
     assert "/api/profile" in res_api["response"]
 
+    # API Key specific question
+    res_key = CodeDNAChatEngine.answer("what is the api key")
+    assert res_key["in_scope"] is True
+    assert res_key["topic"] == "api_key"
+    assert "No API Key Required" in res_key["response"]
+
 
 def test_engine_out_of_scope_rejection():
     # Unrelated queries must be strictly rejected
