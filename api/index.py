@@ -2888,10 +2888,7 @@ def index_html():
                 launcher.classList.add('hidden');
                 if (chatHistory.length === 0) {{
                     appendBotMessage(
-                        "👋 **Greetings! I am CodeDNA Platform Assistant.**\n\n" +
-                        "I can answer questions about the **CodeDNA platform**, developer intelligence metrics, scoring formulas, and Shruti Rai's profile.\n\n" +
-                        "*(Note: I strictly decline off-topic queries to keep conversations focused.)*\n\n" +
-                        "What would you like to explore?"
+                        "👋 **Greetings! I am CodeDNA Platform Assistant.**\\n\\nI can answer questions about the **CodeDNA platform**, developer intelligence metrics, scoring formulas, and Shruti Rai's profile.\\n\\n*(Note: I strictly decline off-topic queries to keep conversations focused.)*\\n\\nWhat would you like to explore?"
                     );
                 }}
                 setTimeout(() => document.getElementById('chatInput').focus(), 50);
@@ -2985,20 +2982,15 @@ def index_html():
         }}
 
         function formatBotMarkdown(str) {{
+            if (!str) return '';
             let html = escapeHtml(str);
-            // Bold **text**
             html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="c-head font-bold">$1</strong>');
-            // Bullet points
             html = html.replace(/^[•\-]\s+(.*)$/gm, '<li class="ml-3">$1</li>');
-            // Math equations $$\\text{...}$$
             html = html.replace(/\$\$(.*?)\$\$/g, '<div class="p-1.5 my-1 rounded glass-card font-mono text-[11px] text-center c-accent">$1</div>');
-            // Numbered lists
             html = html.replace(/^(\d+\.)\s+(.*)$/gm, '<div class="ml-1 my-0.5"><strong class="c-accent">$1</strong> $2</div>');
-            // Inline code `code`
             html = html.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded glass-sub font-mono text-[10px] c-accent font-bold">$1</code>');
-            // Line breaks
-            html = html.replace(/\n\n/g, '<div class="h-2"></div>');
-            html = html.replace(/\n/g, '<br>');
+            html = html.split('\\n\\n').join('<div class="h-2"></div>');
+            html = html.split('\\n').join('<br>');
             return html;
         }}
     </script>
