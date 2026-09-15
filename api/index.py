@@ -975,9 +975,9 @@ async def simulate_career_path_post(request: Request):
 @app.get("/", response_class=HTMLResponse)
 def index_html():
     """
-    Renders the flagship CodeDNA Single-Page Experience:
-    Ultra-visual, high-contrast, distraction-free developer intelligence platform.
-    Features dedicated 3D interactive hero stage and Shruti Rai's profile by default.
+    Renders the flagship CodeDNA Cyber-Laboratory Experience:
+    Futuristic full-screen 3D WebGL universe, frosted dark glassmorphism HUD panels,
+    and Shruti Rai's profile by default.
     """
     profiles_json = json.dumps(SAMPLE_PROFILES)
 
@@ -986,9 +986,9 @@ def index_html():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeDNA • 3D Developer Career Intelligence Platform</title>
-    <meta name="description" content="Turn your GitHub activity into an interactive 3D developer intelligence profile. Multi-dimensional behavioral scoring, ML archetype clustering, and predictive career radar.">
-    <meta name="theme-color" content="#07090E">
+    <title>CodeDNA • Futuristic 3D Developer Career Intelligence Platform</title>
+    <meta name="description" content="Turn your GitHub activity into an empirical 3D developer digital twin. Multi-dimensional behavioral scoring, ML archetype clustering, and predictive career radar.">
+    <meta name="theme-color" content="#060911">
     
     <!-- Fonts: Geist & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1003,22 +1003,17 @@ def index_html():
             theme: {{
                 extend: {{
                     fontFamily: {{
-                        sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     }},
                     colors: {{
-                        base: '#07090E',
-                        surface: '#0D1322',
-                        'surface-card': '#0E1424',
-                        'surface-elevated': '#151D30',
-                        cyan: {{
-                            DEFAULT: '#06B6D4',
-                            glow: 'rgba(6, 182, 212, 0.25)',
-                        }},
-                        indigo: {{
-                            DEFAULT: '#6366F1',
-                            glow: 'rgba(99, 102, 241, 0.25)',
-                        }}
+                        base: '#060911',
+                        surface: 'rgba(12, 18, 33, 0.80)',
+                        'cyber-cyan': '#00F0FF',
+                        'cyber-indigo': '#6366F1',
+                        'cyber-purple': '#A855F7',
+                        'cyber-emerald': '#00FF9D',
+                        'cyber-amber': '#FFB800'
                     }}
                 }}
             }}
@@ -1028,42 +1023,32 @@ def index_html():
     <!-- Three.js (r128) WebGL 3D Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <!-- CodeDNA High-Contrast Design System Stylesheet -->
+    <!-- Cyber-Laboratory Design System Stylesheet -->
     <style>
         :root {{
-            --bg-base: #07090E;
-            --bg-card: #0D1322;
-            --bg-card-hover: #141B2D;
-            --bg-elevated: #162035;
-            --border-subtle: rgba(255, 255, 255, 0.09);
-            --border-active: rgba(6, 182, 212, 0.5);
+            --bg-base: #060911;
+            --bg-card: rgba(12, 18, 33, 0.82);
+            --bg-card-hover: rgba(18, 26, 48, 0.90);
+            --border-cyber: rgba(0, 240, 255, 0.22);
+            --border-hover: rgba(0, 240, 255, 0.55);
             --text-primary: #FFFFFF;
             --text-secondary: #CBD5E1;
             --text-muted: #94A3B8;
-            --accent-cyan: #06B6D4;
-            --accent-indigo: #6366F1;
-            --accent-purple: #8B5CF6;
-            --accent-green: #10B981;
-            --accent-amber: #F59E0B;
-            --accent-rose: #F43F5E;
+            --cyan-glow: rgba(0, 240, 255, 0.35);
+            --indigo-glow: rgba(99, 102, 241, 0.35);
         }}
 
         .light {{
-            --bg-base: #F8FAFC;
-            --bg-card: #FFFFFF;
-            --bg-card-hover: #F1F5F9;
-            --bg-elevated: #E2E8F0;
-            --border-subtle: rgba(0, 0, 0, 0.09);
-            --border-active: rgba(6, 182, 212, 0.6);
-            --text-primary: #0F172A;
+            --bg-base: #F0F4F8;
+            --bg-card: rgba(255, 255, 255, 0.92);
+            --bg-card-hover: #FFFFFF;
+            --border-cyber: rgba(0, 180, 216, 0.3);
+            --border-hover: rgba(0, 180, 216, 0.7);
+            --text-primary: #0A0F1D;
             --text-secondary: #334155;
             --text-muted: #64748B;
-            --accent-cyan: #0891B2;
-            --accent-indigo: #4F46E5;
-            --accent-purple: #7C3AED;
-            --accent-green: #059669;
-            --accent-amber: #D97706;
-            --accent-rose: #E11D48;
+            --cyan-glow: rgba(0, 180, 216, 0.25);
+            --indigo-glow: rgba(79, 70, 229, 0.25);
         }}
 
         * {{
@@ -1074,66 +1059,75 @@ def index_html():
         body {{
             background-color: var(--bg-base);
             color: var(--text-primary);
-            font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Geist', sans-serif;
             overflow-x: hidden;
-            transition: background-color 0.25s ease, color 0.25s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }}
 
-        /* Subtle, non-distracting background grid */
-        .clean-grid {{
-            background-size: 32px 32px;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-        }}
-        .light .clean-grid {{
-            background-image: 
-                linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        /* Full-Screen 3D WebGL Canvas */
+        #webglCanvas {{
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            width: 100vw;
+            height: 100vh;
         }}
 
-        /* High-Contrast Solid Matte Cards (No blur bleed, 100% legible) */
-        .ui-card {{
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 1rem;
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        /* Soft Vignette Overlay for Crisp Foreground Contrast */
+        .vignette-overlay {{
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, rgba(6, 9, 17, 0.65) 0%, rgba(6, 9, 17, 0.92) 85%);
         }}
-        .ui-card:hover {{
-            border-color: var(--border-active);
-            box-shadow: 0 8px 30px -4px rgba(6, 182, 212, 0.15);
-        }}
-
-        /* Dedicated 3D Hologram Stage */
-        #hero3dContainer {{
-            background: radial-gradient(circle at center, #10172A 0%, #090E18 100%);
-            border: 1px solid rgba(6, 182, 212, 0.35);
-            box-shadow: 0 10px 40px -10px rgba(6, 182, 212, 0.2);
-        }}
-        .light #hero3dContainer {{
-            background: radial-gradient(circle at center, #EDF2F7 0%, #E2E8F0 100%);
-            border: 1px solid rgba(6, 182, 212, 0.4);
-            box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.15);
+        .light .vignette-overlay {{
+            background: radial-gradient(ellipse at center, rgba(240, 244, 248, 0.65) 0%, rgba(240, 244, 248, 0.92) 85%);
         }}
 
-        /* Floating HUD Telemetry Pills */
-        .hud-pill {{
-            background: rgba(13, 19, 34, 0.88);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 9999px;
-            padding: 0.35rem 0.75rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            color: #F8FAFC;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        /* Holographic Frosted Glass HUD Panels */
+        .hud-panel {{
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-cyber);
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.55);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }}
+        .hud-panel:hover {{
+            border-color: var(--border-hover);
+            box-shadow: 0 14px 40px -5px var(--cyan-glow);
+            transform: translateY(-2px);
+        }}
+
+        /* Cyber corner accents */
+        .hud-panel::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            border-top: 2px solid #00F0FF;
+            border-left: 2px solid #00F0FF;
+            border-top-left-radius: 1.25rem;
             pointer-events: none;
         }}
-        .light .hud-pill {{
-            background: rgba(255, 255, 255, 0.92);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #0F172A;
+        .hud-panel::after {{
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            border-bottom: 2px solid #00F0FF;
+            border-right: 2px solid #00F0FF;
+            border-bottom-right-radius: 1.25rem;
+            pointer-events: none;
         }}
 
         /* Radial Progress Ring */
@@ -1145,11 +1139,11 @@ def index_html():
             transform-origin: 50% 50%;
         }}
 
-        /* Orbiting glowing particles around score */
+        /* Rotating Orbit Particles */
         .orbit-container {{
             position: absolute;
             inset: 0;
-            animation: rotateOrbit 14s linear infinite;
+            animation: rotateOrbit 12s linear infinite;
             pointer-events: none;
         }}
         @keyframes rotateOrbit {{
@@ -1157,97 +1151,111 @@ def index_html():
             100% {{ transform: rotate(360deg); }}
         }}
 
-        /* Section divider */
-        .section-divider {{
+        /* Section divider with glowing cyber bead */
+        .cyber-divider {{
             position: relative;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
-            margin: 2.5rem 0;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+            margin: 3rem 0;
             display: flex;
             align-items: center;
             justify-content: center;
         }}
-        .light .section-divider {{
-            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent);
-        }}
-        .divider-badge {{
-            background: var(--bg-base);
-            padding: 0.25rem 0.85rem;
+        .cyber-divider-badge {{
+            background: #060911;
+            padding: 0.3rem 1rem;
             border-radius: 9999px;
-            border: 1px solid var(--border-subtle);
-            font-size: 0.68rem;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            font-size: 0.7rem;
             font-family: 'JetBrains Mono', monospace;
-            color: var(--text-muted);
+            color: #00F0FF;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.4rem;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }}
+        .light .cyber-divider-badge {{
+            background: #FFFFFF;
+            color: #0891B2;
+            border-color: rgba(8, 145, 178, 0.4);
         }}
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {{
-            width: 7px;
-            height: 7px;
+        /* Floating visionOS Cyber Dock */
+        .cyber-dock {{
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            background: rgba(10, 15, 29, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 9999px;
+            padding: 0.4rem 0.85rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.15);
         }}
-        ::-webkit-scrollbar-track {{
-            background: var(--bg-base);
-        }}
-        ::-webkit-scrollbar-thumb {{
-            background: #1E293B;
-            border-radius: 4px;
-        }}
-        ::-webkit-scrollbar-thumb:hover {{
-            background: #334155;
+        .light .cyber-dock {{
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0, 180, 216, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }}
 
-        /* Pulse glow animation */
-        @keyframes subtlePulse {{
+        /* Subtle pulsating scanline */
+        @keyframes cyberPulse {{
             0%, 100% {{ opacity: 1; }}
-            50% {{ opacity: 0.6; }}
+            50% {{ opacity: 0.5; }}
         }}
-        .pulse-subtle {{
-            animation: subtlePulse 2s ease-in-out infinite;
+        .cyber-pulse {{
+            animation: cyberPulse 2s ease-in-out infinite;
         }}
     </style>
 </head>
-<body class="clean-grid min-h-screen relative selection:bg-cyan-500 selection:text-black">
+<body class="min-h-screen relative selection:bg-[#00F0FF] selection:text-black">
 
-    <!-- Top Scroll Progress Indicator -->
-    <div id="scrollProgressBar" class="fixed top-0 left-0 h-[2.5px] z-50 bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-500 w-0 transition-[width] duration-100 ease-out"></div>
+    <!-- Top High-Precision Scroll Progress -->
+    <div id="scrollProgressBar" class="fixed top-0 left-0 h-[2.5px] z-50 bg-gradient-to-r from-[#00F0FF] via-[#6366F1] to-[#A855F7] w-0 transition-[width] duration-100 ease-out"></div>
+
+    <!-- Full-Screen 3D Three.js WebGL Canvas -->
+    <canvas id="webglCanvas"></canvas>
+
+    <!-- Depth-of-field Vignette Overlay -->
+    <div class="vignette-overlay"></div>
 
     <!-- ===================================================================== -->
-    <!-- STICKY HEADER -->
+    <!-- STICKY CYBER HEADER -->
     <!-- ===================================================================== -->
-    <header id="mainHeader" class="sticky top-0 z-40 w-full backdrop-blur-md bg-[#07090E]/90 dark:bg-[#07090E]/90 light:bg-white/90 border-b border-white/[0.08] dark:border-white/[0.08] light:border-slate-200 transition-all">
+    <header id="mainHeader" class="sticky top-0 z-40 w-full backdrop-blur-md bg-[#060911]/85 dark:bg-[#060911]/85 light:bg-white/85 border-b border-white/[0.08] dark:border-white/[0.08] light:border-slate-200 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <!-- Brand -->
-            <a href="/" class="flex items-center gap-2.5 group">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-400 via-indigo-500 to-purple-600 flex items-center justify-center font-mono font-black text-black text-xs tracking-tighter shadow-md shadow-cyan/20 group-hover:scale-105 transition-transform">
+            <a href="/" class="flex items-center gap-3 group">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#00F0FF] via-[#6366F1] to-[#A855F7] flex items-center justify-center font-mono font-black text-black text-xs tracking-tighter shadow-md shadow-[#00F0FF]/30 group-hover:scale-105 transition-transform">
                     DNA
                 </div>
                 <div class="flex flex-col">
-                    <span class="font-bold tracking-tight text-white dark:text-white light:text-slate-900 flex items-center gap-1.5 text-base">
-                        CODEDNA <span class="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-cyan/15 text-cyan border border-cyan/30 uppercase tracking-wider">3D Intelligence</span>
+                    <span class="font-bold tracking-tight text-white dark:text-white light:text-slate-900 flex items-center gap-2 text-base">
+                        CODEDNA <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30 uppercase tracking-wider">3D Intelligence</span>
                     </span>
                 </div>
             </a>
 
-            <!-- Nav Links -->
+            <!-- Quick Nav Links -->
             <nav class="hidden md:flex items-center gap-1 text-xs font-medium text-slate-300 dark:text-slate-300 light:text-slate-700" id="navLinks">
-                <a href="#howItWorksSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.06] transition-colors text-cyan font-bold">How It Works</a>
-                <a href="#overviewSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.06] transition-colors">Developer Profile</a>
-                <a href="#twinSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.06] transition-colors">Digital Twin</a>
-                <a href="#dnaSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.06] transition-colors">Technology DNA</a>
-                <a href="#velocitySection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.06] transition-colors">Growth Velocity</a>
-                <a href="#projectsSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.06] transition-colors">Projects</a>
-                <a href="#careerSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.06] transition-colors">Career Radar</a>
+                <a href="#howItWorksSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.08] transition-colors text-[#00F0FF] font-bold">How It Works</a>
+                <a href="#overviewSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.08] transition-colors">Developer Profile</a>
+                <a href="#twinSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.08] transition-colors">Digital Twin</a>
+                <a href="#dnaSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.08] transition-colors">Technology DNA</a>
+                <a href="#velocitySection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.08] transition-colors">Velocity & Rhythm</a>
+                <a href="#projectsSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.08] transition-colors">Projects</a>
+                <a href="#careerSection" class="px-3 py-1.5 rounded-lg hover:text-white dark:hover:text-white light:hover:text-slate-950 hover:bg-white/[0.08] transition-colors">Career Radar</a>
             </nav>
 
             <!-- Tools & Theme -->
             <div class="flex items-center gap-2">
                 <!-- Search ⌘K -->
-                <button onclick="toggleCmdPalette()" class="hidden sm:flex items-center gap-2 px-2.5 py-1.5 text-xs font-mono text-slate-300 dark:text-slate-300 light:text-slate-700 bg-slate-900 dark:bg-slate-900 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.1] dark:border-white/[0.1] light:border-slate-300 rounded-xl transition-colors">
+                <button onclick="toggleCmdPalette()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-mono text-slate-300 dark:text-slate-300 light:text-slate-700 bg-slate-900/90 dark:bg-slate-900/90 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.1] dark:border-white/[0.1] light:border-slate-300 rounded-xl transition-colors">
                     <span>Search</span>
                     <kbd class="px-1.5 py-0.5 rounded bg-white/[0.1] dark:bg-white/[0.1] light:bg-slate-200 text-[10px] text-slate-300 dark:text-slate-300 light:text-slate-600">⌘K</kbd>
                 </button>
@@ -1267,141 +1275,95 @@ def index_html():
     </header>
 
     <!-- Mobile Drawer -->
-    <div id="mobileMenuDrawer" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-md md:hidden">
-        <div class="fixed top-0 right-0 w-64 h-full bg-[#0D1322] border-l border-white/[0.1] p-6 flex flex-col justify-between">
+    <div id="mobileMenuDrawer" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md md:hidden">
+        <div class="fixed top-0 right-0 w-64 h-full bg-[#0C1221] border-l border-white/[0.1] p-6 flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between mb-8">
                     <span class="font-mono font-bold text-white text-sm">CODEDNA NAV</span>
                     <button onclick="toggleMobileMenu()" class="text-slate-400 hover:text-white p-1">✕</button>
                 </div>
                 <div class="space-y-4 font-mono text-xs">
-                    <a href="#howItWorksSection" onclick="toggleMobileMenu()" class="block py-2 text-cyan font-bold">01. How It Works</a>
-                    <a href="#overviewSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-cyan">02. Developer Profile</a>
-                    <a href="#twinSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-cyan">03. Digital Twin</a>
-                    <a href="#dnaSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-cyan">04. Technology DNA</a>
-                    <a href="#velocitySection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-cyan">05. Growth Velocity</a>
-                    <a href="#projectsSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-cyan">06. Projects</a>
-                    <a href="#careerSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-cyan">07. Career Radar</a>
+                    <a href="#howItWorksSection" onclick="toggleMobileMenu()" class="block py-2 text-[#00F0FF] font-bold">01. How It Works</a>
+                    <a href="#overviewSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-[#00F0FF]">02. Developer Profile</a>
+                    <a href="#twinSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-[#00F0FF]">03. Digital Twin</a>
+                    <a href="#dnaSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-[#00F0FF]">04. Technology DNA</a>
+                    <a href="#velocitySection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-[#00F0FF]">05. Growth Velocity</a>
+                    <a href="#projectsSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-[#00F0FF]">06. Projects</a>
+                    <a href="#careerSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-[#00F0FF]">07. Career Radar</a>
                 </div>
             </div>
             <div class="pt-4 border-t border-white/[0.08] text-[11px] font-mono text-slate-500">
-                CodeDNA 3D Platform
+                CodeDNA 3D Cockpit
             </div>
         </div>
     </div>
 
-    <!-- Main Container -->
-    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Main Container (Elevated Above 3D Canvas via z-index) -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         <!-- ===================================================================== -->
-        <!-- 1. SPLIT HERO: VALUE PROPOSITION (LEFT) + DEDICATED 3D STAGE (RIGHT) -->
+        <!-- 1. CINEMATIC FULL-SCREEN 3D HERO SECTION -->
         <!-- ===================================================================== -->
-        <section id="heroSection" class="pt-4 pb-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                
-                <!-- Left Column: Clear Value Proposition & Decoder Search (7 Cols) -->
-                <div class="lg:col-span-7 text-left">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan/10 border border-cyan/30 text-cyan text-xs font-mono mb-5 shadow-sm">
-                        <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
-                        <span>INTERACTIVE 3D DEVELOPER INTELLIGENCE</span>
-                    </div>
+        <section id="heroSection" class="pt-8 pb-16 text-center max-w-4xl mx-auto">
+            <!-- Cyber Status Pill -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00F0FF]/10 border border-[#00F0FF]/30 text-[#00F0FF] text-xs font-mono mb-6 shadow-lg shadow-[#00F0FF]/15">
+                <span class="w-2 h-2 rounded-full bg-[#00F0FF] cyber-pulse"></span>
+                <span>SYSTEM ONLINE • 3D DEVELOPER INTELLIGENCE ENGINE</span>
+            </div>
 
-                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white dark:text-white light:text-slate-950 tracking-tight leading-[1.08] mb-4">
-                        Decode Your Real<br>
-                        <span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">Developer DNA.</span>
-                    </h1>
+            <!-- Big Impact Title -->
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white dark:text-white light:text-slate-950 tracking-tight leading-[1.05] mb-4">
+                CODEDNA
+            </h1>
 
-                    <p class="text-sm sm:text-base text-slate-300 dark:text-slate-300 light:text-slate-700 font-normal leading-relaxed mb-6 max-w-xl">
-                        Turn raw GitHub commits into an interactive 3D digital twin, AI behavioral archetype, and predictive career radar. No vanity stats—pure code intelligence.
-                    </p>
+            <p class="text-xl sm:text-3xl font-bold bg-gradient-to-r from-[#00F0FF] via-[#818CF8] to-[#C084FC] bg-clip-text text-transparent mb-5">
+                "Decode your developer digital twin."
+            </p>
 
-                    <!-- Search Input Box -->
-                    <form onsubmit="handleAnalyzeSubmit(event)" class="ui-card p-2 flex flex-col sm:flex-row gap-2 max-w-lg mb-4 border-cyan/30">
-                        <div class="relative flex-1 flex items-center">
-                            <span class="absolute left-3.5 text-cyan font-mono text-sm font-bold">@</span>
-                            <input 
-                                type="text" 
-                                id="githubUsernameInput" 
-                                value="shrutirai29"
-                                placeholder="Enter GitHub username (e.g. shrutirai29, torvalds)" 
-                                class="w-full pl-8 pr-4 py-2.5 bg-transparent text-sm text-white dark:text-white light:text-slate-900 placeholder-slate-500 focus:outline-none font-mono"
-                                required
-                            />
-                        </div>
-                        <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan/20 cursor-pointer group">
-                            <span>Decode Profile</span>
-                            <span class="group-hover:translate-x-1 transition-transform">→</span>
-                        </button>
-                    </form>
+            <p class="text-sm sm:text-base text-slate-300 dark:text-slate-300 light:text-slate-600 font-normal leading-relaxed mb-8 max-w-2xl mx-auto">
+                Turn your GitHub activity into an empirical 3D living intelligence profile. Multi-dimensional behavioral scoring, Scikit-Learn archetype clustering, and predictive career role readiness.
+            </p>
 
-                    <!-- Preset Chips (Shruti Rai Lead) -->
-                    <div class="flex flex-wrap items-center gap-2 text-xs">
-                        <span class="font-mono text-[11px] text-slate-400 mr-1">Quick Select:</span>
-                        <button onclick="loadProfile('shrutirai29')" class="preset-btn px-3 py-1.5 rounded-xl bg-cyan/20 border border-cyan/50 text-cyan font-bold transition-all font-mono flex items-center gap-1.5 shadow-sm">
-                            <span class="w-1.5 h-1.5 rounded-full bg-cyan"></span>
-                            <span>Shruti Rai (Featured)</span>
-                        </button>
-                        <button onclick="loadProfile('alex-datascientist')" class="preset-btn px-2.5 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-900 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.08] hover:border-cyan/40 text-slate-300 dark:text-slate-300 light:text-slate-700 transition-all font-mono">Dr. Alex (Data Science)</button>
-                        <button onclick="loadProfile('elena-mlops')" class="preset-btn px-2.5 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-900 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.08] hover:border-cyan/40 text-slate-300 dark:text-slate-300 light:text-slate-700 transition-all font-mono">Elena (MLOps)</button>
-                        <button onclick="loadProfile('marcus-fullstack')" class="preset-btn px-2.5 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-900 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.08] hover:border-cyan/40 text-slate-300 dark:text-slate-300 light:text-slate-700 transition-all font-mono">Marcus (Full-Stack)</button>
-                        <button onclick="loadProfile('sophia-systems')" class="preset-btn px-2.5 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-900 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.08] hover:border-cyan/40 text-slate-300 dark:text-slate-300 light:text-slate-700 transition-all font-mono">Sophia (Rust)</button>
-                    </div>
+            <!-- Holographic Search Terminal -->
+            <form onsubmit="handleAnalyzeSubmit(event)" class="hud-panel p-2 sm:p-2.5 flex flex-col sm:flex-row gap-2 max-w-xl mx-auto mb-6 shadow-2xl border-[#00F0FF]/40">
+                <div class="relative flex-1 flex items-center">
+                    <span class="absolute left-3.5 text-[#00F0FF] font-mono text-sm font-bold">@</span>
+                    <input 
+                        type="text" 
+                        id="githubUsernameInput" 
+                        value="shrutirai29"
+                        placeholder="Enter GitHub username (e.g. shrutirai29, torvalds)" 
+                        class="w-full pl-8 pr-4 py-2.5 bg-transparent text-sm text-white dark:text-white light:text-slate-900 placeholder-slate-500 focus:outline-none font-mono"
+                        required
+                    />
                 </div>
+                <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-[#00F0FF] to-[#3B82F6] hover:from-[#38BDF8] hover:to-[#2563EB] text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#00F0FF]/25 cursor-pointer group">
+                    <span>Decode Profile ⚡</span>
+                    <span class="group-hover:translate-x-1 transition-transform">→</span>
+                </button>
+            </form>
 
-                <!-- Right Column: Dedicated 3D Holographic Stage (5 Cols) -->
-                <div class="lg:col-span-5">
-                    <div id="hero3dContainer" class="relative w-full rounded-2xl overflow-hidden border border-cyan-500/30 flex flex-col justify-between">
-                        <!-- Top HUD Bar -->
-                        <div class="p-3 flex items-center justify-between z-10">
-                            <div class="flex items-center gap-1.5 text-[11px] font-mono font-bold text-cyan">
-                                <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
-                                <span>3D DNA TELEMETRY</span>
-                            </div>
-                            <div id="heroHudArchetype" class="hud-pill text-[11px] border-cyan/40 text-cyan font-bold">
-                                🧬 The Technology Explorer
-                            </div>
-                        </div>
-
-                        <!-- 3D Canvas Viewport -->
-                        <div class="relative w-full h-72 sm:h-80 flex items-center justify-center">
-                            <canvas id="hero3dCanvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
-
-                            <!-- Floating Satellite Badges -->
-                            <div class="absolute bottom-4 left-4 z-10">
-                                <div id="heroHudAdaptability" class="hud-pill flex items-center gap-1.5">
-                                    <span class="text-cyan">⚡</span>
-                                    <span>Adaptability: <strong class="text-white">94/100</strong></span>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-4 right-4 z-10">
-                                <div id="heroHudCareer" class="hud-pill flex items-center gap-1.5">
-                                    <span class="text-emerald-400">🎯</span>
-                                    <span>Fit: <strong class="text-white">Full-Stack 89.5%</strong></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Bottom Interaction Caption -->
-                        <div class="py-2.5 px-4 bg-slate-950/80 border-t border-white/[0.08] text-[11px] font-mono text-slate-400 flex items-center justify-between">
-                            <span class="flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5 text-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                                <span>Drag to rotate 3D Double-Helix</span>
-                            </span>
-                            <span class="text-cyan font-bold">WebGL 60FPS</span>
-                        </div>
-                    </div>
-                </div>
-
+            <!-- Quick-Switch Preset Keycards (Shruti Rai Featured) -->
+            <div class="flex flex-wrap items-center justify-center gap-2 text-xs">
+                <span class="font-mono text-[11px] text-slate-400 mr-1">Active Profile:</span>
+                <button onclick="loadProfile('shrutirai29')" class="preset-btn px-3 py-1.5 rounded-xl bg-[#00F0FF]/20 border border-[#00F0FF]/60 text-[#00F0FF] font-bold transition-all font-mono flex items-center gap-1.5 shadow-md shadow-[#00F0FF]/15">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#00F0FF]"></span>
+                    <span>Shruti Rai (Featured)</span>
+                </button>
+                <button onclick="loadProfile('alex-datascientist')" class="preset-btn px-2.5 py-1.5 rounded-xl bg-slate-900/90 dark:bg-slate-900/90 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.08] hover:border-[#00F0FF]/40 text-slate-300 dark:text-slate-300 light:text-slate-700 transition-all font-mono">Dr. Alex (Data Science)</button>
+                <button onclick="loadProfile('elena-mlops')" class="preset-btn px-2.5 py-1.5 rounded-xl bg-slate-900/90 dark:bg-slate-900/90 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.08] hover:border-[#00F0FF]/40 text-slate-300 dark:text-slate-300 light:text-slate-700 transition-all font-mono">Elena (MLOps)</button>
+                <button onclick="loadProfile('marcus-fullstack')" class="preset-btn px-2.5 py-1.5 rounded-xl bg-slate-900/90 dark:bg-slate-900/90 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.08] hover:border-[#00F0FF]/40 text-slate-300 dark:text-slate-300 light:text-slate-700 transition-all font-mono">Marcus (Full-Stack)</button>
+                <button onclick="loadProfile('sophia-systems')" class="preset-btn px-2.5 py-1.5 rounded-xl bg-slate-900/90 dark:bg-slate-900/90 light:bg-slate-100 hover:bg-slate-800 border border-white/[0.08] hover:border-[#00F0FF]/40 text-slate-300 dark:text-slate-300 light:text-slate-700 transition-all font-mono">Sophia (Rust)</button>
             </div>
         </section>
 
         <!-- ===================================================================== -->
-        <!-- 2. VISUAL INFOGRAPHIC: HOW CODEDNA WORKS IN 3 STEPS (ZERO TEXTBOOK!) -->
+        <!-- 2. VISUAL INFOGRAPHIC: HOW CODEDNA WORKS (ZERO TEXTBOOK ESSAYS!) -->
         <!-- ===================================================================== -->
-        <section id="howItWorksSection" class="ui-card p-6 sm:p-8 mb-10 border-indigo-500/25">
+        <section id="howItWorksSection" class="hud-panel p-6 sm:p-8 mb-12 border-[#6366F1]/30">
             <div class="text-center max-w-2xl mx-auto mb-8">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-mono mb-2">
-                    <span>✨ INSTANT VISUAL INTELLIGENCE</span>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6366F1]/15 border border-[#6366F1]/30 text-[#818CF8] text-xs font-mono mb-2">
+                    <span>✨ INSTANT VISUAL ARCHITECTURE</span>
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-950 tracking-tight">
                     How CodeDNA Decodes Any Developer
@@ -1411,68 +1373,68 @@ def index_html():
                 </p>
             </div>
 
-            <!-- 3-Step Visual Flow Cards -->
+            <!-- 3-Step Holographic Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
                 <!-- Step 1 -->
-                <div class="p-5 rounded-2xl bg-[#111827] border border-white/[0.08] flex flex-col justify-between hover:border-cyan/50 transition-colors">
+                <div class="p-5 rounded-2xl bg-black/40 border border-white/[0.08] flex flex-col justify-between hover:border-[#00F0FF]/50 transition-colors">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <span class="w-8 h-8 rounded-xl bg-cyan/15 text-cyan flex items-center justify-center font-mono font-black text-xs border border-cyan/30">01</span>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.06] text-slate-300">INPUT STAGE</span>
+                            <span class="w-8 h-8 rounded-xl bg-[#00F0FF]/15 text-[#00F0FF] flex items-center justify-center font-mono font-black text-xs border border-[#00F0FF]/30">01</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.08] text-slate-300">INPUT STAGE</span>
                         </div>
                         <h3 class="text-base font-bold text-white mb-2">Ingest Git Telemetry</h3>
                         <p class="text-xs text-slate-300 leading-relaxed mb-4">
                             Crawls public repositories, commit cadence, language byte-mass, and project dependencies.
                         </p>
                     </div>
-                    <div class="pt-3 border-t border-white/[0.06] flex items-center gap-2 text-[11px] font-mono text-cyan">
+                    <div class="pt-3 border-t border-white/[0.08] flex items-center gap-2 text-[11px] font-mono text-[#00F0FF]">
                         <span>✓ 16+ Repositories Audited</span>
                     </div>
                 </div>
 
                 <!-- Step 2 -->
-                <div class="p-5 rounded-2xl bg-[#111827] border border-white/[0.08] flex flex-col justify-between hover:border-indigo-500/50 transition-colors">
+                <div class="p-5 rounded-2xl bg-black/40 border border-white/[0.08] flex flex-col justify-between hover:border-[#6366F1]/50 transition-colors">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <span class="w-8 h-8 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center font-mono font-black text-xs border border-indigo-500/30">02</span>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.06] text-slate-300">AI ENGINE</span>
+                            <span class="w-8 h-8 rounded-xl bg-[#6366F1]/15 text-[#818CF8] flex items-center justify-center font-mono font-black text-xs border border-[#6366F1]/30">02</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.08] text-slate-300">AI ENGINE</span>
                         </div>
                         <h3 class="text-base font-bold text-white mb-2">Multi-Vector AI Scoring</h3>
                         <p class="text-xs text-slate-300 leading-relaxed mb-4">
                             Calculates anti-burstiness consistency (CV), Shannon polyglot entropy, and Scikit-Learn KMeans archetypes.
                         </p>
                     </div>
-                    <div class="pt-3 border-t border-white/[0.06] flex items-center gap-2 text-[11px] font-mono text-indigo-400">
+                    <div class="pt-3 border-t border-white/[0.08] flex items-center gap-2 text-[11px] font-mono text-[#818CF8]">
                         <span>✓ Anti-Burstiness Filtering</span>
                     </div>
                 </div>
 
                 <!-- Step 3 -->
-                <div class="p-5 rounded-2xl bg-[#111827] border border-white/[0.08] flex flex-col justify-between hover:border-emerald-500/50 transition-colors">
+                <div class="p-5 rounded-2xl bg-black/40 border border-white/[0.08] flex flex-col justify-between hover:border-[#00FF9D]/50 transition-colors">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <span class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center font-mono font-black text-xs border border-emerald-500/30">03</span>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.06] text-slate-300">OUTPUT STAGE</span>
+                            <span class="w-8 h-8 rounded-xl bg-[#00FF9D]/15 text-[#00FF9D] flex items-center justify-center font-mono font-black text-xs border border-[#00FF9D]/30">03</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.08] text-slate-300">OUTPUT STAGE</span>
                         </div>
                         <h3 class="text-base font-bold text-white mb-2">3D Living Intelligence</h3>
                         <p class="text-xs text-slate-300 leading-relaxed mb-4">
                             Renders the interactive 3D DNA model, 7D Digital Twin radar, and vector space career readiness fit.
                         </p>
                     </div>
-                    <div class="pt-3 border-t border-white/[0.06] flex items-center gap-2 text-[11px] font-mono text-emerald-400">
+                    <div class="pt-3 border-t border-white/[0.08] flex items-center gap-2 text-[11px] font-mono text-[#00FF9D]">
                         <span>✓ Predictive Career Radar</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Visual Comparison Widget: "Raw Vanity vs CodeDNA" -->
-            <div class="p-5 rounded-2xl bg-[#090D16] border border-white/[0.08]">
+            <!-- Visual Comparison Widget: Vanity vs Intelligence -->
+            <div class="p-5 rounded-2xl bg-black/50 border border-white/[0.08]">
                 <div class="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-4 text-center">
                     Visual Comparison: Why Standard GitHub Stats Fail
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Left: Vanity Stats -->
-                    <div class="p-4 rounded-xl bg-rose-950/20 border border-rose-500/20">
+                    <div class="p-4 rounded-xl bg-rose-950/25 border border-rose-500/25">
                         <div class="flex items-center gap-2 text-xs font-mono font-bold text-rose-400 mb-3">
                             <span>❌ Standard GitHub Vanity Stats</span>
                         </div>
@@ -1485,34 +1447,34 @@ def index_html():
                     </div>
 
                     <!-- Right: CodeDNA Intelligence -->
-                    <div class="p-4 rounded-xl bg-cyan-950/20 border border-cyan-500/30">
-                        <div class="flex items-center gap-2 text-xs font-mono font-bold text-cyan mb-3">
+                    <div class="p-4 rounded-xl bg-[#00F0FF]/10 border border-[#00F0FF]/30">
+                        <div class="flex items-center gap-2 text-xs font-mono font-bold text-[#00F0FF] mb-3">
                             <span>⚡ CodeDNA Empirical Intelligence</span>
                         </div>
                         <ul class="text-xs font-mono text-slate-200 space-y-2">
-                            <li class="flex items-center gap-2"><span class="text-cyan font-bold">✓</span> Anti-Burstiness Scoring (penalizes commit dumps)</li>
-                            <li class="flex items-center gap-2"><span class="text-cyan font-bold">✓</span> Shannon Polyglot Entropy (measures stack breadth)</li>
-                            <li class="flex items-center gap-2"><span class="text-cyan font-bold">✓</span> Architectural Rigor (evaluates CI/CD, tests, Docker)</li>
-                            <li class="flex items-center gap-2"><span class="text-cyan font-bold">✓</span> Vector Career Fit (identifies exact skills needed)</li>
+                            <li class="flex items-center gap-2"><span class="text-[#00F0FF] font-bold">✓</span> Anti-Burstiness Scoring (penalizes commit dumps)</li>
+                            <li class="flex items-center gap-2"><span class="text-[#00F0FF] font-bold">✓</span> Shannon Polyglot Entropy (measures stack breadth)</li>
+                            <li class="flex items-center gap-2"><span class="text-[#00F0FF] font-bold">✓</span> Architectural Rigor (evaluates CI/CD, tests, Docker)</li>
+                            <li class="flex items-center gap-2"><span class="text-[#00F0FF] font-bold">✓</span> Vector Career Fit (identifies exact skills needed)</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section Divider -->
-        <div class="section-divider">
-            <span class="divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse"></span> ACTIVE DEVELOPER PROFILE</span>
+        <!-- Cyber Section Divider -->
+        <div class="cyber-divider">
+            <span class="cyber-divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-[#00F0FF] cyber-pulse"></span> ACTIVE DEVELOPER PROFILE</span>
         </div>
 
         <!-- ===================================================================== -->
-        <!-- 3. DECODING SEQUENCE MODAL OVERLAY -->
+        <!-- 3. DECODING SEQUENCE OVERLAY -->
         <!-- ===================================================================== -->
-        <div id="decodingOverlay" class="hidden fixed inset-0 z-50 bg-[#07090E]/95 backdrop-blur-xl flex items-center justify-center p-4">
-            <div class="max-w-md w-full ui-card p-6 border-cyan/40 shadow-2xl shadow-cyan/20">
+        <div id="decodingOverlay" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-xl flex items-center justify-center p-4">
+            <div class="max-w-md w-full hud-panel p-6 border-[#00F0FF]/40 shadow-2xl shadow-[#00F0FF]/20">
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="w-3 h-3 rounded-full bg-cyan animate-pulse"></div>
-                    <h3 class="font-mono text-sm font-bold uppercase tracking-wider text-cyan">Decoding Developer Telemetry</h3>
+                    <div class="w-3 h-3 rounded-full bg-[#00F0FF] cyber-pulse"></div>
+                    <h3 class="font-mono text-sm font-bold uppercase tracking-wider text-[#00F0FF]">Decoding Developer Telemetry</h3>
                 </div>
 
                 <div class="space-y-3 font-mono text-xs" id="decodingSteps">
@@ -1527,29 +1489,29 @@ def index_html():
                 </div>
 
                 <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-6">
-                    <div id="decodingProgressBar" class="bg-gradient-to-r from-cyan to-indigo h-full w-0 transition-all duration-300"></div>
+                    <div id="decodingProgressBar" class="bg-gradient-to-r from-[#00F0FF] to-[#6366F1] h-full w-0 transition-all duration-300"></div>
                 </div>
             </div>
         </div>
 
         <!-- ===================================================================== -->
-        <!-- 4. PROFILE HEADER (FEATURED: SHRUTI RAI) -->
+        <!-- 4. DEVELOPER IDENTITY DOSSIER (FEATURED: SHRUTI RAI) -->
         <!-- ===================================================================== -->
-        <section id="overviewSection" class="ui-card p-6 sm:p-8 mb-8 border-white/[0.1]">
+        <section id="overviewSection" class="hud-panel p-6 sm:p-8 mb-8 border-white/[0.12]">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div class="flex items-center gap-5">
                     <div class="relative">
-                        <img id="profileAvatar" src="https://avatars.githubusercontent.com/u/167513467?v=4" alt="Avatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-cyan/40 shadow-xl shadow-cyan/10">
-                        <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#0D1322]" title="Status: Verified Live Developer"></span>
+                        <img id="profileAvatar" src="https://avatars.githubusercontent.com/u/167513467?v=4" alt="Avatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-[#00F0FF]/50 shadow-xl shadow-[#00F0FF]/15">
+                        <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#00FF9D] border-2 border-[#0C1221]" title="Status: Verified Live Developer"></span>
                     </div>
                     <div>
                         <div class="flex items-center gap-2 mb-1 flex-wrap">
-                            <span id="demoBadge" class="text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-cyan/15 text-cyan border border-cyan/30">Verified GitHub Identity</span>
+                            <span id="demoBadge" class="text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30">Verified GitHub Identity</span>
                             <span class="text-xs text-slate-400 font-mono" id="profileAnalyzedTag">Real-World GitHub Telemetry</span>
                         </div>
                         <h2 id="profileName" class="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-950 tracking-tight">Shruti Rai</h2>
                         <div class="flex items-center gap-2 text-xs font-mono text-slate-300 dark:text-slate-300 light:text-slate-600 mt-1 flex-wrap">
-                            <span id="profileHandle" class="text-cyan font-bold">@shrutirai29</span>
+                            <span id="profileHandle" class="text-[#00F0FF] font-bold">@shrutirai29</span>
                             <span>•</span>
                             <span id="profileTitle">Full-Stack Developer & CSE Engineer</span>
                             <span>•</span>
@@ -1570,18 +1532,18 @@ def index_html():
                         <div class="text-[10px] uppercase font-mono text-slate-400">Followers</div>
                     </div>
                     <div class="text-center px-3">
-                        <div id="statAge" class="text-xl font-bold font-mono text-cyan">2.4y</div>
+                        <div id="statAge" class="text-xl font-bold font-mono text-[#00F0FF]">2.4y</div>
                         <div class="text-[10px] uppercase font-mono text-slate-400">Active Velocity</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- System Intelligence Insight -->
-        <div class="p-4 sm:p-5 rounded-2xl bg-[#0E1528] border-l-4 border-cyan-400 border border-white/[0.08] mb-8 flex items-start gap-3.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 mt-1 animate-pulse shrink-0"></span>
+        <!-- System Intelligence Insight HUD Banner -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#00F0FF]/15 via-[#6366F1]/10 to-transparent border-l-4 border-[#00F0FF] border border-white/[0.08] mb-8 flex items-start gap-3.5 shadow-lg shadow-[#00F0FF]/5">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#00F0FF] mt-1 cyber-pulse shrink-0"></span>
             <div>
-                <div class="text-[11px] font-mono font-bold uppercase tracking-wider text-cyan mb-1">💡 System Intelligence Insight</div>
+                <div class="text-[11px] font-mono font-bold uppercase tracking-wider text-[#00F0FF] mb-1">💡 System Intelligence Insight</div>
                 <p id="keyInsightNarrative" class="text-xs sm:text-sm text-slate-200 dark:text-slate-200 light:text-slate-700 leading-relaxed font-normal">
                     This profile clusters firmly under <strong>The Technology Explorer</strong> archetype, demonstrating high polyglot adaptability across JavaScript, Python, TypeScript, and C++ (92/100 breadth) paired with active open-source contributions across AI tools and Hackathon solutions.
                 </p>
@@ -1589,13 +1551,13 @@ def index_html():
         </div>
 
         <!-- ===================================================================== -->
-        <!-- 5. MASTER SCORECARD (5 COLS) & 6 DIMENSIONS (7 COLS) -->
+        <!-- 5. MASTER SCORECARD (5 COLS) & 6 SATELLITE DIMENSIONS (7 COLS) -->
         <!-- ===================================================================== -->
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-            <!-- Centerpiece Circular Score -->
-            <div class="lg:col-span-5 ui-card p-6 sm:p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
+            <!-- Centerpiece Circular Score (5 Cols) -->
+            <div class="lg:col-span-5 hud-panel p-6 sm:p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <div class="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold mb-4 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
+                    <span class="w-2 h-2 rounded-full bg-[#00F0FF] cyber-pulse"></span>
                     Developer Intelligence Score
                 </div>
 
@@ -1606,7 +1568,7 @@ def index_html():
                         <circle id="scoreProgressCircle" cx="80" cy="80" r="70" stroke="url(#scoreGradient)" stroke-width="12" fill="transparent" stroke-linecap="round" class="radial-progress-circle"/>
                         <defs>
                             <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#06B6D4"/>
+                                <stop offset="0%" stop-color="#00F0FF"/>
                                 <stop offset="50%" stop-color="#6366F1"/>
                                 <stop offset="100%" stop-color="#A855F7"/>
                             </linearGradient>
@@ -1620,7 +1582,7 @@ def index_html():
                     <div class="orbit-container">
                         <svg class="orbit-ring-svg" viewBox="0 0 160 160">
                             <g class="orbit-particles-group">
-                                <circle cx="80" cy="10" r="3.5" fill="#06B6D4" filter="url(#particleGlow)"/>
+                                <circle cx="80" cy="10" r="3.5" fill="#00F0FF" filter="url(#particleGlow)"/>
                                 <circle cx="150" cy="80" r="2.5" fill="#6366F1" filter="url(#particleGlow)"/>
                                 <circle cx="80" cy="150" r="3" fill="#A855F7" filter="url(#particleGlow)"/>
                                 <circle cx="10" cy="80" r="2.5" fill="#38BDF8" filter="url(#particleGlow)"/>
@@ -1636,14 +1598,14 @@ def index_html():
                 </div>
 
                 <div class="mt-4 flex items-center gap-2">
-                    <span id="scoreTierBadge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan/15 text-cyan border border-cyan/30">Tier: High Momentum</span>
-                    <span id="scoreVelocityBadge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">+42% YoY</span>
+                    <span id="scoreTierBadge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30">Tier: High Momentum</span>
+                    <span id="scoreVelocityBadge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#00FF9D]/15 text-[#00FF9D] border border-[#00FF9D]/30">+42% YoY</span>
                 </div>
                 <p class="text-xs text-slate-400 mt-3 max-w-xs">Synthesized from depth, polyglot entropy, consistency, and structural complexity.</p>
             </div>
 
-            <!-- 6 Dimensions Satellite Breakdown -->
-            <div class="lg:col-span-7 ui-card p-6 sm:p-8 flex flex-col justify-between">
+            <!-- 6 Dimensions Satellite Breakdown (7 Cols) -->
+            <div class="lg:col-span-7 hud-panel p-6 sm:p-8 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200 font-mono">Competency Dimensions</h3>
                     <span class="text-xs text-slate-400 font-mono">Empirical Observables</span>
@@ -1654,8 +1616,8 @@ def index_html():
                 </div>
 
                 <div class="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
-                    <span class="font-mono">Top percentile rank: <strong class="text-cyan font-bold" id="topPercentileStat">92nd percentile</strong></span>
-                    <a href="#twinSection" class="text-cyan hover:underline font-mono">Inspect in Digital Twin →</a>
+                    <span class="font-mono">Top percentile rank: <strong class="text-[#00F0FF] font-bold" id="topPercentileStat">92nd percentile</strong></span>
+                    <a href="#twinSection" class="text-[#00F0FF] hover:underline font-mono">Inspect in Digital Twin →</a>
                 </div>
             </div>
         </section>
@@ -1663,68 +1625,68 @@ def index_html():
         <!-- KPI SHOWCASE ROW -->
         <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- 1. Career Match KPI -->
-            <div class="ui-card p-5 flex flex-col justify-between hover:-translate-y-1 transition-all">
+            <div class="hud-panel p-5 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">CAREER MATCH</span>
-                    <span class="text-xs font-mono text-emerald-400 font-semibold">+18% vs peer cohort</span>
+                    <span class="text-xs font-mono text-[#00FF9D] font-semibold">+18% vs peer cohort</span>
                 </div>
                 <div class="my-2">
-                    <div class="text-3xl font-black font-mono text-cyan" id="careerMatchKpiVal">89.5%</div>
+                    <div class="text-3xl font-black font-mono text-[#00F0FF]" id="careerMatchKpiVal">89.5%</div>
                     <div class="text-xs font-mono text-slate-200 font-semibold mt-0.5" id="careerMatchKpiRole">Full-Stack Developer</div>
                 </div>
                 <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
-                    <div class="bg-cyan h-full rounded-full" style="width: 89.5%;"></div>
+                    <div class="bg-[#00F0FF] h-full rounded-full" style="width: 89.5%;"></div>
                 </div>
             </div>
 
             <!-- 2. Consistency KPI -->
-            <div class="ui-card p-5 flex flex-col justify-between hover:-translate-y-1 transition-all">
+            <div class="hud-panel p-5 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">CONSISTENCY INDEX</span>
-                    <span class="text-xs font-mono text-amber-400 font-semibold">Disciplined Cadence</span>
+                    <span class="text-xs font-mono text-[#FFB800] font-semibold">Disciplined Cadence</span>
                 </div>
                 <div class="my-2">
-                    <div class="text-3xl font-black font-mono text-amber-400" id="consistencyKpiVal">84 / 100</div>
+                    <div class="text-3xl font-black font-mono text-[#FFB800]" id="consistencyKpiVal">84 / 100</div>
                     <div class="text-xs font-mono text-slate-200 font-semibold mt-0.5">Active Sprint Rhythm</div>
                 </div>
                 <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
-                    <div class="bg-amber-400 h-full rounded-full" style="width: 84%;"></div>
+                    <div class="bg-[#FFB800] h-full rounded-full" style="width: 84%;"></div>
                 </div>
             </div>
 
             <!-- 3. Portfolio Health KPI -->
-            <div class="ui-card p-5 flex flex-col justify-between hover:-translate-y-1 transition-all">
+            <div class="hud-panel p-5 flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">PORTFOLIO HEALTH</span>
-                    <span class="text-xs font-mono text-indigo-400 font-semibold">Active Repository Hygiene</span>
+                    <span class="text-xs font-mono text-[#818CF8] font-semibold">Active Repository Hygiene</span>
                 </div>
                 <div class="my-2">
-                    <div class="text-3xl font-black font-mono text-indigo-400" id="portfolioHealthKpiVal">92 / 100</div>
+                    <div class="text-3xl font-black font-mono text-[#818CF8]" id="portfolioHealthKpiVal">92 / 100</div>
                     <div class="text-xs font-mono text-slate-200 font-semibold mt-0.5">16 Repositories Audited</div>
                 </div>
                 <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
-                    <div class="bg-indigo-400 h-full rounded-full" style="width: 92%;"></div>
+                    <div class="bg-[#818CF8] h-full rounded-full" style="width: 92%;"></div>
                 </div>
             </div>
         </section>
 
-        <!-- Section Divider -->
-        <div class="section-divider">
-            <span class="divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse"></span> DIGITAL TWIN & BEHAVIORAL ARCHETYPE</span>
+        <!-- Cyber Section Divider -->
+        <div class="cyber-divider">
+            <span class="cyber-divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-[#00F0FF] cyber-pulse"></span> DIGITAL TWIN & BEHAVIORAL ARCHETYPE</span>
         </div>
 
         <!-- ===================================================================== -->
         <!-- 6. DIGITAL TWIN (7D RADAR) & BEHAVIORAL ARCHETYPE -->
         <!-- ===================================================================== -->
         <section id="twinSection" class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-            <!-- 7D Radar Visualization -->
-            <div class="lg:col-span-7 ui-card p-6 sm:p-8">
+            <!-- 7D Radar Visualization (7 Cols) -->
+            <div class="lg:col-span-7 hud-panel p-6 sm:p-8">
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="text-base font-bold text-white tracking-tight">Developer Digital Twin</h3>
                         <p class="text-xs text-slate-400 font-mono">7-Dimensional mathematical fingerprint</p>
                     </div>
-                    <span class="px-2.5 py-1 rounded bg-indigo-500/15 text-indigo-400 text-xs font-mono border border-indigo-500/30">Radar Profile</span>
+                    <span class="px-2.5 py-1 rounded-full bg-[#6366F1]/15 text-[#818CF8] text-xs font-mono border border-[#6366F1]/30">Radar Profile</span>
                 </div>
 
                 <!-- SVG Radar Chart -->
@@ -1735,24 +1697,24 @@ def index_html():
                 </div>
 
                 <!-- Hover Evidence Box -->
-                <div id="radarTooltip" class="mt-3 p-3 rounded-xl bg-slate-900 border border-white/[0.08] text-xs font-mono text-slate-300 flex items-center justify-between">
+                <div id="radarTooltip" class="mt-3 p-3 rounded-xl bg-black/50 border border-white/[0.08] text-xs font-mono text-slate-300 flex items-center justify-between">
                     <span id="radarHoverLabel">Hover on any polygon node to inspect empirical signals</span>
-                    <span id="radarHoverScore" class="text-cyan font-bold"></span>
+                    <span id="radarHoverScore" class="text-[#00F0FF] font-bold"></span>
                 </div>
             </div>
 
-            <!-- Behavioral Archetype Card -->
-            <div class="lg:col-span-5 ui-card p-6 sm:p-8 flex flex-col justify-between border-indigo-500/30">
+            <!-- Behavioral Archetype Card (5 Cols) -->
+            <div class="lg:col-span-5 hud-panel p-6 sm:p-8 flex flex-col justify-between border-[#6366F1]/40">
                 <div>
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-mono uppercase tracking-wider text-indigo-400 font-bold">Behavioral Archetype</span>
-                        <span id="archetypeBadge" class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-indigo-500/15 text-indigo-400 border border-indigo-500/30">HIGH MOMENTUM ↗</span>
+                        <span class="text-xs font-mono uppercase tracking-wider text-[#818CF8] font-bold">Behavioral Archetype</span>
+                        <span id="archetypeBadge" class="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#6366F1]/15 text-[#818CF8] border border-[#6366F1]/30">HIGH MOMENTUM ↗</span>
                     </div>
 
                     <h3 id="archetypeName" class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-1">The Technology Explorer</h3>
-                    <p id="archetypeTagline" class="text-xs text-cyan font-mono mb-4">Polyglot Architecture & Cross-Stack Agility</p>
+                    <p id="archetypeTagline" class="text-xs text-[#00F0FF] font-mono mb-4">Polyglot Architecture & Cross-Stack Agility</p>
 
-                    <div class="p-4 rounded-xl bg-slate-900/90 border border-white/[0.08] mb-4">
+                    <div class="p-4 rounded-xl bg-black/40 border border-white/[0.08] mb-4">
                         <div class="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono mb-2">Why this archetype?</div>
                         <p id="archetypeReason" class="text-xs text-slate-300 leading-relaxed">
                             Your repositories demonstrate rapid cross-stack adoption across modern TypeScript web ecosystems, Python applied analytics, and algorithmic C++ foundations.
@@ -1769,38 +1731,38 @@ def index_html():
 
                 <div class="mt-6 pt-4 border-t border-white/[0.06] text-xs text-slate-400 font-mono flex justify-between">
                     <span>KMeans ($k=6$) Archetype Clustering</span>
-                    <span class="text-cyan font-bold">PCA Coords (0.68, 0.74)</span>
+                    <span class="text-[#00F0FF] font-bold">PCA Coords (0.68, 0.74)</span>
                 </div>
             </div>
         </section>
 
-        <!-- Section Divider -->
-        <div class="section-divider">
-            <span class="divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse"></span> TECHNOLOGY ECOSYSTEM & MOMENTUM</span>
+        <!-- Cyber Section Divider -->
+        <div class="cyber-divider">
+            <span class="cyber-divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-[#00F0FF] cyber-pulse"></span> TECHNOLOGY ECOSYSTEM & MOMENTUM</span>
         </div>
 
         <!-- ===================================================================== -->
         <!-- 7. TECHNOLOGY DNA & SKILL MOMENTUM -->
         <!-- ===================================================================== -->
-        <section id="dnaSection" class="ui-card p-6 sm:p-8 mb-8">
+        <section id="dnaSection" class="hud-panel p-6 sm:p-8 mb-8">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
                     <h3 class="text-lg font-bold text-white tracking-tight">Technology DNA & Ecosystem</h3>
                     <p class="text-xs text-slate-400 font-mono">Hierarchical network mapping primary stacks and active frameworks</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-xs font-mono px-2.5 py-1 rounded bg-cyan/15 text-cyan border border-cyan/30">Interactive Graph</span>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30">Interactive Graph</span>
                 </div>
             </div>
 
             <!-- Technology DNA Interactive Graph -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                <div class="lg:col-span-8 bg-[#090E18] rounded-2xl p-4 border border-white/[0.08] relative overflow-hidden h-96 flex items-center justify-center">
+                <div class="lg:col-span-8 bg-black/40 rounded-2xl p-4 border border-white/[0.08] relative overflow-hidden h-96 flex items-center justify-center">
                     <svg id="dnaNetworkSvg" class="w-full h-full" viewBox="0 0 500 300">
                         <!-- Rendered dynamically -->
                     </svg>
                     <!-- Node popover -->
-                    <div id="dnaNodeTooltip" class="hidden absolute bottom-3 left-3 right-3 p-3 bg-slate-900 border border-cyan/40 rounded-xl text-xs font-mono text-slate-200 flex items-center justify-between shadow-xl">
+                    <div id="dnaNodeTooltip" class="hidden absolute bottom-3 left-3 right-3 p-3 bg-black/90 border border-[#00F0FF]/40 rounded-xl text-xs font-mono text-slate-200 flex items-center justify-between shadow-xl">
                         <span id="dnaTooltipText"></span>
                     </div>
                 </div>
@@ -1815,15 +1777,15 @@ def index_html():
             </div>
         </section>
 
-        <!-- Section Divider -->
-        <div class="section-divider">
-            <span class="divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse"></span> GROWTH VELOCITY & CODING RHYTHM</span>
+        <!-- Cyber Section Divider -->
+        <div class="cyber-divider">
+            <span class="cyber-divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-[#00F0FF] cyber-pulse"></span> GROWTH VELOCITY & CODING RHYTHM</span>
         </div>
 
         <!-- ===================================================================== -->
         <!-- 8. DEVELOPER GROWTH VELOCITY (DGV) TIME-SERIES -->
         <!-- ===================================================================== -->
-        <section id="velocitySection" class="ui-card p-6 sm:p-8 mb-8">
+        <section id="velocitySection" class="hud-panel p-6 sm:p-8 mb-8">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
                     <h3 class="text-lg font-bold text-white tracking-tight">Developer Growth Velocity (DGV)</h3>
@@ -1835,21 +1797,21 @@ def index_html():
             </div>
 
             <!-- SVG Timeline Line Graph -->
-            <div class="w-full h-64 bg-[#090E18] rounded-2xl p-4 border border-white/[0.08] relative flex items-center justify-center mb-4">
+            <div class="w-full h-64 bg-black/40 rounded-2xl p-4 border border-white/[0.08] relative flex items-center justify-center mb-4">
                 <svg id="velocitySvg" class="w-full h-full" viewBox="0 0 700 200">
                     <!-- Rendered dynamically -->
                 </svg>
             </div>
 
             <!-- Annual Snapshot Card -->
-            <div id="velocitySnapshotCard" class="p-4 rounded-xl bg-slate-900 border border-white/[0.08] text-xs font-mono flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div id="velocitySnapshotCard" class="p-4 rounded-xl bg-black/50 border border-white/[0.08] text-xs font-mono flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <span id="snapshotYear" class="text-cyan font-bold text-sm">2026 Trajectory Snapshot:</span>
+                    <span id="snapshotYear" class="text-[#00F0FF] font-bold text-sm">2026 Trajectory Snapshot:</span>
                     <span id="snapshotNote" class="text-slate-200 ml-2">Applied AI architectures and gamified focus platforms</span>
                 </div>
                 <div class="flex items-center gap-4 text-slate-400">
                     <span>Depth: <strong id="snapshotDepth" class="text-white">82</strong></span>
-                    <span>Complexity: <strong id="snapshotComplexity" class="text-cyan">86</strong></span>
+                    <span>Complexity: <strong id="snapshotComplexity" class="text-[#00F0FF]">86</strong></span>
                 </div>
             </div>
         </section>
@@ -1857,7 +1819,7 @@ def index_html():
         <!-- ===================================================================== -->
         <!-- 9. CODING RHYTHM PUNCHCARD (7x24) -->
         <!-- ===================================================================== -->
-        <section id="rhythmSection" class="ui-card p-6 sm:p-8 mb-8">
+        <section id="rhythmSection" class="hud-panel p-6 sm:p-8 mb-8">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
                     <h3 class="text-lg font-bold text-white tracking-tight">Coding Rhythm & Focus Cadence</h3>
@@ -1865,11 +1827,11 @@ def index_html():
                 </div>
                 <div class="flex items-center gap-3">
                     <span class="text-xs font-mono text-slate-400">Consistency Index:</span>
-                    <span id="consistencyScoreVal" class="text-sm font-bold font-mono text-amber-400">84 / 100</span>
+                    <span id="consistencyScoreVal" class="text-sm font-bold font-mono text-[#FFB800]">84 / 100</span>
                 </div>
             </div>
 
-            <div class="bg-[#090E18] rounded-2xl p-4 sm:p-6 border border-white/[0.08] mb-4 overflow-x-auto">
+            <div class="bg-black/40 rounded-2xl p-4 sm:p-6 border border-white/[0.08] mb-4 overflow-x-auto">
                 <div id="punchcardMatrix" class="space-y-2 min-w-[500px]">
                     <!-- Rendered dynamically -->
                 </div>
@@ -1882,18 +1844,18 @@ def index_html():
                 </div>
             </div>
 
-            <div id="rhythmInsightBox" class="p-3.5 rounded-xl bg-slate-900 border border-white/[0.08] text-xs font-mono text-slate-300">
+            <div id="rhythmInsightBox" class="p-3.5 rounded-xl bg-black/50 border border-white/[0.08] text-xs font-mono text-slate-300">
                 <!-- Insight text -->
             </div>
         </section>
 
-        <!-- Section Divider -->
-        <div class="section-divider">
-            <span class="divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse"></span> PORTFOLIO HEALTH & PROJECTS</span>
+        <!-- Cyber Section Divider -->
+        <div class="cyber-divider">
+            <span class="cyber-divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-[#00F0FF] cyber-pulse"></span> PORTFOLIO HEALTH & PROJECTS</span>
         </div>
 
         <!-- ===================================================================== -->
-        <!-- 10. REPOSITORY INTELLIGENCE & PROJECT PORTFOLIO -->
+        <!-- 10. REPOSITORY INTELLIGENCE & AUDITED PROJECTS -->
         <!-- ===================================================================== -->
         <section id="projectsSection" class="mb-8">
             <div class="flex items-center justify-between mb-4">
@@ -1901,7 +1863,7 @@ def index_html():
                     <h3 class="text-lg font-bold text-white tracking-tight">Audited Project Repositories</h3>
                     <p class="text-xs text-slate-400 font-mono">Repository mass, complexity tiering, and algorithmic architecture</p>
                 </div>
-                <span class="text-xs font-mono text-cyan font-bold">16 Audited Repositories</span>
+                <span class="text-xs font-mono text-[#00F0FF] font-bold">16 Audited Repositories</span>
             </div>
 
             <!-- Project Cards Grid -->
@@ -1910,24 +1872,24 @@ def index_html():
             </div>
         </section>
 
-        <!-- Section Divider -->
-        <div class="section-divider">
-            <span class="divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> CAREER RADAR & SKILL ROADMAP</span>
+        <!-- Cyber Section Divider -->
+        <div class="cyber-divider">
+            <span class="cyber-divider-badge"><span class="w-1.5 h-1.5 rounded-full bg-[#00FF9D] cyber-pulse"></span> CAREER RADAR & SKILL ROADMAP</span>
         </div>
 
         <!-- ===================================================================== -->
         <!-- 11. CAREER MATCH & NEXT BEST SKILL -->
         <!-- ===================================================================== -->
-        <section id="careerSection" class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
+        <section id="careerSection" class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-16">
             <!-- Career Leaderboard (7 Cols) -->
-            <div class="lg:col-span-7 ui-card p-6 sm:p-8 flex flex-col justify-between">
+            <div class="lg:col-span-7 hud-panel p-6 sm:p-8 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <h3 class="text-base font-bold text-white tracking-tight">Career Match Leaderboard</h3>
                             <p class="text-xs text-slate-400 font-mono">Cosine similarity matching across target tech roles</p>
                         </div>
-                        <span class="px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-400 text-xs font-mono border border-emerald-500/30">Vector Fit</span>
+                        <span class="px-2.5 py-1 rounded-full bg-[#00FF9D]/15 text-[#00FF9D] text-xs font-mono border border-[#00FF9D]/30">Vector Fit</span>
                     </div>
 
                     <div class="space-y-3" id="careerBarsContainer">
@@ -1937,17 +1899,17 @@ def index_html():
 
                 <div class="mt-6 pt-4 border-t border-white/[0.06] text-xs text-slate-400 font-mono flex justify-between">
                     <span>Evaluated against 8 Industry Target Roles</span>
-                    <span class="text-cyan font-bold">Top: Full-Stack (89.5%)</span>
+                    <span class="text-[#00F0FF] font-bold">Top: Full-Stack (89.5%)</span>
                 </div>
             </div>
 
             <!-- Skill Gap Roadmap & Next Best Skill (5 Cols) -->
             <div class="lg:col-span-5 space-y-6">
                 <!-- Next Best Skill Card -->
-                <div class="ui-card p-6 border-cyan/40 bg-gradient-to-br from-[#0E1528] to-[#090D18]">
+                <div class="hud-panel p-6 border-[#00F0FF]/40 bg-gradient-to-br from-[#00F0FF]/10 to-black/60">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-mono uppercase tracking-wider text-cyan font-bold">🚀 Next Best Skill Recommendation</span>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan/15 text-cyan border border-cyan/30">MAX LEVERAGE</span>
+                        <span class="text-xs font-mono uppercase tracking-wider text-[#00F0FF] font-bold">🚀 Next Best Skill Recommendation</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30">MAX LEVERAGE</span>
                     </div>
 
                     <h4 id="nextSkillName" class="text-xl font-bold text-white font-mono mb-2">Docker & Containerization</h4>
@@ -1955,14 +1917,14 @@ def index_html():
                         Containerizing full-stack web applications and Python analytics engines enables 1-click cloud deployment and microservices architecture.
                     </p>
 
-                    <div class="p-3 rounded-xl bg-slate-900 border border-white/[0.08] text-xs font-mono text-emerald-400 flex items-center gap-2">
+                    <div class="p-3 rounded-xl bg-black/50 border border-white/[0.08] text-xs font-mono text-[#00FF9D] flex items-center gap-2">
                         <span>⚡ Projected Lift:</span>
                         <span id="nextSkillLeverage" class="font-bold">+10% readiness lift across Full-Stack & SDE roles</span>
                     </div>
                 </div>
 
                 <!-- Categorized Skill Gaps -->
-                <div class="ui-card p-6">
+                <div class="hud-panel p-6">
                     <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold mb-3">Audited Skill Gaps:</h4>
                     <div class="space-y-3" id="skillGapsList">
                         <!-- Injected dynamically -->
@@ -1970,7 +1932,7 @@ def index_html():
                 </div>
 
                 <!-- Peer Percentiles -->
-                <div class="ui-card p-6">
+                <div class="hud-panel p-6">
                     <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold mb-3">Peer Cohort Percentiles:</h4>
                     <div class="space-y-3" id="benchmarkPercentiles">
                         <!-- Injected dynamically -->
@@ -1982,11 +1944,11 @@ def index_html():
         <!-- ===================================================================== -->
         <!-- 12. DEVELOPER API SNIPPET & EXPORT MART -->
         <!-- ===================================================================== -->
-        <section class="ui-card p-6 sm:p-8 mb-12 border-white/[0.08] bg-[#0A0F1D]">
+        <section class="hud-panel p-6 sm:p-8 mb-16 border-white/[0.08]">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                     <h3 class="text-base font-bold text-white font-mono flex items-center gap-2">
-                        <span class="text-cyan">GET</span>
+                        <span class="text-[#00F0FF]">GET</span>
                         <span>/api/profile?username=<span id="apiTerminalUser">shrutirai29</span></span>
                     </h3>
                     <p class="text-xs text-slate-400 font-mono mt-1">Live JSON endpoint accessible by any external recruiting pipeline or data mart.</p>
@@ -1995,17 +1957,30 @@ def index_html():
                     <button onclick="copyApiUrl()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/[0.1] text-xs font-mono text-slate-300 transition-colors flex items-center gap-1.5">
                         <span id="copyBtnText">Copy Endpoint</span>
                     </button>
-                    <a id="viewJsonLink" href="/api/profile?username=shrutirai29" target="_blank" class="px-3 py-1.5 rounded-xl bg-cyan/15 hover:bg-cyan/25 border border-cyan/30 text-xs font-mono text-cyan font-bold transition-colors">
+                    <a id="viewJsonLink" href="/api/profile?username=shrutirai29" target="_blank" class="px-3 py-1.5 rounded-xl bg-[#00F0FF]/15 hover:bg-[#00F0FF]/25 border border-[#00F0FF]/30 text-xs font-mono text-[#00F0FF] font-bold transition-colors">
                         View Raw JSON ↗
                     </a>
                 </div>
             </div>
 
             <!-- Terminal Code Window -->
-            <pre class="bg-black/90 p-4 rounded-xl border border-white/[0.08] text-xs font-mono text-cyan overflow-x-auto"><code id="apiSnippetPreview">Loading live payload...</code></pre>
+            <pre class="bg-black/90 p-4 rounded-xl border border-white/[0.08] text-xs font-mono text-[#00F0FF] overflow-x-auto"><code id="apiSnippetPreview">Loading live payload...</code></pre>
         </section>
 
     </main>
+
+    <!-- Floating visionOS Cyber Dock -->
+    <div class="cyber-dock hidden sm:flex items-center gap-2 font-mono text-xs">
+        <button onclick="jumpToSection('#heroSection')" class="px-2.5 py-1 rounded-full hover:bg-white/[0.1] text-slate-300 hover:text-white transition-colors" title="Hero">Top</button>
+        <button onclick="jumpToSection('#howItWorksSection')" class="px-2.5 py-1 rounded-full hover:bg-white/[0.1] text-[#00F0FF] transition-colors" title="How It Works">Flow</button>
+        <button onclick="jumpToSection('#overviewSection')" class="px-2.5 py-1 rounded-full hover:bg-white/[0.1] text-slate-300 hover:text-white transition-colors" title="Profile">Profile</button>
+        <button onclick="jumpToSection('#twinSection')" class="px-2.5 py-1 rounded-full hover:bg-white/[0.1] text-slate-300 hover:text-white transition-colors" title="Digital Twin">Twin</button>
+        <button onclick="jumpToSection('#dnaSection')" class="px-2.5 py-1 rounded-full hover:bg-white/[0.1] text-slate-300 hover:text-white transition-colors" title="Tech DNA">DNA</button>
+        <button onclick="jumpToSection('#projectsSection')" class="px-2.5 py-1 rounded-full hover:bg-white/[0.1] text-slate-300 hover:text-white transition-colors" title="Projects">Projects</button>
+        <button onclick="jumpToSection('#careerSection')" class="px-2.5 py-1 rounded-full hover:bg-white/[0.1] text-slate-300 hover:text-white transition-colors" title="Careers">Careers</button>
+        <div class="w-[1px] h-4 bg-white/[0.2] mx-1"></div>
+        <button onclick="toggleTheme()" class="px-2 py-1 text-slate-300 hover:text-white" title="Toggle Theme">🌓</button>
+    </div>
 
     <!-- Footer -->
     <footer class="border-t border-white/[0.08] py-8 text-center text-xs font-mono text-slate-400">
@@ -2020,10 +1995,10 @@ def index_html():
     </footer>
 
     <!-- Command Palette (⌘K) Modal -->
-    <div id="cmdPalette" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-start justify-center pt-24 p-4">
-        <div class="max-w-lg w-full ui-card border-cyan/30 shadow-2xl p-4 overflow-hidden">
+    <div id="cmdPalette" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-start justify-center pt-24 p-4">
+        <div class="max-w-lg w-full hud-panel border-[#00F0FF]/30 shadow-2xl p-4 overflow-hidden">
             <div class="flex items-center gap-2 border-b border-white/[0.1] pb-3 mb-3">
-                <span class="text-cyan font-mono font-bold">⌘</span>
+                <span class="text-[#00F0FF] font-mono font-bold">⌘</span>
                 <input 
                     type="text" 
                     id="cmdSearchInput" 
@@ -2071,44 +2046,42 @@ def index_html():
         const PROFILES = {profiles_json};
         let currentProfile = PROFILES['shrutirai29'] || PROFILES[Object.keys(PROFILES)[0]];
 
-        // --- 1. Dedicated Interactive 3D WebGL Double-Helix (Three.js) ---
-        let helixGroup, scene, camera, renderer;
-        let isUserDragging = false;
-        let previousMousePosition = {{ x: 0, y: 0 }};
+        // --- 1. Full-Screen Interactive 3D WebGL Double-Helix (Three.js) ---
+        let helixGroup, scene, camera, renderer, starPoints;
+        let mouseX = 0, mouseY = 0;
+        let targetRotationX = 0, targetRotationY = 0;
 
         function init3DScene() {{
-            const canvas = document.getElementById('hero3dCanvas');
-            const container = document.getElementById('hero3dContainer');
-            if (!canvas || !container || typeof THREE === 'undefined') return;
-
-            const width = container.clientWidth || 380;
-            const height = container.clientHeight || 320;
+            const canvas = document.getElementById('webglCanvas');
+            if (!canvas || typeof THREE === 'undefined') return;
 
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-            camera.position.z = 44;
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 52;
 
             renderer = new THREE.WebGLRenderer({{ canvas: canvas, alpha: true, antialias: true }});
-            renderer.setSize(width, height);
+            renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const isMobile = window.innerWidth < 768;
 
             // Helix Group
             helixGroup = new THREE.Group();
             scene.add(helixGroup);
 
-            // Double Helix Parameters
-            const strandCount = 75;
-            const radius = 7.0;
-            const helixHeight = 58;
-            const turns = 3.2;
+            // Double Helix Geometry
+            const strandCount = isMobile ? 65 : 100;
+            const radius = 8.5;
+            const helixHeight = 75;
+            const turns = 3.6;
 
-            const geomA = new THREE.SphereGeometry(0.35, 8, 8);
-            const matA = new THREE.MeshBasicMaterial({{ color: 0x06B6D4 }}); // Cyan Strand
+            const geomA = new THREE.SphereGeometry(0.38, 8, 8);
+            const matA = new THREE.MeshBasicMaterial({{ color: 0x00F0FF }}); // Cyan Strand
 
-            const geomB = new THREE.SphereGeometry(0.35, 8, 8);
-            const matB = new THREE.MeshBasicMaterial({{ color: 0x6366F1 }}); // Indigo Strand
+            const geomB = new THREE.SphereGeometry(0.38, 8, 8);
+            const matB = new THREE.MeshBasicMaterial({{ color: 0x8A2BE2 }}); // Violet Strand
 
-            const lineMat = new THREE.LineBasicMaterial({{ color: 0x38BDF8, transparent: true, opacity: 0.35 }});
+            const lineMat = new THREE.LineBasicMaterial({{ color: 0x00F0FF, transparent: true, opacity: 0.35 }});
 
             for (let i = 0; i < strandCount; i++) {{
                 const t = (i / strandCount);
@@ -2122,7 +2095,7 @@ def index_html():
                 nodeA.position.set(xA, y, zA);
                 helixGroup.add(nodeA);
 
-                // Strand B
+                // Strand B (phase shifted by PI)
                 const xB = Math.cos(angle + Math.PI) * radius;
                 const zB = Math.sin(angle + Math.PI) * radius;
                 const nodeB = new THREE.Mesh(geomB, matB);
@@ -2140,82 +2113,47 @@ def index_html():
                 }}
             }}
 
-            // Ambient floating data sparkles
+            // Cosmic ambient data sparkles
+            const starCount = isMobile ? 50 : 120;
             const starGeom = new THREE.BufferGeometry();
-            const starCount = 45;
             const starPositions = new Float32Array(starCount * 3);
             for (let i = 0; i < starCount * 3; i += 3) {{
-                starPositions[i] = (Math.random() - 0.5) * 60;
-                starPositions[i + 1] = (Math.random() - 0.5) * 60;
-                starPositions[i + 2] = (Math.random() - 0.5) * 40;
+                starPositions[i] = (Math.random() - 0.5) * 95;
+                starPositions[i + 1] = (Math.random() - 0.5) * 95;
+                starPositions[i + 2] = (Math.random() - 0.5) * 75;
             }}
             starGeom.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-            const starMat = new THREE.PointsMaterial({{ color: 0x06B6D4, size: 0.7, transparent: true, opacity: 0.6 }});
-            const starPoints = new THREE.Points(starGeom, starMat);
+            const starMat = new THREE.PointsMaterial({{ color: 0x00F0FF, size: 0.8, transparent: true, opacity: 0.55 }});
+            starPoints = new THREE.Points(starGeom, starMat);
             scene.add(starPoints);
 
-            // Drag to Rotate Support (Mouse & Touch)
-            container.addEventListener('mousedown', (e) => {{
-                isUserDragging = true;
-                previousMousePosition = {{ x: e.clientX, y: e.clientY }};
+            // Responsive Parallax Tilting
+            window.addEventListener('mousemove', (e) => {{
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+                targetRotationY = mouseX * 0.6;
+                targetRotationX = mouseY * 0.35;
             }});
 
-            window.addEventListener('mouseup', () => {{
-                isUserDragging = false;
-            }});
-
-            container.addEventListener('mousemove', (e) => {{
-                if (isUserDragging) {{
-                    const deltaX = e.clientX - previousMousePosition.x;
-                    const deltaY = e.clientY - previousMousePosition.y;
-                    helixGroup.rotation.y += deltaX * 0.01;
-                    helixGroup.rotation.x += deltaY * 0.01;
-                    previousMousePosition = {{ x: e.clientX, y: e.clientY }};
-                }}
-            }});
-
-            // Touch events
-            container.addEventListener('touchstart', (e) => {{
-                if (e.touches.length === 1) {{
-                    isUserDragging = true;
-                    previousMousePosition = {{ x: e.touches[0].clientX, y: e.touches[0].clientY }};
-                }}
-            }});
-
-            container.addEventListener('touchmove', (e) => {{
-                if (isUserDragging && e.touches.length === 1) {{
-                    const deltaX = e.touches[0].clientX - previousMousePosition.x;
-                    const deltaY = e.touches[0].clientY - previousMousePosition.y;
-                    helixGroup.rotation.y += deltaX * 0.01;
-                    helixGroup.rotation.x += deltaY * 0.01;
-                    previousMousePosition = {{ x: e.touches[0].clientX, y: e.touches[0].clientY }};
-                }}
-            }});
-
-            window.addEventListener('touchend', () => {{
-                isUserDragging = false;
-            }});
-
-            // Resize observer
+            // Window Resize Listener
             window.addEventListener('resize', () => {{
-                if (!container || !renderer || !camera) return;
-                const w = container.clientWidth;
-                const h = container.clientHeight || 320;
-                camera.aspect = w / h;
+                camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
-                renderer.setSize(w, h);
+                renderer.setSize(window.innerWidth, window.innerHeight);
             }});
 
             // 60FPS Render Loop
             function animate() {{
                 requestAnimationFrame(animate);
 
-                // Auto-spin only when not dragging
-                if (!isUserDragging) {{
-                    helixGroup.rotation.y += 0.008;
-                }}
+                // Continuous rotation
+                helixGroup.rotation.y += 0.006;
 
-                starPoints.rotation.y += 0.002;
+                // Smooth mouse parallax interpolation
+                helixGroup.rotation.y += (targetRotationY - helixGroup.rotation.y) * 0.04;
+                helixGroup.rotation.x += (targetRotationX - helixGroup.rotation.x) * 0.04;
+
+                starPoints.rotation.y += 0.001;
                 renderer.render(scene, camera);
             }}
             animate();
@@ -2236,23 +2174,13 @@ def index_html():
             document.getElementById('statFollowers').textContent = p.followers;
             document.getElementById('statAge').textContent = p.account_age || '2.4 years';
 
-            // 3D HUD Pills Update
-            const hudArch = document.getElementById('heroHudArchetype');
-            if (hudArch) hudArch.textContent = `🧬 ${{p.archetype || 'The Technology Explorer'}}`;
-
-            const hudAdapt = document.getElementById('heroHudAdaptability');
-            if (hudAdapt) hudAdapt.innerHTML = `<span class="text-cyan">⚡</span> <span>Adaptability: <strong class="text-white">${{p.dimensions ? p.dimensions.adaptability : 94}}/100</strong></span>`;
-
-            const hudCareer = document.getElementById('heroHudCareer');
-            if (hudCareer) hudCareer.innerHTML = `<span class="text-emerald-400">🎯</span> <span>Fit: <strong class="text-white">${{p.top_career || 'Full-Stack'}} (${{p.top_fit || 89.5}}%)</strong></span>`;
-
             const demoBadge = document.getElementById('demoBadge');
             if (p.is_demo) {{
                 demoBadge.textContent = 'Benchmark Persona';
                 demoBadge.className = 'text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30';
             }} else {{
                 demoBadge.textContent = 'Verified GitHub Identity';
-                demoBadge.className = 'text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-cyan/15 text-cyan border border-cyan/30';
+                demoBadge.className = 'text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30';
             }}
 
             // Score Wheel Count Up & Radial Stroke
@@ -2290,12 +2218,12 @@ def index_html():
             // Skill Momentum
             const momList = document.getElementById('momentumList');
             momList.innerHTML = (p.momentum || []).map(m => `
-                <div class="p-2.5 rounded-xl bg-slate-900 border border-white/[0.08] flex items-center justify-between text-xs font-mono">
+                <div class="p-2.5 rounded-xl bg-black/50 border border-white/[0.08] flex items-center justify-between text-xs font-mono">
                     <div>
                         <strong class="text-white">${{m.skill}}</strong>
                         <div class="text-[11px] text-slate-400">${{m.recent}}</div>
                     </div>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold" style="background: ${{m.color}}20; color: ${{m.color}}; border: 1px solid ${{m.color}}40;">${{m.trend}}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background: ${{m.color}}20; color: ${{m.color}}; border: 1px solid ${{m.color}}40;">${{m.trend}}</span>
                 </div>
             `).join('');
 
@@ -2311,13 +2239,13 @@ def index_html():
             // Projects
             const projGrid = document.getElementById('projectCardsGrid');
             projGrid.innerHTML = (p.projects || []).map(pr => `
-                <div class="ui-card p-5 flex flex-col justify-between hover:-translate-y-1 transition-all group">
+                <div class="hud-panel p-5 flex flex-col justify-between group">
                     <div>
                         <div class="flex items-center justify-between gap-2 mb-2">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan/15 text-cyan border border-cyan/30">${{pr.complexity}} COMPLEXITY</span>
-                            <span class="text-amber-400 text-xs">${{pr.rating}}</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#00F0FF]/15 text-[#00F0FF] border border-[#00F0FF]/30">${{pr.complexity}} COMPLEXITY</span>
+                            <span class="text-[#FFB800] text-xs">${{pr.rating}}</span>
                         </div>
-                        <h4 class="text-base font-bold text-white font-mono tracking-tight mb-1 group-hover:text-cyan transition-colors">${{pr.name}}</h4>
+                        <h4 class="text-base font-bold text-white font-mono tracking-tight mb-1 group-hover:text-[#00F0FF] transition-colors">${{pr.name}}</h4>
                         <p class="text-xs text-slate-300 mb-3">${{pr.description}}</p>
                     </div>
                     <div class="pt-3 border-t border-white/[0.06] text-[11px] font-mono text-slate-400 space-y-1">
@@ -2361,12 +2289,12 @@ def index_html():
         function renderDimensionBars(dims) {{
             const container = document.getElementById('dimensionBars');
             const labels = [
-                ['Technical Depth', dims.technical_depth, '#06B6D4'],
-                ['Technical Breadth', dims.technical_breadth, '#6366F1'],
-                ['Consistency Index', dims.consistency, '#F59E0B'],
-                ['Project Complexity', dims.project_complexity, '#8B5CF6'],
-                ['Collaboration', dims.collaboration, '#10B981'],
-                ['Adaptability', dims.adaptability, '#06B6D4']
+                ['Technical Depth', dims.technical_depth, '#00F0FF'],
+                ['Technical Breadth', dims.technical_breadth, '#818CF8'],
+                ['Consistency Index', dims.consistency, '#FFB800'],
+                ['Project Complexity', dims.project_complexity, '#C084FC'],
+                ['Collaboration', dims.collaboration, '#00FF9D'],
+                ['Adaptability', dims.adaptability, '#00F0FF']
             ];
 
             container.innerHTML = labels.map(([label, val, color]) => `
@@ -2375,7 +2303,7 @@ def index_html():
                         <span class="text-slate-200 font-medium">${{label}}</span>
                         <span class="font-bold text-white">${{val}} / 100</span>
                     </div>
-                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div class="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden">
                         <div class="h-full rounded-full transition-all duration-1000 ease-out" style="width: ${{val}}%; background-color: ${{color}};"></div>
                     </div>
                 </div>
@@ -2421,14 +2349,14 @@ def index_html():
                 const labelX = cx + Math.cos(angle) * (maxR + 22);
                 const labelY = cy + Math.sin(angle) * (maxR + 22);
                 nodeHtml += `
-                    <circle cx="${{x}}" cy="${{y}}" r="4.5" fill="#06B6D4" stroke="#07090E" stroke-width="2" class="cursor-pointer hover:scale-150 transition-transform" onmouseover="showRadarTooltip('${{labels[i]}}', ${{val}})" onmouseout="resetRadarTooltip()"/>
+                    <circle cx="${{x}}" cy="${{y}}" r="4.5" fill="#00F0FF" stroke="#060911" stroke-width="2" class="cursor-pointer hover:scale-150 transition-transform" onmouseover="showRadarTooltip('${{labels[i]}}', ${{val}})" onmouseout="resetRadarTooltip()"/>
                     <text x="${{labelX}}" y="${{labelY + 3}}" font-family="JetBrains Mono" font-size="8.5" fill="#CBD5E1" text-anchor="middle">${{labels[i]}}</text>
                 `;
             }});
 
             svg.innerHTML = `
                 ${{gridHtml}}
-                <polygon points="${{polyPoints.join(' ')}}" fill="rgba(6, 182, 212, 0.28)" stroke="#06B6D4" stroke-width="2.5" class="transition-all duration-700"/>
+                <polygon points="${{polyPoints.join(' ')}}" fill="rgba(0, 240, 255, 0.28)" stroke="#00F0FF" stroke-width="2.5" class="transition-all duration-700"/>
                 ${{nodeHtml}}
             `;
         }}
@@ -2451,7 +2379,7 @@ def index_html():
             const cx = 250, cy = 150;
 
             // Center Developer node
-            html += `<circle cx="${{cx}}" cy="${{cy}}" r="24" fill="#0E1424" stroke="#06B6D4" stroke-width="2.5"/>`;
+            html += `<circle cx="${{cx}}" cy="${{cy}}" r="24" fill="#0C1221" stroke="#00F0FF" stroke-width="2.5"/>`;
             html += `<text x="${{cx}}" y="${{cy + 4}}" font-family="JetBrains Mono" font-weight="bold" font-size="9" fill="#FFFFFF" text-anchor="middle">CODEDNA</text>`;
 
             const childNodes = nodes.filter(n => n.id !== 'developer');
@@ -2462,14 +2390,14 @@ def index_html():
                 const dist = n.type === 'primary' ? 85 : 120;
                 const nx = cx + Math.cos(angle) * dist;
                 const ny = cy + Math.sin(angle) * dist;
-                const color = n.momentum === 'RISING' ? '#10B981' : (n.momentum === 'NEW' ? '#06B6D4' : '#6366F1');
+                const color = n.momentum === 'RISING' ? '#00FF9D' : (n.momentum === 'NEW' ? '#00F0FF' : '#818CF8');
 
                 // connecting line
                 html += `<line x1="${{cx}}" y1="${{cy}}" x2="${{nx}}" y2="${{ny}}" stroke="${{color}}50" stroke-width="1.5" stroke-dasharray="${{n.type === 'primary' ? 'none' : '3 3'}}"/>`;
 
                 // node circle
                 const r = Math.max(14, Math.min(22, (n.usage || 20) / 4 + 10));
-                html += `<circle cx="${{nx}}" cy="${{ny}}" r="${{r}}" fill="#0E1424" stroke="${{color}}" stroke-width="2" class="cursor-pointer hover:stroke-white transition-all" onmouseover="showDnaTooltip('${{n.name}}', '${{n.usage}}%', '${{n.momentum}}', '${{n.projects}}')"/>`;
+                html += `<circle cx="${{nx}}" cy="${{ny}}" r="${{r}}" fill="#0C1221" stroke="${{color}}" stroke-width="2" class="cursor-pointer hover:stroke-white transition-all" onmouseover="showDnaTooltip('${{n.name}}', '${{n.usage}}%', '${{n.momentum}}', '${{n.projects}}')"/>`;
                 html += `<text x="${{nx}}" y="${{ny + 3}}" font-family="JetBrains Mono" font-size="8" fill="#FFFFFF" text-anchor="middle" pointer-events="none">${{n.name.substring(0, 7)}}</text>`;
             }});
 
@@ -2480,7 +2408,7 @@ def index_html():
             const tip = document.getElementById('dnaNodeTooltip');
             const text = document.getElementById('dnaTooltipText');
             tip.classList.remove('hidden');
-            text.innerHTML = `<strong>${{name}}</strong> • Usage: <span class="text-cyan">${{usage}}</span> • Projects: <span class="text-white">${{projects}}</span> • Momentum: <span class="text-emerald-400 font-bold">${{momentum}}</span>`;
+            text.innerHTML = `<strong>${{name}}</strong> • Usage: <span class="text-[#00F0FF]">${{usage}}</span> • Projects: <span class="text-white">${{projects}}</span> • Momentum: <span class="text-[#00FF9D] font-bold">${{momentum}}</span>`;
         }}
 
         // --- 6. Growth Velocity Timeline Graph ---
@@ -2508,17 +2436,17 @@ def index_html():
             let svgContent = `
                 <defs>
                     <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.3"/>
-                        <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.0"/>
+                        <stop offset="0%" stop-color="#00F0FF" stop-opacity="0.3"/>
+                        <stop offset="100%" stop-color="#00F0FF" stop-opacity="0.0"/>
                     </linearGradient>
                 </defs>
                 <path d="${{areaD}}" fill="url(#areaGrad)"/>
-                <path d="${{pathD}}" fill="none" stroke="#06B6D4" stroke-width="3" stroke-linecap="round"/>
+                <path d="${{pathD}}" fill="none" stroke="#00F0FF" stroke-width="3" stroke-linecap="round"/>
             `;
 
             pts.forEach(p => {{
                 svgContent += `
-                    <circle cx="${{p.x}}" cy="${{p.y}}" r="5" fill="#07090E" stroke="#06B6D4" stroke-width="2.5" class="cursor-pointer hover:r-7 transition-all" onclick="selectTimelineYear('${{p.year}}')"/>
+                    <circle cx="${{p.x}}" cy="${{p.y}}" r="5" fill="#060911" stroke="#00F0FF" stroke-width="2.5" class="cursor-pointer hover:r-7 transition-all" onclick="selectTimelineYear('${{p.year}}')"/>
                     <text x="${{p.x}}" y="${{h - pad + 18}}" font-family="JetBrains Mono" font-size="10" fill="#94A3B8" text-anchor="middle">${{p.year}}</text>
                     <text x="${{p.x}}" y="${{p.y - 10}}" font-family="JetBrains Mono" font-weight="bold" font-size="10" fill="#FFFFFF" text-anchor="middle">${{p.score}}</text>
                 `;
@@ -2529,7 +2457,7 @@ def index_html():
             // Set chips
             const chipBox = document.getElementById('velocityYearChips');
             chipBox.innerHTML = timeline.map(t => `
-                <button onclick="selectTimelineYear('${{t.year}}')" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-white/[0.08] hover:border-cyan text-slate-300 font-mono transition-colors">${{t.year}}</button>
+                <button onclick="selectTimelineYear('${{t.year}}')" class="px-2.5 py-1 rounded-lg bg-black/60 border border-white/[0.08] hover:border-[#00F0FF] text-slate-300 font-mono transition-colors">${{t.year}}</button>
             `).join('');
 
             // Select latest
@@ -2556,7 +2484,7 @@ def index_html():
                     const isPeakDay = (rhythm.peak_day && rhythm.peak_day.toLowerCase().includes(d.toLowerCase()));
                     const isPeakHour = (h >= 17 && h <= 22);
                     const opacity = isPeakDay && isPeakHour ? 0.95 : (isPeakHour ? 0.55 : 0.15);
-                    cells += `<span class="w-full h-3 rounded-[2px] transition-all hover:scale-125" style="background-color: rgba(6, 182, 212, ${{opacity}});" title="${{d}} ${{h}}:00"></span>`;
+                    cells += `<span class="w-full h-3 rounded-[2px] transition-all hover:scale-125" style="background-color: rgba(0, 240, 255, ${{opacity}});" title="${{d}} ${{h}}:00"></span>`;
                 }}
                 html += `
                     <div class="flex items-center gap-2">
@@ -2576,17 +2504,17 @@ def index_html():
         function renderCareerBars(careers) {{
             const container = document.getElementById('careerBarsContainer');
             container.innerHTML = careers.map(c => `
-                <div class="p-3.5 rounded-xl bg-slate-900 border border-white/[0.08]">
+                <div class="p-3.5 rounded-xl bg-black/40 border border-white/[0.08]">
                     <div class="flex justify-between items-center text-xs font-mono mb-1.5">
                         <span class="text-white font-bold text-sm">${{c.role}}</span>
-                        <span class="text-cyan font-black font-mono text-sm">${{c.fit}}%</span>
+                        <span class="text-[#00F0FF] font-black font-mono text-sm">${{c.fit}}%</span>
                     </div>
                     <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-2">
-                        <div class="bg-gradient-to-r from-cyan to-indigo h-full rounded-full" style="width: ${{c.fit}}%;"></div>
+                        <div class="bg-gradient-to-r from-[#00F0FF] to-[#6366F1] h-full rounded-full" style="width: ${{c.fit}}%;"></div>
                     </div>
                     <div class="flex flex-wrap gap-1.5 text-[10px] font-mono">
-                        ${{(c.strengths || []).map(s => `<span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">✓ ${{s}}</span>`).join('')}}
-                        ${{(c.gaps || []).map(g => `<span class="px-1.5 py-0.5 rounded bg-rose-500/15 text-rose-400 border border-rose-500/30">gap: ${{g}}</span>`).join('')}}
+                        ${{(c.strengths || []).map(s => `<span class="px-1.5 py-0.5 rounded-full bg-[#00FF9D]/15 text-[#00FF9D] border border-[#00FF9D]/30">✓ ${{s}}</span>`).join('')}}
+                        ${{(c.gaps || []).map(g => `<span class="px-1.5 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30">gap: ${{g}}</span>`).join('')}}
                     </div>
                 </div>
             `).join('');
@@ -2631,10 +2559,10 @@ def index_html():
                 <div>
                     <div class="flex justify-between text-xs font-mono mb-1">
                         <span class="text-slate-300">${{label}}</span>
-                        <span class="text-cyan font-bold">${{val}}th percentile</span>
+                        <span class="text-[#00F0FF] font-bold">${{val}}th percentile</span>
                     </div>
                     <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                        <div class="bg-gradient-to-r from-slate-500 to-cyan h-full rounded-full" style="width: ${{val}}%;"></div>
+                        <div class="bg-gradient-to-r from-slate-500 to-[#00F0FF] h-full rounded-full" style="width: ${{val}}%;"></div>
                     </div>
                 </div>
             `).join('');
@@ -2658,7 +2586,7 @@ def index_html():
 
             steps.forEach(s => {{
                 const el = document.getElementById(`step-${{s}}`);
-                el.className = 'flex items-center gap-3 text-slate-500';
+                el.className = 'flex items-center gap-3 text-slate-400';
                 el.querySelector('.step-icon').textContent = '⏳';
             }});
 
@@ -2667,12 +2595,12 @@ def index_html():
                 currentStep++;
                 if (currentStep <= 8) {{
                     const el = document.getElementById(`step-${{currentStep}}`);
-                    el.className = 'flex items-center gap-3 text-cyan font-bold';
+                    el.className = 'flex items-center gap-3 text-[#00F0FF] font-bold';
                     el.querySelector('.step-icon').textContent = '⚡';
 
                     if (currentStep > 1) {{
                         const prevEl = document.getElementById(`step-${{currentStep - 1}}`);
-                        prevEl.className = 'flex items-center gap-3 text-emerald-400';
+                        prevEl.className = 'flex items-center gap-3 text-[#00FF9D]';
                         prevEl.querySelector('.step-icon').textContent = '✓';
                     }}
 
@@ -2680,7 +2608,7 @@ def index_html():
                 }} else {{
                     clearInterval(interval);
                     const lastEl = document.getElementById('step-8');
-                    lastEl.className = 'flex items-center gap-3 text-emerald-400';
+                    lastEl.className = 'flex items-center gap-3 text-[#00FF9D]';
                     lastEl.querySelector('.step-icon').textContent = '✓';
 
                     setTimeout(async () => {{
@@ -2689,7 +2617,7 @@ def index_html():
                         jumpToSection('#overviewSection');
                     }}, 350);
                 }}
-            }}, 200);
+            }}, 180);
         }}
 
         async function fetchAndRenderProfile(username) {{
