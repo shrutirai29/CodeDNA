@@ -1101,64 +1101,64 @@ def index_html():
     <!-- Hyper-Premium Design System (WeEvolveIT + Spyker + Creche Tank) -->
     <style>
         :root {{
-            /* Dark Mode: Luxury Obsidian Glass */
-            --bg-base: #09090b;
-            --bg-card: rgba(18, 18, 24, 0.85);
-            --bg-card-hover: rgba(24, 24, 32, 0.95);
-            --bg-sub: rgba(12, 12, 16, 0.7);
-            --border-hairline: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(0, 240, 255, 0.4);
-            --text-head: #FFFFFF;
-            --text-body: #D4D4D8;
-            --text-sub: #71717A;
+            /* Developer Dark Mode: Terminal & GitHub Obsidian Canvas */
+            --bg-base: #06090e;
+            --bg-card: rgba(13, 19, 31, 0.82);
+            --bg-card-hover: rgba(18, 26, 42, 0.94);
+            --bg-sub: rgba(16, 23, 36, 0.75);
+            --border-hairline: rgba(56, 189, 248, 0.15);
+            --border-glow: rgba(0, 240, 255, 0.45);
+            --text-head: #F0F6FC;
+            --text-body: #C9D1D9;
+            --text-sub: #8B949E;
             --cyan-accent: #00F0FF;
-            --cyan-bg: rgba(0, 240, 255, 0.12);
-            --cyan-border: rgba(0, 240, 255, 0.3);
-            --indigo-accent: #818CF8;
-            --emerald-accent: #10B981;
-            --amber-accent: #F59E0B;
-            --rose-accent: #F43F5E;
-            --vignette-start: rgba(9, 9, 11, 0.55);
-            --vignette-end: rgba(9, 9, 11, 0.95);
-            --glow-color: rgba(0, 240, 255, 0.15);
-            --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-            --pill-bg: rgba(18, 18, 24, 0.88);
-            --pill-border: rgba(255, 255, 255, 0.12);
-            --bar-track: #1C1C22;
+            --cyan-bg: rgba(0, 240, 255, 0.10);
+            --cyan-border: rgba(0, 240, 255, 0.28);
+            --emerald-accent: #00FF9D;
+            --indigo-accent: #A78BFA;
+            --amber-accent: #FBBF24;
+            --rose-accent: #FF5277;
+            --vignette-start: rgba(6, 9, 14, 0.45);
+            --vignette-end: rgba(6, 9, 14, 0.95);
+            --glow-color: rgba(0, 240, 255, 0.16);
+            --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+            --pill-bg: rgba(13, 19, 31, 0.88);
+            --pill-border: rgba(56, 189, 248, 0.20);
+            --bar-track: #151D2A;
             --radar-grid: rgba(255, 255, 255, 0.08);
             --radar-poly: rgba(0, 240, 255, 0.25);
             --radar-stroke: #00F0FF;
-            --node-fill: #121218;
+            --node-fill: #0D131F;
         }}
 
         html.light {{
-            /* Bright Mode: Pristine Studio Alabaster */
-            --bg-base: #F8F9FA;
+            /* Developer Light Mode: Clean IDE & Studio Alabaster */
+            --bg-base: #F6F8FA;
             --bg-card: rgba(255, 255, 255, 0.94);
             --bg-card-hover: #FFFFFF;
-            --bg-sub: rgba(244, 245, 247, 0.95);
-            --border-hairline: rgba(0, 0, 0, 0.08);
-            --border-glow: rgba(2, 132, 199, 0.4);
-            --text-head: #09090B;
-            --text-body: #27272A;
-            --text-sub: #71717A;
-            --cyan-accent: #0284C7;
-            --cyan-bg: rgba(2, 132, 199, 0.10);
-            --cyan-border: rgba(2, 132, 199, 0.35);
-            --indigo-accent: #4F46E5;
-            --emerald-accent: #059669;
-            --amber-accent: #D97706;
-            --rose-accent: #E11D48;
-            --vignette-start: rgba(248, 249, 250, 0.55);
-            --vignette-end: rgba(248, 249, 250, 0.92);
-            --glow-color: rgba(2, 132, 199, 0.18);
+            --bg-sub: rgba(243, 245, 248, 0.95);
+            --border-hairline: rgba(31, 35, 40, 0.12);
+            --border-glow: rgba(9, 105, 218, 0.4);
+            --text-head: #1F2328;
+            --text-body: #31373D;
+            --text-sub: #656D76;
+            --cyan-accent: #0969DA;
+            --cyan-bg: rgba(9, 105, 218, 0.08);
+            --cyan-border: rgba(9, 105, 218, 0.28);
+            --emerald-accent: #1A7F37;
+            --indigo-accent: #8250DF;
+            --amber-accent: #BF8700;
+            --rose-accent: #CF222E;
+            --vignette-start: rgba(246, 248, 250, 0.45);
+            --vignette-end: rgba(246, 248, 250, 0.92);
+            --glow-color: rgba(9, 105, 218, 0.15);
             --card-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.06);
             --pill-bg: rgba(255, 255, 255, 0.92);
-            --pill-border: rgba(0, 0, 0, 0.10);
-            --bar-track: #E4E4E7;
+            --pill-border: rgba(31, 35, 40, 0.12);
+            --bar-track: #E6EDF2;
             --radar-grid: rgba(0, 0, 0, 0.08);
-            --radar-poly: rgba(2, 132, 199, 0.22);
-            --radar-stroke: #0284C7;
+            --radar-poly: rgba(9, 105, 218, 0.22);
+            --radar-stroke: #0969DA;
             --node-fill: #FFFFFF;
         }}
 
@@ -1190,10 +1190,50 @@ def index_html():
             height: 100vh;
         }}
 
-        .vignette-overlay {{
+        /* Developer Cyber Matrix Blueprint Grid */
+        .developer-grid-bg {{
             position: fixed;
             inset: 0;
             z-index: 1;
+            pointer-events: none;
+            background-size: 36px 36px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 240, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.035) 1px, transparent 1px);
+            mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 95%);
+            -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 95%);
+        }}
+
+        html.light .developer-grid-bg {{
+            background-image: 
+                linear-gradient(to right, rgba(9, 105, 218, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(9, 105, 218, 0.04) 1px, transparent 1px);
+        }}
+
+        /* Ambient Developer Glow Spots (Cyan, Emerald, Purple) */
+        .ambient-dev-glow {{
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle 700px at 50% -80px, rgba(0, 240, 255, 0.12), transparent 70%),
+                radial-gradient(circle 500px at 15% 45%, rgba(167, 139, 250, 0.07), transparent 60%),
+                radial-gradient(circle 550px at 85% 65%, rgba(0, 255, 157, 0.08), transparent 60%);
+            transition: background 0.4s ease;
+        }}
+
+        html.light .ambient-dev-glow {{
+            background: 
+                radial-gradient(circle 700px at 50% -80px, rgba(9, 105, 218, 0.08), transparent 70%),
+                radial-gradient(circle 500px at 15% 45%, rgba(130, 80, 223, 0.04), transparent 60%),
+                radial-gradient(circle 550px at 85% 65%, rgba(26, 127, 55, 0.05), transparent 60%);
+        }}
+
+        .vignette-overlay {{
+            position: fixed;
+            inset: 0;
+            z-index: 2;
             pointer-events: none;
             background: radial-gradient(ellipse at center, var(--vignette-start) 0%, var(--vignette-end) 90%);
             transition: background 0.3s ease;
@@ -1302,8 +1342,12 @@ def index_html():
     <!-- Scroll Progress -->
     <div id="scrollProgressBar" class="fixed top-0 left-0 h-[2px] z-50 bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-500 w-0 transition-[width] duration-100 ease-out"></div>
 
-    <!-- 3D Three.js WebGL Helix Canvas -->
+    <!-- 3D Three.js WebGL Cyber Canvas -->
     <canvas id="webglCanvas"></canvas>
+    <!-- Developer Cyber Blueprint Matrix Grid -->
+    <div class="developer-grid-bg"></div>
+    <!-- Ambient Developer Neon Aurora Glow -->
+    <div class="ambient-dev-glow"></div>
     <div class="vignette-overlay"></div>
 
     <!-- ===================================================================== -->
@@ -1369,23 +1413,35 @@ def index_html():
             </p>
 
             <!-- Holographic Search Terminal -->
-            <form onsubmit="handleAnalyzeSubmit(event)" class="glass-card p-2 sm:p-2.5 flex flex-col sm:flex-row gap-2 max-w-lg w-full mx-auto mb-6">
-                <div class="relative flex-1 flex items-center">
-                    <span class="absolute left-3.5 font-mono text-sm font-bold c-accent">@</span>
-                    <input 
-                        type="text" 
-                        id="githubUsernameInput" 
-                        value="shrutirai29"
-                        placeholder="Enter any GitHub username (e.g. shrutirai29)" 
-                        class="w-full pl-8 pr-4 py-2.5 bg-transparent text-sm c-head placeholder-slate-400 focus:outline-none font-mono"
-                        required
-                    />
+            <div class="glass-card max-w-lg w-full mx-auto mb-6 overflow-hidden">
+                <div class="flex items-center justify-between px-3.5 py-1.5 border-b text-[10px] font-mono c-sub" style="border-color: var(--border-hairline); background: rgba(0,0,0,0.18);">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                        <span class="ml-1 text-[9px] opacity-75">terminal : search</span>
+                    </div>
+                    <span class="c-accent text-[9px] font-bold">git:inspect</span>
                 </div>
-                <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white dark:text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer group shrink-0 font-mono uppercase">
-                    <span>Analyze Profile ⚡</span>
-                    <span class="group-hover:translate-x-1 transition-transform">→</span>
-                </button>
-            </form>
+                <form onsubmit="handleAnalyzeSubmit(event)" class="p-2 sm:p-2.5 flex flex-col sm:flex-row gap-2">
+                    <div class="relative flex-1 flex items-center">
+                        <span class="absolute left-3.5 font-mono text-sm font-bold" style="color: var(--emerald-accent);">$</span>
+                        <span class="absolute left-7 font-mono text-xs c-sub">@</span>
+                        <input 
+                            type="text" 
+                            id="githubUsernameInput" 
+                            value="shrutirai29"
+                            placeholder="Enter any GitHub username (e.g. shrutirai29)" 
+                            class="w-full pl-11 pr-4 py-2.5 bg-transparent text-sm c-head placeholder-slate-400 focus:outline-none font-mono"
+                            required
+                        />
+                    </div>
+                    <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:opacity-90 text-white dark:text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer group shrink-0 font-mono uppercase">
+                        <span>Analyze Profile ⚡</span>
+                        <span class="group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                </form>
+            </div>
 
             <!-- Benchmark Selectors -->
             <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
@@ -1404,16 +1460,39 @@ def index_html():
         <!-- ===================================================================== -->
         <!-- 2. THE UNIFIED INTERACTIVE TWIN COCKPIT (ALL DATA IN 1 POLISHED HUB) -->
         <!-- ===================================================================== -->
-        <section id="cockpitSection" class="glass-card p-6 sm:p-8 mb-16">
+        <section id="cockpitSection" class="glass-card mb-16 overflow-hidden">
+            <!-- Terminal Window Header Strip -->
+            <div class="flex items-center justify-between px-4 sm:px-6 py-2.5 border-b text-[11px] font-mono c-sub" style="border-color: var(--border-hairline); background: rgba(0,0,0,0.18);">
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                    </div>
+                    <span class="text-xs font-semibold c-head ml-2 flex items-center gap-1.5">
+                        <span style="color: var(--emerald-accent); font-weight: bold;">$</span>
+                        <span>codedna --inspect profile</span>
+                    </span>
+                </div>
+                <div class="flex items-center gap-3 text-[10px]">
+                    <span class="hidden sm:inline-block px-2 py-0.5 rounded border text-[10px]" style="border-color: var(--cyan-border); color: var(--cyan-accent); background: var(--cyan-bg);">ENV: PROD</span>
+                    <span class="flex items-center gap-1 c-head font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full pulse-beacon" style="background-color: var(--emerald-accent);"></span>
+                        <span>LIVE DATA ⚡</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8">
             <!-- Cockpit Navigation Bar (Tabs) -->
             <div class="flex items-center justify-between border-b pb-4 mb-6 gap-2 overflow-x-auto" style="border-color: var(--border-hairline);">
                 <div class="flex items-center gap-2 shrink-0">
-                    <button onclick="switchTab('overview')" id="tab-overview" class="cockpit-tab active px-3.5 py-1.5 rounded-xl text-xs font-mono border transition-all">01 Overview</button>
-                    <button onclick="switchTab('radar')" id="tab-radar" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">02 Skills Radar</button>
-                    <button onclick="switchTab('dna')" id="tab-dna" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">03 Tech Stack</button>
-                    <button onclick="switchTab('velocity')" id="tab-velocity" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">04 Coding Rhythm</button>
-                    <button onclick="switchTab('projects')" id="tab-projects" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">05 Projects</button>
-                    <button onclick="switchTab('careers')" id="tab-careers" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">06 Career Matches</button>
+                    <button onclick="switchTab('overview')" id="tab-overview" class="cockpit-tab active px-3.5 py-1.5 rounded-xl text-xs font-mono border transition-all">> 01 Overview</button>
+                    <button onclick="switchTab('radar')" id="tab-radar" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">> 02 Skills Radar</button>
+                    <button onclick="switchTab('dna')" id="tab-dna" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">> 03 Tech Stack</button>
+                    <button onclick="switchTab('velocity')" id="tab-velocity" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">> 04 Coding Rhythm</button>
+                    <button onclick="switchTab('projects')" id="tab-projects" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">> 05 Projects</button>
+                    <button onclick="switchTab('careers')" id="tab-careers" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">> 06 Career Matches</button>
                 </div>
 
                 <div class="hidden sm:flex items-center gap-2 text-xs font-mono c-sub shrink-0">
@@ -1466,9 +1545,9 @@ def index_html():
                                 <circle id="scoreProgressCircle" cx="80" cy="80" r="70" stroke="url(#scoreGradient)" stroke-width="11" fill="transparent" stroke-linecap="round" class="radial-progress-circle"/>
                                 <defs>
                                     <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#06B6D4"/>
-                                        <stop offset="50%" stop-color="#6366F1"/>
-                                        <stop offset="100%" stop-color="#A855F7"/>
+                                        <stop offset="0%" stop-color="#00F0FF"/>
+                                        <stop offset="60%" stop-color="#00FF9D"/>
+                                        <stop offset="100%" stop-color="#10B981"/>
                                     </linearGradient>
                                 </defs>
                             </svg>
@@ -1680,6 +1759,7 @@ def index_html():
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
 
@@ -1950,91 +2030,136 @@ def index_html():
             }}
         }}
 
-        // --- 3. Full-Screen Three.js WebGL Helix Cosmos ---
-        let helixGroup, scene, camera, renderer, starPoints, matA, matB, lineMat, starMat;
+        // --- 3. Full-Screen Three.js Interactive Developer Cyber Constellation & Horizon Grid ---
+        let scene, camera, renderer, cyberGroup, gridHelper, nodePoints, lineSegments, tokenA, tokenB;
+        let nodeData = [];
         let mouseX = 0, mouseY = 0;
-        let targetRotationX = 0, targetRotationY = 0;
+        let targetCamX = 0, targetCamY = 0;
+        let isThemeLight = false;
 
         function init3DScene() {{
             const canvas = document.getElementById('webglCanvas');
             if (!canvas || typeof THREE === 'undefined') return;
 
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 52;
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 48);
 
             renderer = new THREE.WebGLRenderer({{ canvas: canvas, alpha: true, antialias: true }});
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+            isThemeLight = document.documentElement.classList.contains('light');
+
+            cyberGroup = new THREE.Group();
+            scene.add(cyberGroup);
+
+            // 1. Perspective Horizon Cyber Grid Plane
+            const gridColorCenter = isThemeLight ? 0x0969DA : 0x00F0FF;
+            const gridColorOuter = isThemeLight ? 0xD0D7DE : 0x1E293B;
+            gridHelper = new THREE.GridHelper(120, 36, gridColorCenter, gridColorOuter);
+            gridHelper.position.y = -16;
+            gridHelper.rotation.x = Math.PI * 0.05;
+            gridHelper.material.opacity = isThemeLight ? 0.30 : 0.38;
+            gridHelper.material.transparent = true;
+            cyberGroup.add(gridHelper);
+
+            // 2. Interactive Constellation Nodes (Data Points)
             const isMobile = window.innerWidth < 768;
-            const isLight = document.documentElement.classList.contains('light');
+            const nodeCount = isMobile ? 42 : 75;
+            nodeData = [];
 
-            helixGroup = new THREE.Group();
-            scene.add(helixGroup);
+            const positions = new Float32Array(nodeCount * 3);
+            const colors = new Float32Array(nodeCount * 3);
 
-            const strandCount = isMobile ? 65 : 100;
-            const radius = 8.5;
-            const helixHeight = 75;
-            const turns = 3.6;
+            const colorPrimary = new THREE.Color(isThemeLight ? 0x0969DA : 0x00F0FF); // Cyber Cyan
+            const colorSecondary = new THREE.Color(isThemeLight ? 0x1A7F37 : 0x00FF9D); // Terminal Neon Green
+            const colorAccent = new THREE.Color(isThemeLight ? 0x8250DF : 0xA78BFA); // Syntax Violet
 
-            const colorA = isLight ? 0x0284C7 : 0x00F0FF;
-            const colorB = isLight ? 0x4F46E5 : 0x8A2BE2;
-            const lineColor = isLight ? 0x0284C7 : 0x00F0FF;
+            for (let i = 0; i < nodeCount; i++) {{
+                const x = (Math.random() - 0.5) * 65;
+                const y = (Math.random() - 0.5) * 45;
+                const z = (Math.random() - 0.5) * 35;
+                
+                positions[i * 3] = x;
+                positions[i * 3 + 1] = y;
+                positions[i * 3 + 2] = z;
 
-            const geomA = new THREE.SphereGeometry(0.38, 8, 8);
-            matA = new THREE.MeshBasicMaterial({{ color: colorA }});
+                const c = (i % 3 === 0) ? colorPrimary : (i % 3 === 1 ? colorSecondary : colorAccent);
+                colors[i * 3] = c.r;
+                colors[i * 3 + 1] = c.g;
+                colors[i * 3 + 2] = c.b;
 
-            const geomB = new THREE.SphereGeometry(0.38, 8, 8);
-            matB = new THREE.MeshBasicMaterial({{ color: colorB }});
-
-            lineMat = new THREE.LineBasicMaterial({{ color: lineColor, transparent: true, opacity: isLight ? 0.45 : 0.35 }});
-
-            for (let i = 0; i < strandCount; i++) {{
-                const t = (i / strandCount);
-                const y = (t - 0.5) * helixHeight;
-                const angle = t * Math.PI * 2 * turns;
-
-                const xA = Math.cos(angle) * radius;
-                const zA = Math.sin(angle) * radius;
-                const nodeA = new THREE.Mesh(geomA, matA);
-                nodeA.position.set(xA, y, zA);
-                helixGroup.add(nodeA);
-
-                const xB = Math.cos(angle + Math.PI) * radius;
-                const zB = Math.sin(angle + Math.PI) * radius;
-                const nodeB = new THREE.Mesh(geomB, matB);
-                nodeB.position.set(xB, y, zB);
-                helixGroup.add(nodeB);
-
-                if (i % 2 === 0) {{
-                    const lineGeom = new THREE.BufferGeometry().setFromPoints([
-                        new THREE.Vector3(xA, y, zA),
-                        new THREE.Vector3(xB, y, zB)
-                    ]);
-                    const rung = new THREE.Line(lineGeom, lineMat);
-                    helixGroup.add(rung);
-                }}
+                nodeData.push({{
+                    x, y, z,
+                    vx: (Math.random() - 0.5) * 0.035,
+                    vy: (Math.random() - 0.5) * 0.035,
+                    vz: (Math.random() - 0.5) * 0.025
+                }});
             }}
 
-            const starCount = isMobile ? 50 : 120;
-            const starGeom = new THREE.BufferGeometry();
-            const starPositions = new Float32Array(starCount * 3);
-            for (let i = 0; i < starCount * 3; i += 3) {{
-                starPositions[i] = (Math.random() - 0.5) * 95;
-                starPositions[i + 1] = (Math.random() - 0.5) * 95;
-                starPositions[i + 2] = (Math.random() - 0.5) * 75;
-            }}
-            starGeom.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-            starMat = new THREE.PointsMaterial({{ color: colorA, size: 0.8, transparent: true, opacity: isLight ? 0.65 : 0.55 }});
-            starPoints = new THREE.Points(starGeom, starMat);
-            scene.add(starPoints);
+            const pointGeom = new THREE.BufferGeometry();
+            pointGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            pointGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
+            const pointMat = new THREE.PointsMaterial({{
+                size: isMobile ? 0.9 : 1.2,
+                vertexColors: true,
+                transparent: true,
+                opacity: isThemeLight ? 0.75 : 0.85
+            }});
+
+            nodePoints = new THREE.Points(pointGeom, pointMat);
+            cyberGroup.add(nodePoints);
+
+            // 3. Dynamic Laser Connection Lines between nearby nodes
+            const maxConnections = nodeCount * 3;
+            const linePositions = new Float32Array(maxConnections * 6);
+            const lineColors = new Float32Array(maxConnections * 6);
+
+            const lineGeom = new THREE.BufferGeometry();
+            lineGeom.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+            lineGeom.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
+
+            const lineMat = new THREE.LineBasicMaterial({{
+                vertexColors: true,
+                transparent: true,
+                opacity: isThemeLight ? 0.28 : 0.35,
+                blending: isThemeLight ? THREE.NormalBlending : THREE.AdditiveBlending
+            }});
+
+            lineSegments = new THREE.LineSegments(lineGeom, lineMat);
+            cyberGroup.add(lineSegments);
+
+            // 4. Floating Developer Wireframe Token (Geometric Octahedrons)
+            const tokenGeom = new THREE.OctahedronGeometry(2.2, 0);
+            const tokenMat = new THREE.MeshBasicMaterial({{
+                color: isThemeLight ? 0x0969DA : 0x00F0FF,
+                wireframe: true,
+                transparent: true,
+                opacity: isThemeLight ? 0.35 : 0.45
+            }});
+            tokenA = new THREE.Mesh(tokenGeom, tokenMat);
+            tokenA.position.set(-24, 12, -10);
+            cyberGroup.add(tokenA);
+
+            const tokenMatB = new THREE.MeshBasicMaterial({{
+                color: isThemeLight ? 0x1A7F37 : 0x00FF9D,
+                wireframe: true,
+                transparent: true,
+                opacity: isThemeLight ? 0.35 : 0.45
+            }});
+            tokenB = new THREE.Mesh(tokenGeom, tokenMatB);
+            tokenB.position.set(26, -6, -8);
+            tokenB.scale.set(0.7, 0.7, 0.7);
+            cyberGroup.add(tokenB);
+
+            // Mouse parallax listener
             window.addEventListener('mousemove', (e) => {{
                 mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
                 mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-                targetRotationY = mouseX * 0.6;
-                targetRotationX = mouseY * 0.35;
+                targetCamX = mouseX * 4.5;
+                targetCamY = -mouseY * 3.0;
             }});
 
             window.addEventListener('resize', () => {{
@@ -2043,29 +2168,112 @@ def index_html():
                 renderer.setSize(window.innerWidth, window.innerHeight);
             }});
 
+            // Animation Loop (60 FPS)
+            const connectDist = 11.5;
             function animate() {{
                 requestAnimationFrame(animate);
 
-                helixGroup.rotation.y += 0.005;
-                helixGroup.rotation.y += (targetRotationY - helixGroup.rotation.y) * 0.04;
-                helixGroup.rotation.x += (targetRotationX - helixGroup.rotation.x) * 0.04;
+                // Smooth camera parallax
+                camera.position.x += (targetCamX - camera.position.x) * 0.04;
+                camera.position.y += (targetCamY - camera.position.y) * 0.04;
+                camera.lookAt(0, 0, 0);
 
-                starPoints.rotation.y += 0.001;
+                // Gentle cyber group rotation
+                cyberGroup.rotation.y += 0.0008;
+
+                // Wireframe tokens rotation
+                tokenA.rotation.x += 0.008;
+                tokenA.rotation.y += 0.012;
+                tokenB.rotation.x -= 0.010;
+                tokenB.rotation.y += 0.009;
+
+                // Update node positions and compute connections
+                const posArr = nodePoints.geometry.attributes.position.array;
+                const linePos = lineSegments.geometry.attributes.position.array;
+                const lineCol = lineSegments.geometry.attributes.color.array;
+                let lineIdx = 0;
+
+                for (let i = 0; i < nodeCount; i++) {{
+                    const d = nodeData[i];
+                    d.x += d.vx;
+                    d.y += d.vy;
+                    d.z += d.vz;
+
+                    if (d.x < -35 || d.x > 35) d.vx *= -1;
+                    if (d.y < -25 || d.y > 25) d.vy *= -1;
+                    if (d.z < -20 || d.z > 20) d.vz *= -1;
+
+                    posArr[i * 3] = d.x;
+                    posArr[i * 3 + 1] = d.y;
+                    posArr[i * 3 + 2] = d.z;
+
+                    // Connect lines to nearby nodes
+                    for (let j = i + 1; j < nodeCount; j++) {{
+                        const d2 = nodeData[j];
+                        const dx = d.x - d2.x;
+                        const dy = d.y - d2.y;
+                        const dz = d.z - d2.z;
+                        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                        if (dist < connectDist && lineIdx < maxConnections) {{
+                            const pIdx = lineIdx * 6;
+                            linePos[pIdx] = d.x;
+                            linePos[pIdx + 1] = d.y;
+                            linePos[pIdx + 2] = d.z;
+                            linePos[pIdx + 3] = d2.x;
+                            linePos[pIdx + 4] = d2.y;
+                            linePos[pIdx + 5] = d2.z;
+
+                            const r = isThemeLight ? 0.04 : 0.0;
+                            const g = isThemeLight ? 0.41 : 0.94;
+                            const b = 1.0;
+
+                            lineCol[pIdx] = r; lineCol[pIdx + 1] = g; lineCol[pIdx + 2] = b;
+                            lineCol[pIdx + 3] = r; lineCol[pIdx + 4] = g; lineCol[pIdx + 5] = b;
+
+                            lineIdx++;
+                        }}
+                    }}
+                }}
+
+                nodePoints.geometry.attributes.position.needsUpdate = true;
+                lineSegments.geometry.setDrawRange(0, lineIdx * 2);
+                lineSegments.geometry.attributes.position.needsUpdate = true;
+                lineSegments.geometry.attributes.color.needsUpdate = true;
+
                 renderer.render(scene, camera);
             }}
             animate();
         }}
 
         function update3DTheme(isLight) {{
-            if (!matA || !matB || !lineMat || !starMat) return;
-            const colorA = isLight ? 0x0284C7 : 0x00F0FF;
-            const colorB = isLight ? 0x4F46E5 : 0x8A2BE2;
-            matA.color.setHex(colorA);
-            matB.color.setHex(colorB);
-            lineMat.color.setHex(colorA);
-            lineMat.opacity = isLight ? 0.45 : 0.35;
-            starMat.color.setHex(colorA);
-            starMat.opacity = isLight ? 0.65 : 0.55;
+            isThemeLight = isLight;
+            if (!gridHelper || !nodePoints || !lineSegments || !tokenA || !tokenB) return;
+
+            const gridColorOuter = isLight ? 0xD0D7DE : 0x1E293B;
+            gridHelper.material.color.setHex(gridColorOuter);
+            gridHelper.material.opacity = isLight ? 0.30 : 0.38;
+
+            const colorPrimary = new THREE.Color(isLight ? 0x0969DA : 0x00F0FF);
+            const colorSecondary = new THREE.Color(isLight ? 0x1A7F37 : 0x00FF9D);
+            const colorAccent = new THREE.Color(isLight ? 0x8250DF : 0xA78BFA);
+
+            const colors = nodePoints.geometry.attributes.color.array;
+            const count = colors.length / 3;
+            for (let i = 0; i < count; i++) {{
+                const c = (i % 3 === 0) ? colorPrimary : (i % 3 === 1 ? colorSecondary : colorAccent);
+                colors[i * 3] = c.r;
+                colors[i * 3 + 1] = c.g;
+                colors[i * 3 + 2] = c.b;
+            }}
+            nodePoints.geometry.attributes.color.needsUpdate = true;
+            nodePoints.material.opacity = isLight ? 0.75 : 0.85;
+
+            tokenA.material.color.setHex(isLight ? 0x0969DA : 0x00F0FF);
+            tokenB.material.color.setHex(isLight ? 0x1A7F37 : 0x00FF9D);
+
+            lineSegments.material.opacity = isLight ? 0.28 : 0.35;
+            lineSegments.material.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
         }}
 
         // --- 4. Profile Machine ---
