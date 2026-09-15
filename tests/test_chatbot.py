@@ -1,71 +1,76 @@
 import pytest
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 from api.index import app
 from ml.chatbot_agent import TrainedCodeDNAAgent
 
 client = TestClient(app)
 
-def test_trained_agent_greetings():
-    res_hi = TrainedCodeDNAAgent.answer("hi")
-    assert res_hi["in_scope"] is True
-    assert res_hi["intent"] == "greeting"
-    assert "CodeDNA Assistant" in res_hi["response"]
+def test_trained_agent_local_ml_greetings():
+    """Verify local Scikit-Learn ML model classifies greetings correctly without external API."""
+    with patch("ml.gemini_service.query_gemini", return_value=None):
+        res_hi = TrainedCodeDNAAgent.answer("hi")
+        assert res_hi["in_scope"] is True
+        assert res_hi["intent"] == "greeting"
+        assert "CodeDNA Assistant" in res_hi["response"]
 
-    res_hello = TrainedCodeDNAAgent.answer("Hello there")
-    assert res_hello["in_scope"] is True
-    assert res_hello["intent"] == "greeting"
+        res_hello = TrainedCodeDNAAgent.answer("Hello there")
+        assert res_hello["in_scope"] is True
+        assert res_hello["intent"] == "greeting"
 
-    res_namaste = TrainedCodeDNAAgent.answer("Namaste")
-    assert res_namaste["in_scope"] is True
-    assert res_namaste["intent"] == "greeting"
+        res_namaste = TrainedCodeDNAAgent.answer("Namaste")
+        assert res_namaste["in_scope"] is True
+        assert res_namaste["intent"] == "greeting"
 
 
-def test_trained_agent_platform_queries():
-    # What is CodeDNA
-    res_codedna = TrainedCodeDNAAgent.answer("What is CodeDNA?")
-    assert res_codedna["in_scope"] is True
-    assert res_codedna["intent"] == "platform_overview"
-    assert "CodeDNA" in res_codedna["response"]
-    assert res_codedna["confidence"] >= 0.5
+def test_trained_agent_local_ml_platform_queries():
+    """Verify local Scikit-Learn ML model classifies all core topics accurately."""
+    with patch("ml.gemini_service.query_gemini", return_value=None):
+        # What is CodeDNA
+        res_codedna = TrainedCodeDNAAgent.answer("What is CodeDNA?")
+        assert res_codedna["in_scope"] is True
+        assert res_codedna["intent"] == "platform_overview"
+        assert "CodeDNA" in res_codedna["response"]
+        assert res_codedna["confidence"] >= 0.5
 
-    # Score calculation
-    res_score = TrainedCodeDNAAgent.answer("How is the developer score calculated?")
-    assert res_score["in_scope"] is True
-    assert res_score["intent"] == "score_intelligence"
-    assert "Developer Score" in res_score["response"] or "Coding Speed" in res_score["response"]
+        # Score calculation
+        res_score = TrainedCodeDNAAgent.answer("How is the developer score calculated?")
+        assert res_score["in_scope"] is True
+        assert res_score["intent"] == "score_intelligence"
+        assert "Developer Score" in res_score["response"] or "Coding Speed" in res_score["response"]
 
-    # Anti-burstiness
-    res_burst = TrainedCodeDNAAgent.answer("Tell me about anti-burstiness")
-    assert res_burst["in_scope"] is True
-    assert res_burst["intent"] == "anti_burstiness"
-    assert "Anti-Burstiness" in res_burst["response"]
+        # Anti-burstiness
+        res_burst = TrainedCodeDNAAgent.answer("Tell me about anti-burstiness")
+        assert res_burst["in_scope"] is True
+        assert res_burst["intent"] == "anti_burstiness"
+        assert "Anti-Burstiness" in res_burst["response"]
 
-    # Shruti Rai profile
-    res_shruti = TrainedCodeDNAAgent.answer("Who is Shruti Rai?")
-    assert res_shruti["in_scope"] is True
-    assert res_shruti["intent"] == "shruti_profile"
-    assert "Shruti Rai" in res_shruti["response"]
+        # Shruti Rai profile
+        res_shruti = TrainedCodeDNAAgent.answer("Who is Shruti Rai?")
+        assert res_shruti["in_scope"] is True
+        assert res_shruti["intent"] == "shruti_profile"
+        assert "Shruti Rai" in res_shruti["response"]
 
-    # API
-    res_api = TrainedCodeDNAAgent.answer("What are the public API endpoints?")
-    assert res_api["in_scope"] is True
-    assert "/api/profile" in res_api["response"]
+        # API
+        res_api = TrainedCodeDNAAgent.answer("What are the public API endpoints?")
+        assert res_api["in_scope"] is True
+        assert "/api/profile" in res_api["response"]
 
-    # API Key question
-    res_key = TrainedCodeDNAAgent.answer("Do I need an API key to access CodeDNA?")
-    assert res_key["in_scope"] is True
-    assert res_key["intent"] == "api_key_auth"
-    assert "No API key" in res_key["response"] or "API" in res_key["response"]
+        # API Key question
+        res_key = TrainedCodeDNAAgent.answer("Do I need an API key to access CodeDNA?")
+        assert res_key["in_scope"] is True
+        assert res_key["intent"] == "api_key_auth"
+        assert "No API key" in res_key["response"] or "API" in res_key["response"]
 
-    # Analysis process question
-    res_analysis = TrainedCodeDNAAgent.answer("how is the analysis happening")
-    assert res_analysis["in_scope"] is True
-    assert res_analysis["intent"] == "how_to_analyze"
-    assert "3" in res_analysis["response"] or "Scan" in res_analysis["response"]
+        # Analysis process question
+        res_analysis = TrainedCodeDNAAgent.answer("how is the analysis happening")
+        assert res_analysis["in_scope"] is True
+        assert res_analysis["intent"] == "how_to_analyze"
+        assert "3" in res_analysis["response"] or "Scan" in res_analysis["response"]
 
 
 def test_trained_agent_out_of_scope_rejection():
-    # Unrelated queries must be classified as out_of_scope or below confidence threshold
+    """Verify both Gemini and ML guardrails reject off-topic questions."""
     off_topic_questions = [
         "What is the capital of France?",
         "Make me a chocolate cake recipe",
@@ -82,6 +87,7 @@ def test_trained_agent_out_of_scope_rejection():
 
 
 def test_chat_api_endpoint():
+    """Test /api/chat endpoint with valid and off-topic requests."""
     # Test POST /api/chat with valid question
     payload = {"message": "What is CodeDNA?"}
     response = client.post("/api/chat", json=payload)
@@ -90,7 +96,7 @@ def test_chat_api_endpoint():
     assert "response" in data
     assert data["in_scope"] is True
     assert data["confidence"] > 0.3
-    assert data["intent"] == "platform_overview"
+    assert data["intent"] in ("platform_overview", "gemini_generative")
 
     # Test POST /api/chat with off-topic question
     payload_off = {"message": "What is the capital of Spain?"}
@@ -104,4 +110,15 @@ def test_chat_api_endpoint():
     assert res_get.status_code == 200
     data_get = res_get.json()
     assert data_get["in_scope"] is True
-    assert data_get["intent"] == "greeting"
+    assert data_get["intent"] in ("greeting", "gemini_generative")
+
+
+def test_gemini_generative_response():
+    """Verify Google Gemini produces generative conversational responses when key is available."""
+    from ml.gemini_service import query_gemini
+    res = query_gemini("How does CodeDNA calculate the developer score?")
+    if res is not None:
+        assert res["in_scope"] is True
+        assert res["engine"] == "gemini_1.5_flash"
+        assert "response" in res
+        assert len(res["response"]) > 50

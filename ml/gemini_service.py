@@ -10,6 +10,12 @@ import json
 import requests
 from typing import Optional, Dict, Any, List
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(override=True)
+except Exception:
+    pass
+
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 
 GEMINI_SYSTEM_INSTRUCTION = """You are the official AI Assistant for CodeDNA (https://code-dna-alpha.vercel.app), a smart developer profile analyzer platform created by Shruti Rai (@shrutirai29), a Computer Science Engineering student at Rashtriya Raksha University, India.
@@ -54,14 +60,21 @@ STRICT DOMAIN GUARDRAIL:
 
 def query_gemini(user_message: str, history: Optional[List[Dict[str, str]]] = None, api_key: Optional[str] = None) -> Optional[Dict[str, Any]]:
     """
-    Calls Gemini 1.5 Flash via standard REST API.
-    Returns structured response or None if API key is invalid/unavailable.
+    Calls Google Gemini via standard REST API.
+    Tries gemini-flash-latest, gemini-1.5-flash, and gemini-flash-lite-latest with CodeDNA system prompt.
+    Returns structured response or None if unavailable/rate-limited.
     """
     key = api_key or os.environ.get("GEMINI_API_KEY", "").strip()
-    if not key or not key.startswith("AIzaSy"):
-        return None
+    if not key or len(key) < 15:
+        try:
+            from dotenv import load_dotenv
+            load_dotenv(override=True)
+            key = os.environ.get("GEMINI_API_KEY", "").strip()
+        except Exception:
+            pass
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+    if not key or len(key) < 15:
+        return None
 
     # Build conversation contents
     contents = []
@@ -80,30 +93,36 @@ def query_gemini(user_message: str, history: Optional[List[Dict[str, str]]] = No
         },
         "contents": contents,
         "generationConfig": {
-            "temperature": 0.35,
+            "temperature": 0.4,
             "maxOutputTokens": 600,
             "topP": 0.85
         }
     }
 
-    try:
-        res = requests.post(url, json=payload, timeout=8)
-        if res.status_code == 200:
-            data = res.json()
-            candidates = data.get("candidates", [])
-            if candidates:
-                parts = candidates[0].get("content", {}).get("parts", [])
-                if parts:
-                    text = parts[0].get("text", "").strip()
-                    is_off_topic = "specifically here to help you with questions about this website" in text or "only answer questions about codedna" in text.lower()
-                    return {
-                        "response": text,
-                        "topic": "Question Out of Scope" if is_off_topic else "Gemini Platform Intelligence",
-                        "confidence": 0.99,
-                        "in_scope": not is_off_topic,
-                        "intent": "gemini_generative",
-                        "engine": "gemini_1.5_flash"
-                    }
-        return None
-    except Exception:
-        return None
+    # Try latest models in order
+    models_to_try = ["gemini-flash-latest", "gemini-1.5-flash", "gemini-flash-lite-latest"]
+
+    for model_name in models_to_try:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={key}"
+        try:
+            res = requests.post(url, json=payload, timeout=8)
+            if res.status_code == 200:
+                data = res.json()
+                candidates = data.get("candidates", [])
+                if candidates:
+                    parts = candidates[0].get("content", {}).get("parts", [])
+                    if parts:
+                        text = parts[0].get("text", "").strip()
+                        is_off_topic = "specifically here to help you with questions about this website" in text or "only answer questions about codedna" in text.lower()
+                        return {
+                            "response": text,
+                            "topic": "Question Out of Scope" if is_off_topic else "Gemini AI Intelligence",
+                            "confidence": 0.99,
+                            "in_scope": not is_off_topic,
+                            "intent": "gemini_generative",
+                            "engine": "gemini_1.5_flash"
+                        }
+        except Exception:
+            continue
+
+    return None
