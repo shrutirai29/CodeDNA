@@ -25,185 +25,173 @@ except ImportError:
 
 RESPONSES = {
     "greeting": (
-        "Hello! I am the **CodeDNA Trained AI Agent**.\n\n"
-        "I am trained on the CodeDNA genome intelligence platform. You can ask me about:\n"
-        "- **DNA Scoring & Formula**: How biometric dev metrics are computed\n"
-        "- **7D Engineering Radar**: Velocity, Quality, Entropy, Collaboration & more\n"
-        "- **Anti-Burstiness & Entropy**: Detecting sustainable engineering rhythms\n"
-        "- **Interactive Simulators**: What-if skill simulator & Career recommender\n"
-        "- **Developer Profile**: Shruti Rai's DNA genome and achievements\n"
-        "- **Open REST API**: Direct JSON endpoints without authentication\n\n"
-        "How can I assist your analysis today?"
+        "Hello! I am the **CodeDNA Assistant**.\n\n"
+        "I can help you explore this website and understand how developer profiles work. You can ask me:\n"
+        "- **How the Developer Score Works**: What makes up the 0 to 100 score\n"
+        "- **The Skills Radar**: Speed, quality, teamwork, and variety\n"
+        "- **Anti-Burstiness**: Why regular weekly coding matters more than sudden bulk uploads\n"
+        "- **Career Matcher**: Which job roles fit best and what skill to learn next\n"
+        "- **Shruti Rai's Profile**: Projects, skills, and background\n"
+        "- **Free API**: How to get raw JSON data without any sign-up or API key\n\n"
+        "What would you like to know?"
     ),
     "platform_overview": (
-        "**CodeDNA** is an Enterprise Developer Genome & Biometric Intelligence Platform created by **Shruti Rai**.\n\n"
-        "It transforms multi-dimensional GitHub commit telemetry into actionable biometric engineering signatures:\n"
-        "- **7D Engineering Radar**: Multi-axial evaluation across velocity, quality, impact, consistency, entropy, breadth, and collaboration.\n"
-        "- **Developer Archetyping**: Unsupervised clustering (K-Means & PCA) categorizing devs into Deep Specialists, Full-Stack Architects, and Momentum Drivers.\n"
-        "- **Biometric Anti-Burstiness**: Rigorous mathematical modeling to distinguish authentic sustained mastery from bot or weekend-binge bursts.\n"
-        "- **Interactive Simulator**: Dynamic career recommender and skill projection engines."
+        "**CodeDNA** is an open coding profile analyzer built by **Shruti Rai**.\n\n"
+        "Instead of just counting green squares or vanity stars on GitHub, it looks at how you actually code:\n"
+        "- **Core Strengths**: Speed, code quality, weekly habit, and skill variety\n"
+        "- **Coding Style**: Whether you are an Explorer, Deep Specialist, or Fast Builder\n"
+        "- **Honest Habits**: Rewards steady weekly coding and spots bot-spam or weekend dumping\n"
+        "- **Career Direction**: Tells you which jobs match your skills and the exact next tool to learn!"
     ),
     "score_intelligence": (
-        "### How the CodeDNA Score is Calculated\n\n"
-        "The overall **DNA Score (0–100)** is computed using a weighted composite of normalized engineering dimensions:\n\n"
-        "1. **Velocity & Momentum (20%)**: Rolling commit frequency, active day distribution, and throughput velocity.\n"
-        "2. **Code Quality & Longevity (20%)**: Test coverage signals, PR survival rate, and low regression overhead.\n"
-        "3. **Anti-Burstiness Index (15%)**: Measures commit interval variance. Penalizes sporadic artificial bulk bursts; rewards consistent daily execution.\n"
-        "4. **Information Entropy (15%)**: Shannon entropy over commit dispersion and architectural subsystem changes.\n"
-        "5. **Multi-Technology Breadth (10%)**: Diversity and proficiency across languages, runtimes, and frameworks.\n"
-        "6. **Collaboration Factor (10%)**: PR discussions, code reviews, and community issue interactions.\n"
-        "7. **Architecture Impact (10%)**: Scope and longevity of core codebase contributions."
+        "### How the Developer Score (0–100) Works\n\n"
+        "Your overall score is calculated from real coding habits:\n\n"
+        "1. **Coding Speed & Momentum (20%)**: How regularly and actively you push code.\n"
+        "2. **Code Quality (20%)**: Building clean projects with tests and good structure.\n"
+        "3. **Weekly Habit / Anti-Burstiness (15%)**: Coding steadily week after week instead of dumping everything at once.\n"
+        "4. **Skill Variety (15%)**: Working comfortably across frontend, backend, or data tools.\n"
+        "5. **Tool Mastery (10%)**: How deeply you know your primary languages.\n"
+        "6. **Teamwork (10%)**: Pull requests, code reviews, and community collaboration.\n"
+        "7. **Project Impact (10%)**: Creating real, working apps and tools."
     ),
     "anti_burstiness": (
-        "### Understanding Anti-Burstiness\n\n"
-        "**Anti-Burstiness** is a proprietary biometric metric that evaluates the temporal rhythm of coding activity.\n\n"
-        "- **The Problem**: Superficial commit counts can easily be gamed by batch squashes, bot commits, or short-lived weekend binges.\n"
-        "- **The Math**: We analyze the inter-arrival time (IAT) variance between commits, normalized across calendar weeks.\n"
-        "- **The Score**: High anti-burstiness (>0.80) indicates steady, sustainable development cadence and genuine craftsmanship, while low scores highlight episodic or bot-driven bursts."
+        "### What is Anti-Burstiness?\n\n"
+        "**Anti-Burstiness** simply checks whether you code with a **real, healthy habit**:\n\n"
+        "- **The Issue**: It is easy to game GitHub stats by uploading 50 empty commits in one night or running a bot script.\n"
+        "- **What We Do**: We check your activity over weeks and months.\n"
+        "- **The Reward**: If you code steadily week by week, you get a high consistency score (like Shruti Rai's **84/100**). If someone dumps all their code on one Sunday and vanishes for months, their score drops."
     ),
     "entropy": (
-        "### Information Entropy in CodeDNA\n\n"
-        "CodeDNA uses **Shannon Entropy** to evaluate the structural diversity and complexity of a developer's workflow:\n\n"
-        "- **Commit Dispersion**: Quantifies whether commits are uniformly distributed across days or clumped artificially.\n"
-        "- **Subsystem Breadth**: Measures whether code diffs touch backend, frontend, ML, and infrastructure systems in a balanced manner.\n"
-        "- An optimal entropy score (0.70–0.90) indicates well-rounded, modular development without chaos."
+        "### What is Skill Variety (Entropy)?\n\n"
+        "Skill Variety measures whether you only know one tool or can comfortably adapt to different layers of tech:\n\n"
+        "- Developers who only touch one file format have low variety.\n"
+        "- Developers who build across web apps (JavaScript/TypeScript), backend APIs (Python), and databases have healthy variety and adapt faster to modern engineering teams."
     ),
     "seven_d_radar": (
-        "### The 7D Engineering Radar\n\n"
-        "CodeDNA benchmarks developers across 7 orthogonal engineering dimensions:\n\n"
-        "1. **Velocity**: Deployment cadence, PR merge cycles, and commit throughput.\n"
-        "2. **Quality**: Test density, static analysis adherence, and refactor ratios.\n"
-        "3. **Consistency**: Longitudinal presence and anti-burstiness regularity.\n"
-        "4. **Entropy**: Information diversity and systemic breadth.\n"
-        "5. **Collaboration**: Review depth, community responsiveness, and mentorship.\n"
-        "6. **Architecture Impact**: Core module ownership, longevity, and structural contributions.\n"
-        "7. **Polyglot Breadth**: Multi-language adaptability across modern stacks."
+        "### The 7 Core Skills Radar\n\n"
+        "CodeDNA visualizes your coding profile across 7 key strengths:\n\n"
+        "1. **Depth**: How well you understand your core languages.\n"
+        "2. **Breadth**: The range of different tools and frameworks you can use.\n"
+        "3. **Consistency**: Your day-to-day coding habit and steady rhythm.\n"
+        "4. **Complexity**: Building full, multi-tier projects.\n"
+        "5. **Teamwork**: Working with others through reviews and open-source.\n"
+        "6. **Adaptability**: How fast you pick up fresh libraries and modern tools.\n"
+        "7. **Impact**: Delivering real-world applications that solve problems."
     ),
     "technology_dna": (
-        "### Technology DNA Matrix\n\n"
-        "Shruti Rai's CodeDNA profile features an integrated full-stack & AI/Data telemetry:\n\n"
-        "- **Languages**: Python (Core/ML), JavaScript/TypeScript (Web/UI), SQL (Data), HTML5/CSS3.\n"
-        "- **Data & ML**: Scikit-Learn, Pandas, NumPy, PCA, K-Means Clustering, SciPy.\n"
-        "- **Web & Backend**: FastAPI / Vercel Serverless, Streamlit, Docker.\n"
-        "- **Architecture**: Microservices, RESTful API Design, Responsive Minimalist UX."
+        "### Your Tech Stack\n\n"
+        "The Tech Stack view shows the tools you actually use in your GitHub projects:\n\n"
+        "- **Languages**: Python, JavaScript, TypeScript, C++, and HTML/CSS.\n"
+        "- **Libraries & Frameworks**: React, FastAPI, Scikit-Learn, TailwindCSS, Docker.\n"
+        "- **Activity Signals**: Shows which tools you are actively using more this month vs. mature tools in your toolkit."
     ),
     "benchmark_peer": (
-        "### Peer Benchmarks & Percentile Ranking\n\n"
-        "CodeDNA aggregates telemetry across hundreds of developer profiles to provide empirical percentile rankings:\n\n"
-        "- **Elite Tier (Top 5%)**: Anti-burstiness > 0.85, 7D composite > 88, Multi-language proficiency.\n"
-        "- **Accomplished (Top 15%)**: Consistent rhythm, strong system impact, robust code quality.\n"
-        "- **Emerging (Top 40%)**: Developing cadence, focused domain specialization.\n\n"
-        "Shruti Rai ranks in the **Top 5%** for Anti-Burstiness and Architecture Entropy."
+        "### How You Compare to Other Developers\n\n"
+        "CodeDNA compares your coding activity against hundreds of developer profiles so you can see where you stand:\n\n"
+        "- **Top 5%**: Outstanding weekly consistency (>84/100) and multi-skill adaptability.\n"
+        "- **Top 15%**: Strong project depth and steady development rhythm.\n"
+        "- **Top 40%**: Emerging developer with clear domain focus.\n\n"
+        "Shruti Rai ranks in the **Top 5%** for consistency and adaptability!"
     ),
     "skill_simulator": (
-        "### Interactive What-If Skill Simulator\n\n"
-        "The **Skill Simulator** lets you project how acquiring or deepening specific engineering skills impacts your overall CodeDNA score.\n\n"
-        "- Adjust sliders for Cloud Architecture, Distributed Systems, ML Engineering, and Test Automation.\n"
-        "- Watch the 7D Radar and overall composite score re-balance dynamically in real time!\n"
-        "- Try it right now on the homepage under the **Simulator** section."
+        "### Interactive Skill Simulator\n\n"
+        "The **Skill Simulator** lets you see how learning a new tool would boost your career:\n\n"
+        "- Pick a skill like Docker, Kubernetes, or ML Engineering.\n"
+        "- Watch your skills radar and match percentage update immediately in real time!\n"
+        "- Try it out right on the homepage in the Simulator tab."
     ),
     "career_recommender": (
-        "### ML Career Recommender\n\n"
-        "Our machine learning recommendation engine matches developer archetypes to tailored growth paths:\n\n"
-        "- Uses cosine similarity and nearest-centroid matching against industry career clusters.\n"
-        "- Pinpoints actionable gap analysis (e.g., adding CI/CD or System Design to bridge into a Staff Engineer role).\n"
-        "- Provides instant recommendations for next high-impact technologies to master."
+        "### Career Matcher\n\n"
+        "Our system matches your GitHub skills with real industry jobs:\n\n"
+        "- Finds the roles that fit what you already build (like Full-Stack Developer or Software Engineer).\n"
+        "- Shows you the exact gap to fill (e.g. adding Docker to jump from 80% to 90% job readiness)."
     ),
     "shruti_profile": (
         "### Developer Profile: Shruti Rai\n\n"
-        "**Shruti Rai** is an AI Engineer, Data Analytics Specialist, and Full-Stack Developer who designed and created CodeDNA.\n\n"
-        "- **Role**: Lead Developer & Creator of CodeDNA\n"
-        "- **Core Expertise**: Machine Learning, Data Analytics & Visualization, Python, REST APIs, Modern Web Architecture\n"
-        "- **GitHub**: [github.com/shrutirai29](https://github.com/shrutirai29)\n"
-        "- **Portfolio Project**: CodeDNA Developer Genome Platform"
+        "**Shruti Rai** is a Full-Stack Developer and Computer Science Engineering student who created CodeDNA:\n\n"
+        "- **Creator of**: CodeDNA Developer Career Intelligence Platform\n"
+        "- **Core Skills**: Python, JavaScript, TypeScript, FastAPI, Scikit-Learn, Web Architecture\n"
+        "- **University**: Rashtriya Raksha University\n"
+        "- **GitHub**: [github.com/shrutirai29](https://github.com/shrutirai29)"
     ),
     "contact_links": (
-        "### Contact & Connect with Shruti Rai\n\n"
+        "### Connect with Shruti Rai\n\n"
         "- **GitHub**: [github.com/shrutirai29](https://github.com/shrutirai29)\n"
-        "- **Project Repository**: [github.com/shrutirai29/CodeDNA](https://github.com/shrutirai29/CodeDNA)\n"
-        "- **Platform Web App**: [code-dna-alpha.vercel.app](https://code-dna-alpha.vercel.app)\n\n"
-        "Feel free to explore the repository, star the project, or reach out for collaboration!"
+        "- **CodeDNA Repository**: [github.com/shrutirai29/CodeDNA](https://github.com/shrutirai29/CodeDNA)\n"
+        "- **Live Website**: [code-dna-alpha.vercel.app](https://code-dna-alpha.vercel.app)"
     ),
     "api_key_auth": (
-        "### CodeDNA API Authentication\n\n"
+        "### Do You Need an API Key?\n\n"
         "**Good news: You do NOT need any API key!**\n\n"
-        "The CodeDNA REST API is **100% open-access** and public. You can immediately send GET or POST requests to our endpoints with zero authentication headers:\n\n"
-        "- `GET /api/profile` - Full developer genome and metrics\n"
-        "- `GET /api/skills` - Skill taxonomy and proficiency\n"
-        "- `GET /api/metrics` - 7D biometric telemetry data\n"
-        "- `POST /api/chat` - Query this trained AI Agent\n\n"
-        "Try it now with `curl https://code-dna-alpha.vercel.app/api/profile`!"
+        "The CodeDNA REST API is **100% free and open to everyone** with zero sign-up or headers required:\n\n"
+        "- `GET /api/profile?username=shrutirai29`\n"
+        "- `POST /api/chat`\n\n"
+        "Try it in your browser or with curl anytime!"
     ),
     "api_endpoints": (
-        "### CodeDNA Public REST API Endpoints\n\n"
-        "CodeDNA provides comprehensive REST APIs ready for integration:\n\n"
-        "1. `GET /api/profile` - Returns Shruti Rai's full biometric genome profile.\n"
-        "2. `GET /api/metrics` - High-resolution 7D radar telemetry and percentiles.\n"
-        "3. `GET /api/skills` - Categorized technology stack breakdown.\n"
-        "4. `GET /api/career` - Machine learning career trajectory recommendations.\n"
-        "5. `POST /api/chat` - Query this trained Machine Learning AI Agent (payload: `{\"message\": \"your question\"}`).\n\n"
-        "All endpoints return standard JSON and require no API keys."
+        "### Free Public API Endpoints\n\n"
+        "You can use our free REST API directly without any key:\n\n"
+        "1. `GET /api/profile?username={handle}` — Returns full skill breakdown and score in clean JSON.\n"
+        "2. `POST /api/chat` — Ask this AI Assistant any question via API.\n"
+        "3. `GET /api/profiles` — Returns list of benchmark profiles."
     ),
     "export_download": (
-        "### Export & Reporting Options\n\n"
-        "You can export your CodeDNA analysis in multiple formats:\n\n"
-        "- **JSON Feed**: Consume direct machine-readable data via `/api/profile` and `/api/metrics`.\n"
-        "- **Interactive Dashboard**: Use the web platform to visualize and inspect 7D radar charts and archetype clusters.\n"
-        "- **API Integration**: Easily pipe CodeDNA telemetry into custom CI/CD pipelines or HR dashboards."
+        "### Exporting Your Profile\n\n"
+        "You can access your CodeDNA data in multiple simple ways:\n\n"
+        "- **Live JSON**: Click 'View Raw JSON' to get clean machine-readable data.\n"
+        "- **Interactive Visuals**: Inspect the Skills Radar and weekly heatmap directly on the page.\n"
+        "- **Share Profile**: Share your direct URL with recruiters and team leads."
     ),
     "clustering_archetypes": (
-        "### Machine Learning Developer Archetypes\n\n"
-        "CodeDNA clusters developers into archetypes using unsupervised machine learning (K-Means & PCA dimensional reduction):\n\n"
-        "- **Deep Specialist**: High depth in a specific language/subsystem; exceptional code quality and anti-burstiness.\n"
-        "- **Full-Stack Architect**: Broad polyglot footprint across backend, frontend, and infrastructure with high entropy.\n"
-        "- **Momentum Driver**: High velocity, rapid PR turnaround, and strong collaboration rhythm.\n\n"
-        "The model accurately identifies career archetypes from raw git commit histories."
+        "### Coding Personalities (Archetypes)\n\n"
+        "CodeDNA identifies your primary coding style:\n\n"
+        "- **The Explorer**: Loves trying new languages, modern frameworks, and cross-stack apps (like Shruti Rai).\n"
+        "- **The Deep Specialist**: Goes very deep into one language and system.\n"
+        "- **The Fast Builder**: High velocity, quick turnaround, and steady shipping."
     ),
     "code_dna_meaning": (
         "### What Does 'CodeDNA' Mean?\n\n"
-        "Much like biological DNA defines an organism's traits, **CodeDNA** posits that every software engineer has a unique biometric signature embedded in how they write, commit, structure, and review code.\n\n"
-        "Rather than judging developers purely on superficial commit counts or leetcode tests, CodeDNA decodes authentic engineering craftsmanship through multi-dimensional mathematical analysis."
+        "Just like biological DNA makes every person unique, every programmer has their own unique way of coding, choosing tools, and solving problems.\n\n"
+        "CodeDNA celebrates authentic coding craftsmanship instead of empty vanity metrics."
     ),
     "dataset_details": (
-        "### Telemetry & Dataset Details\n\n"
-        "CodeDNA's intelligence engine analyzes temporal telemetry extracted from version control systems:\n\n"
-        "- Longitudinal commit timestamps across calendar intervals\n"
-        "- Diff metrics: additions, deletions, file dispersion, churn rates\n"
-        "- Repository multi-language breakdown\n"
-        "- Normalized against peer cohort baselines for fair percentile comparisons"
+        "### How We Read Data\n\n"
+        "CodeDNA safely looks at your public GitHub commits:\n\n"
+        "- When and how often you push code\n"
+        "- What programming languages you write in\n"
+        "- How organized your project repositories are"
     ),
     "out_of_scope": (
-        "I am the **CodeDNA Trained AI Agent**, specifically trained to assist with developer genome analytics, "
-        "biometric scoring, architecture benchmarks, and the CodeDNA platform.\n\n"
-        "I do not answer general or off-topic questions. Please feel free to ask about:\n"
-        "- CodeDNA score calculation and formulas\n"
-        "- Anti-burstiness & entropy metrics\n"
-        "- 7D engineering radar\n"
-        "- Shruti Rai's developer profile\n"
-        "- Free REST API endpoints"
+        "I am the **CodeDNA Assistant**, specifically here to help you with questions about this website, developer scores, coding habits, and Shruti Rai's profile.\n\n"
+        "I don't answer general trivia or off-topic questions, but feel free to ask about:\n"
+        "- How your coding score is calculated\n"
+        "- What Anti-Burstiness means\n"
+        "- The skills radar and job matching\n"
+        "- Shruti Rai's projects\n"
+        "- Using the free API!"
     )
 }
 
 TOPIC_TITLES = {
-    "greeting": "CodeDNA Assistant Greeting",
-    "platform_overview": "CodeDNA Platform Overview",
-    "score_intelligence": "Biometric Scoring Intelligence",
-    "anti_burstiness": "Anti-Burstiness Mathematical Metric",
-    "entropy": "Information Entropy & Dispersion",
-    "seven_d_radar": "7D Engineering Radar",
-    "technology_dna": "Technology DNA Matrix",
-    "benchmark_peer": "Peer Benchmarks & Percentiles",
-    "skill_simulator": "What-If Skill Simulator",
-    "career_recommender": "ML Career Recommender",
-    "shruti_profile": "Shruti Rai Developer Profile",
-    "contact_links": "Contact & Project Links",
-    "api_key_auth": "API Authentication (Zero Key Required)",
-    "api_endpoints": "Public REST API Endpoints",
-    "export_download": "Telemetry Export & Downloads",
-    "clustering_archetypes": "Developer Archetype Clustering",
-    "code_dna_meaning": "CodeDNA Concept & Philosophy",
-    "dataset_details": "Telemetry & Dataset Specifications",
-    "out_of_scope": "Out of Domain Scope"
+    "greeting": "Welcome to CodeDNA",
+    "platform_overview": "What is CodeDNA?",
+    "score_intelligence": "How the Score Works",
+    "anti_burstiness": "What is Anti-Burstiness?",
+    "entropy": "Skill Variety",
+    "seven_d_radar": "7 Core Skills Radar",
+    "technology_dna": "Your Tech Stack",
+    "benchmark_peer": "How You Compare",
+    "skill_simulator": "Interactive Skill Simulator",
+    "career_recommender": "Career Matcher",
+    "shruti_profile": "About Shruti Rai",
+    "contact_links": "Contact & Links",
+    "api_key_auth": "Free API (No Key Needed)",
+    "api_endpoints": "Public API Endpoints",
+    "export_download": "Exporting Your Data",
+    "clustering_archetypes": "Your Coding Personality",
+    "code_dna_meaning": "The Meaning of CodeDNA",
+    "dataset_details": "How We Read Data",
+    "out_of_scope": "Question Out of Scope"
 }
 
 # =====================================================================

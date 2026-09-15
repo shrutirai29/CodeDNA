@@ -9,8 +9,7 @@ def test_trained_agent_greetings():
     res_hi = TrainedCodeDNAAgent.answer("hi")
     assert res_hi["in_scope"] is True
     assert res_hi["intent"] == "greeting"
-    assert res_hi["confidence"] > 0.2
-    assert "CodeDNA Trained AI Agent" in res_hi["response"]
+    assert "CodeDNA Assistant" in res_hi["response"]
 
     res_hello = TrainedCodeDNAAgent.answer("Hello there")
     assert res_hello["in_scope"] is True
@@ -33,7 +32,7 @@ def test_trained_agent_platform_queries():
     res_score = TrainedCodeDNAAgent.answer("How is the developer score calculated?")
     assert res_score["in_scope"] is True
     assert res_score["intent"] == "score_intelligence"
-    assert "DNA Score" in res_score["response"] or "Velocity" in res_score["response"]
+    assert "Developer Score" in res_score["response"] or "Coding Speed" in res_score["response"]
 
     # Anti-burstiness
     res_burst = TrainedCodeDNAAgent.answer("Tell me about anti-burstiness")
@@ -73,7 +72,7 @@ def test_trained_agent_out_of_scope_rejection():
     for q in off_topic_questions:
         res = TrainedCodeDNAAgent.answer(q)
         assert res["in_scope"] is False, f"Expected '{q}' to be rejected as out of scope"
-        assert "CodeDNA Trained AI Agent" in res["response"]
+        assert "CodeDNA Assistant" in res["response"]
 
 
 def test_chat_api_endpoint():

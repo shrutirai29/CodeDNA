@@ -28,7 +28,7 @@ SAMPLE_PROFILES = {
         "is_demo": False,
         "score": 86.4,
         "archetype": "The Technology Explorer",
-        "archetype_tagline": "Polyglot Architecture & Cross-Stack Agility",
+        "archetype_tagline": "Multi-Stack Problem Solver & Fast Learner",
         "archetype_badge": "HIGH MOMENTUM ↗",
         "trajectory": "High Adaptability (Expanding)",
         "velocity_growth": "+42% YoY",
@@ -76,11 +76,11 @@ SAMPLE_PROFILES = {
             "insight": "Peak development focus during evening hack sessions and weekday problem-solving intervals."
         },
         "projects": [
-            {"name": "CodeDNA", "tech": "Python • FastAPI • ML", "stars": 3, "complexity": "VERY HIGH", "rating": "A+", "age": "Recent", "description": "Flagship Developer Career Intelligence and behavioral analytics platform."},
+            {"name": "CodeDNA", "tech": "Python • FastAPI • ML", "stars": 3, "complexity": "VERY HIGH", "rating": "A+", "age": "Recent", "description": "Smart developer profile analyzer and career matching platform."},
             {"name": "study-roulette", "tech": "TypeScript • React • Web", "stars": 2, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Gamified focus and study challenge platform with real-time room matching."},
             {"name": "code4nature", "tech": "TypeScript • Next.js", "stars": 1, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Environmental green-technology and sustainability awareness platform."},
             {"name": "LeetCode-Problems", "tech": "Python • Algorithms", "stars": 1, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Comprehensive algorithmic problem solving and data structure solutions."},
-            {"name": "FLEETRA", "tech": "Python • Backend", "stars": 1, "complexity": "MEDIUM", "rating": "B+", "age": "2025", "description": "Fleet logistics management and telemetry tracking microservice."},
+            {"name": "FLEETRA", "tech": "Python • Backend", "stars": 1, "complexity": "MEDIUM", "rating": "B+", "age": "2025", "description": "Vehicle tracking and logistics management service."},
             {"name": "SIH", "tech": "JavaScript • Web", "stars": 2, "complexity": "HIGH", "rating": "A", "age": "2024", "description": "Smart India Hackathon innovation prototype solving real-world civic challenges."}
         ],
         "careers": [
@@ -91,7 +91,7 @@ SAMPLE_PROFILES = {
             {"role": "Backend Engineer", "fit": 80.0, "strengths": ["Python", "REST APIs", "Relational Databases"], "gaps": ["System Scalability"]}
         ],
         "strengths": [
-            "Exceptional Polyglot Adaptability (JavaScript, Python, TypeScript, C++)",
+            "Comfortable building across multiple languages (JavaScript, Python, TypeScript, C++)",
             "Active open-source project portfolio spanning AI, Hackathon solutions, and gamified apps",
             "Strong algorithmic foundations paired with modern web interface design"
         ],
@@ -239,7 +239,7 @@ SAMPLE_PROFILES = {
         },
         "strengths": [
             "High Technical Depth in Python, statistical modeling, and machine learning pipelines",
-            "Disciplined multi-year commit cadence with low volatility across active quarters",
+            "Consistent coding habits across multiple years with steady weekly activity",
             "Architectural rigor evidenced by automated tests and reproducible environments"
         ],
         "gaps": ["Cloud Deployment & Infrastructure as Code", "Kubernetes Container Orchestration"],
@@ -302,7 +302,7 @@ SAMPLE_PROFILES = {
             {"skill": "Go", "status": "RISING", "trend": "↑ Rising", "color": "#10B981", "recent": "72 commits across k8s operators"},
             {"skill": "Kubernetes", "status": "RISING", "trend": "↑ Rising", "color": "#10B981", "recent": "CRD controllers & auto-scalers"},
             {"skill": "Terraform", "status": "STABLE", "trend": "→ Stable", "color": "#818CF8", "recent": "Modular AWS EKS blueprints"},
-            {"skill": "Python", "status": "STABLE", "trend": "→ Stable", "color": "#818CF8", "recent": "Model serving & telemetry bridges"}
+            {"skill": "Python", "status": "STABLE", "trend": "→ Stable", "color": "#818CF8", "recent": "Model serving & API monitoring"}
         ],
         "growth_timeline": [
             {"year": "2022", "score": 64.0, "depth": 68, "breadth": 60, "complexity": 70, "note": "Docker & cloud microservices"},
@@ -314,7 +314,7 @@ SAMPLE_PROFILES = {
         "rhythm": {
             "peak_day": "Wednesday",
             "peak_time": "Afternoon (14:00 - 17:00)",
-            "insight": "Cadence peaks midweek during core architectural review and deployment windows.",
+            "insight": "Coding activity peaks midweek during focused build and testing sessions.",
             "weekend_pct": "8.4%",
             "business_pct": "84.0%"
         },
@@ -352,7 +352,7 @@ SAMPLE_PROFILES = {
             {"role": "Machine Learning Engineer", "fit": 84.0, "status": "High Match", "strengths": ["Model Serving", "Inference Scaling"], "gaps": ["Deep Research NLP"]}
         ],
         "gaps_categorized": {
-            "critical": ["Low-level Kernel eBPF Telemetry"],
+            "critical": ["Low-level Linux Kernel Monitoring"],
             "important": ["Rust-based Low-latency Ingress"],
             "emerging": ["Decentralized Edge Model Sync"]
         },
@@ -366,7 +366,7 @@ SAMPLE_PROFILES = {
         "strengths": [
             "Exceptional production infrastructure with Kubernetes operators and automated CI/CD",
             "High collaboration volume with 120+ downstream forks across cloud projects",
-            "Polyglot mastery across Go, Python, and Infrastructure as Code (Terraform)"
+            "Strong multi-tool skills across Go, Python, and cloud infrastructure"
         ],
         "gaps": ["Causal Inference ML Modeling", "Frontend Client Frameworks"],
         "next_skills": ["Rust", "eBPF", "Triton TensorRT"],
@@ -398,7 +398,7 @@ SAMPLE_PROFILES = {
         "is_demo": True,
         "score": 81.2,
         "archetype": "The Technology Explorer",
-        "archetype_tagline": "Polyglot Prototyping & Modern Web",
+        "archetype_tagline": "Fast Prototyping & Modern Web Apps",
         "archetype_badge": "EXPLORER 🌐",
         "trajectory": "Accelerating Trajectory",
         "velocity_growth": "+34% YoY",
@@ -490,7 +490,7 @@ SAMPLE_PROFILES = {
             "adaptability": 92
         },
         "analytical_insight": {
-            "headline": "Your technical footprint represents a high-velocity polyglot explorer with rapid product delivery.",
+            "headline": "Your coding history shows a versatile builder who learns new tools quickly and ships fast.",
             "evidence": ["+55% TypeScript dominance", "Broad coverage across 8 distinct web frameworks", "Active participation across 24 public repositories"]
         }
     },
@@ -549,7 +549,7 @@ SAMPLE_PROFILES = {
         "rhythm": {
             "peak_day": "Monday & Friday",
             "peak_time": "Morning (09:00 - 12:00)",
-            "insight": "Cadence demonstrates disciplined morning focus blocks with steady daily commits.",
+            "insight": "Coding activity shows disciplined morning focus blocks with steady daily commits.",
             "weekend_pct": "12.0%",
             "business_pct": "78.0%"
         },
@@ -602,7 +602,7 @@ SAMPLE_PROFILES = {
         },
         "analytical_insight": {
             "headline": "Your profile demonstrates peer-leading systems programming depth and discipline.",
-            "evidence": ["98th percentile technical depth in analyzed peer cohort", "Consistent daily commit cadence over 3+ consecutive years", "1,450+ stargazers on primary asynchronous runtime"]
+            "evidence": ["98th percentile technical depth in analyzed peer cohort", "Consistent daily coding habit over 3+ consecutive years", "1,450+ stargazers on primary asynchronous runtime"]
         }
     },
 
@@ -766,7 +766,7 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
         # Archetype logic
         if breadth_score >= 75 and len(lang_counts) >= 4:
             archetype = "The Technology Explorer"
-            tagline = "Polyglot Footprint & Multi-Language Breadth"
+            tagline = "Versatile Skills & Multi-Language Breadth"
             badge = "EXPLORER 🌐"
         elif stars > 50 or forks > 15:
             archetype = "The Open Source Contributor"
@@ -863,7 +863,7 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
             "rhythm": {
                 "peak_day": "Midweek",
                 "peak_time": "Afternoons (13:00 - 18:00)",
-                "insight": "Cadence indicates steady iterative development with regular push cycles.",
+                "insight": "Shows steady, continuous progress with regular commits throughout the week.",
                 "weekend_pct": "22.0%",
                 "business_pct": "68.0%"
             },
@@ -1059,8 +1059,8 @@ def index_html():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeDNA • Developer Career Intelligence & Digital Twin</title>
-    <meta name="description" content="Empirical developer career intelligence platform. Decode your GitHub digital twin through behavioral scoring, Scikit-Learn archetype clustering, and vector career matching.">
+    <title>CodeDNA • Smart Developer Profile & Skills Analyzer</title>
+    <meta name="description" content="Smart developer profile analyzer. Discover your true coding style, skill strengths, and career matches from your public GitHub.">
     <meta name="theme-color" content="#09090b">
     
     <!-- Immediate Scroll & Hash Reset on Refresh: Always return to Main Page -->
@@ -1321,14 +1321,14 @@ def index_html():
         <!-- Live Status Pill -->
         <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">
             <span class="w-1.5 h-1.5 rounded-full pulse-beacon" style="background-color: var(--cyan-accent);"></span>
-            <span>DEVELOPER DIGITAL TWIN</span>
+            <span>DEVELOPER PROFILE ANALYZER</span>
         </div>
 
         <!-- Quick Jump Links -->
         <div class="hidden md:flex items-center gap-1 text-xs font-mono c-body">
-            <a href="#cockpitSection" onclick="navigateToSection(event, '#cockpitSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Cockpit</a>
-            <a href="#methodSection" onclick="navigateToSection(event, '#methodSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Pipeline</a>
-            <a href="#apiSection" onclick="navigateToSection(event, '#apiSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">API</a>
+            <a href="#cockpitSection" onclick="navigateToSection(event, '#cockpitSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Dashboard</a>
+            <a href="#methodSection" onclick="navigateToSection(event, '#methodSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">How It Works</a>
+            <a href="#apiSection" onclick="navigateToSection(event, '#apiSection')" class="px-3 py-1 rounded-full hover:opacity-80 transition-opacity font-medium">Free API</a>
         </div>
 
         <!-- Utility Buttons -->
@@ -1355,17 +1355,17 @@ def index_html():
             <!-- Eyebrow Pill -->
             <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-mono mb-6 shadow-sm" style="background-color: var(--cyan-bg); border: 1px solid var(--cyan-border); color: var(--cyan-accent);">
                 <span class="w-1.5 h-1.5 rounded-full pulse-beacon" style="background-color: var(--cyan-accent);"></span>
-                <span>EMPIRICAL DEVELOPER INTELLIGENCE</span>
+                <span>SMART GITHUB ANALYZER</span>
             </div>
 
             <!-- Crisp Clean Headline -->
             <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] c-head mb-5">
-                Decode your developer<br class="hidden sm:inline">
-                <span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">digital twin.</span>
+                Discover your true<br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">coding style.</span>
             </h1>
 
             <p class="text-sm sm:text-base c-body font-normal leading-relaxed mb-8 max-w-2xl mx-auto">
-                Turn public GitHub commits, code topologies, and development cadence into an empirical 3D developer genome and predictive career trajectory.
+                Turn your GitHub commits, repositories, and coding habits into a clear skill breakdown, coding personality, and personalized career recommendations.
             </p>
 
             <!-- Holographic Search Terminal -->
@@ -1376,20 +1376,20 @@ def index_html():
                         type="text" 
                         id="githubUsernameInput" 
                         value="shrutirai29"
-                        placeholder="Enter GitHub handle (e.g. shrutirai29)" 
+                        placeholder="Enter any GitHub username (e.g. shrutirai29)" 
                         class="w-full pl-8 pr-4 py-2.5 bg-transparent text-sm c-head placeholder-slate-400 focus:outline-none font-mono"
                         required
                     />
                 </div>
                 <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white dark:text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer group shrink-0 font-mono uppercase">
-                    <span>Decode ⚡</span>
+                    <span>Analyze Profile ⚡</span>
                     <span class="group-hover:translate-x-1 transition-transform">→</span>
                 </button>
             </form>
 
             <!-- Benchmark Selectors -->
             <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
-                <span class="text-[11px] c-sub mr-1">Active Profile:</span>
+                <span class="text-[11px] c-sub mr-1">Sample Profile:</span>
                 <button onclick="loadProfile('shrutirai29')" class="preset-btn px-3 py-1.5 rounded-full font-bold transition-all flex items-center gap-1.5 shadow-sm" style="background-color: var(--cyan-bg); border: 1px solid var(--cyan-border); color: var(--cyan-accent);">
                     <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--cyan-accent);"></span>
                     <span>Shruti Rai (Featured)</span>
@@ -1409,11 +1409,11 @@ def index_html():
             <div class="flex items-center justify-between border-b pb-4 mb-6 gap-2 overflow-x-auto" style="border-color: var(--border-hairline);">
                 <div class="flex items-center gap-2 shrink-0">
                     <button onclick="switchTab('overview')" id="tab-overview" class="cockpit-tab active px-3.5 py-1.5 rounded-xl text-xs font-mono border transition-all">01 Overview</button>
-                    <button onclick="switchTab('radar')" id="tab-radar" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">02 7D Radar</button>
-                    <button onclick="switchTab('dna')" id="tab-dna" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">03 Tech DNA</button>
-                    <button onclick="switchTab('velocity')" id="tab-velocity" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">04 Velocity & Rhythm</button>
+                    <button onclick="switchTab('radar')" id="tab-radar" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">02 Skills Radar</button>
+                    <button onclick="switchTab('dna')" id="tab-dna" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">03 Tech Stack</button>
+                    <button onclick="switchTab('velocity')" id="tab-velocity" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">04 Coding Rhythm</button>
                     <button onclick="switchTab('projects')" id="tab-projects" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">05 Projects</button>
-                    <button onclick="switchTab('careers')" id="tab-careers" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">06 Careers</button>
+                    <button onclick="switchTab('careers')" id="tab-careers" class="cockpit-tab px-3.5 py-1.5 rounded-xl text-xs font-mono glass-sub c-body border border-transparent transition-all">06 Career Matches</button>
                 </div>
 
                 <div class="hidden sm:flex items-center gap-2 text-xs font-mono c-sub shrink-0">
@@ -1458,7 +1458,7 @@ def index_html():
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mb-6">
                     <!-- Circular Score (5 Cols) -->
                     <div class="lg:col-span-5 p-6 rounded-2xl glass-sub flex flex-col items-center justify-center text-center relative overflow-hidden">
-                        <span class="text-[10px] font-mono uppercase tracking-wider c-sub font-bold mb-2">DEVELOPER INTELLIGENCE</span>
+                        <span class="text-[10px] font-mono uppercase tracking-wider c-sub font-bold mb-2">DEVELOPER SCORE</span>
 
                         <div class="relative w-48 h-48 flex items-center justify-center my-1">
                             <svg class="w-full h-full radial-progress" viewBox="0 0 160 160">
@@ -1475,21 +1475,21 @@ def index_html():
 
                             <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                                 <span id="scoreNumber" class="text-5xl font-black font-mono tracking-tight c-head">0.0</span>
-                                <span class="text-[9px] font-mono uppercase tracking-widest c-sub mt-0.5">QUOTIENT</span>
+                                <span class="text-[9px] font-mono uppercase tracking-widest c-sub mt-0.5">OUT OF 100</span>
                             </div>
                         </div>
 
                         <div class="mt-2 flex items-center gap-2">
-                            <span id="scoreTierBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">Tier: High Momentum</span>
-                            <span id="scoreVelocityBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border: 1px solid rgba(16, 185, 129, 0.35);">+42% YoY</span>
+                            <span id="scoreTierBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">Steady Growth</span>
+                            <span id="scoreVelocityBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border: 1px solid rgba(16, 185, 129, 0.35);">+42% This Year</span>
                         </div>
                     </div>
 
                     <!-- 6 Competency Dimensions (7 Cols) -->
                     <div class="lg:col-span-7 p-6 rounded-2xl glass-sub flex flex-col justify-between">
                         <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">Competency Dimensions</h3>
-                            <span class="text-[11px] c-sub font-mono">Top: <strong class="c-accent" id="topPercentileStat">92nd percentile</strong></span>
+                            <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">Core Coding Strengths</h3>
+                            <span class="text-[11px] c-sub font-mono">Top: <strong class="c-accent" id="topPercentileStat">Top 8% of Devs</strong></span>
                         </div>
 
                         <div class="space-y-3" id="dimensionBars">
@@ -1502,42 +1502,42 @@ def index_html():
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <!-- Archetype -->
                     <div class="p-4 rounded-xl glass-sub flex flex-col justify-between">
-                        <span class="text-[10px] font-mono uppercase c-sub font-bold">ARCHETYPE</span>
+                        <span class="text-[10px] font-mono uppercase c-sub font-bold">CODING PERSONALITY</span>
                         <div class="my-1">
                             <div class="text-sm font-bold c-head" id="archetypeName">The Technology Explorer</div>
-                            <div class="text-[11px] font-mono c-accent" id="archetypeTagline">Polyglot Architecture</div>
+                            <div class="text-[11px] font-mono c-accent" id="archetypeTagline">Loves Trying New Stacks</div>
                         </div>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full border w-max" style="background-color: rgba(99, 102, 241, 0.15); color: var(--indigo-accent); border-color: rgba(99, 102, 241, 0.35);" id="archetypeBadge">HIGH MOMENTUM ↗</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full border w-max" style="background-color: rgba(99, 102, 241, 0.15); color: var(--indigo-accent); border-color: rgba(99, 102, 241, 0.35);" id="archetypeBadge">FAST LEARNER ↗</span>
                     </div>
 
                     <!-- Career Match -->
                     <div class="p-4 rounded-xl glass-sub flex flex-col justify-between">
-                        <span class="text-[10px] font-mono uppercase c-sub font-bold">CAREER MATCH</span>
+                        <span class="text-[10px] font-mono uppercase c-sub font-bold">BEST JOB MATCH</span>
                         <div class="my-1">
                             <div class="text-2xl font-black font-mono c-accent" id="careerMatchKpiVal">89.5%</div>
                             <div class="text-[11px] font-mono c-body" id="careerMatchKpiRole">Full-Stack Developer</div>
                         </div>
-                        <span class="text-[10px] font-mono" style="color: var(--emerald-accent);">Optimal Fit</span>
+                        <span class="text-[10px] font-mono" style="color: var(--emerald-accent);">Strong Match</span>
                     </div>
 
                     <!-- Consistency -->
                     <div class="p-4 rounded-xl glass-sub flex flex-col justify-between">
-                        <span class="text-[10px] font-mono uppercase c-sub font-bold">CONSISTENCY</span>
+                        <span class="text-[10px] font-mono uppercase c-sub font-bold">WEEKLY HABIT</span>
                         <div class="my-1">
                             <div class="text-2xl font-black font-mono" style="color: var(--amber-accent);" id="consistencyKpiVal">84 / 100</div>
-                            <div class="text-[11px] font-mono c-body">Disciplined Cadence</div>
+                            <div class="text-[11px] font-mono c-body">Steady Coding Rhythm</div>
                         </div>
-                        <span class="text-[10px] font-mono c-sub">Low Volatility</span>
+                        <span class="text-[10px] font-mono c-sub">No Bulk Dumps</span>
                     </div>
 
                     <!-- Portfolio Health -->
                     <div class="p-4 rounded-xl glass-sub flex flex-col justify-between">
-                        <span class="text-[10px] font-mono uppercase c-sub font-bold">PORTFOLIO HEALTH</span>
+                        <span class="text-[10px] font-mono uppercase c-sub font-bold">PROJECT HEALTH</span>
                         <div class="my-1">
                             <div class="text-2xl font-black font-mono" style="color: var(--indigo-accent);" id="portfolioHealthKpiVal">92 / 100</div>
-                            <div class="text-[11px] font-mono c-body">16 Repos Audited</div>
+                            <div class="text-[11px] font-mono c-body">16 Clean Repos</div>
                         </div>
-                        <span class="text-[10px] font-mono" style="color: var(--indigo-accent);">Hygiene Score</span>
+                        <span class="text-[10px] font-mono" style="color: var(--indigo-accent);">Well-Organized</span>
                     </div>
                 </div>
             </div>
@@ -1552,26 +1552,26 @@ def index_html():
                             </svg>
                         </div>
                         <div id="radarTooltip" class="mt-2 p-2.5 rounded-xl glass-sub text-xs font-mono c-body w-full flex justify-between">
-                            <span id="radarHoverLabel">Hover on any vertex node to inspect empirical signals</span>
+                            <span id="radarHoverLabel">Hover over any point to see your score in that skill</span>
                             <span id="radarHoverScore" class="font-bold c-accent"></span>
                         </div>
                     </div>
 
                     <div class="lg:col-span-5 p-6 rounded-2xl glass-sub flex flex-col justify-between">
                         <div>
-                            <span class="text-[10px] font-mono uppercase tracking-wider font-bold" style="color: var(--indigo-accent);">Clustering Analysis</span>
-                            <h3 class="text-lg font-bold c-head mt-1 mb-2">Mathematical Fingerprint</h3>
+                            <span class="text-[10px] font-mono uppercase tracking-wider font-bold" style="color: var(--indigo-accent);">Skill Summary</span>
+                            <h3 class="text-lg font-bold c-head mt-1 mb-2">Your Coding Strengths</h3>
                             <p id="archetypeReason" class="text-xs c-body leading-relaxed mb-4">
-                                Repositories demonstrate rapid cross-stack adoption across modern TypeScript web ecosystems, Python applied analytics, and algorithmic C++ foundations.
+                                Your projects show a great mix of modern web tools (TypeScript, React), data and backend scripts (Python), and computer science problem-solving (C++).
                             </p>
-                            <div class="text-xs font-bold c-sub font-mono uppercase mb-2">Observable Strengths:</div>
+                            <div class="text-xs font-bold c-sub font-mono uppercase mb-2">Your Top Strengths:</div>
                             <ul id="archetypeEvidenceList" class="text-xs c-body space-y-1.5 font-mono">
                                 <!-- Injected dynamically -->
                             </ul>
                         </div>
                         <div class="pt-4 mt-6 border-t text-xs c-sub font-mono flex justify-between" style="border-color: var(--border-hairline);">
-                            <span>KMeans ($k=6$) Archetype</span>
-                            <span class="c-accent font-bold">PCA Coords (0.68, 0.74)</span>
+                            <span>Developer Personality</span>
+                            <span class="c-accent font-bold">Explorer Category</span>
                         </div>
                     </div>
                 </div>
@@ -1585,9 +1585,9 @@ def index_html():
                         <div id="dnaLiveInspector" class="p-3 px-4 rounded-xl glass-card text-xs font-mono flex items-center justify-between mb-3 border" style="border-color: var(--border-hairline);">
                             <div class="flex items-center gap-2.5">
                                 <span class="w-2 h-2 rounded-full pulse-beacon" style="background-color: var(--cyan-accent);"></span>
-                                <span id="dnaInspectorText" class="c-body font-medium">Hover over any node to inspect technology mass, projects & momentum</span>
+                                <span id="dnaInspectorText" class="c-body font-medium">Hover over any tool to see where you use it and how active you are</span>
                             </div>
-                            <span id="dnaInspectorBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full border" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border-color: var(--cyan-border);">8 NODES AUDITED</span>
+                            <span id="dnaInspectorBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full border" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border-color: var(--cyan-border);">8 TOOLS ANALYZED</span>
                         </div>
 
                         <!-- Full Unobstructed SVG Graph Canvas -->
@@ -1599,7 +1599,7 @@ def index_html():
                     </div>
 
                     <div class="lg:col-span-4 p-5 rounded-2xl glass-sub space-y-3">
-                        <div class="text-xs font-mono uppercase tracking-wider c-sub font-bold mb-2">Stack Shifts & Momentum:</div>
+                        <div class="text-xs font-mono uppercase tracking-wider c-sub font-bold mb-2">Tools You're Actively Learning:</div>
                         <div id="momentumList" class="space-y-2.5">
                             <!-- Injected dynamically -->
                         </div>
@@ -1607,12 +1607,12 @@ def index_html():
                 </div>
             </div>
 
-            <!-- ================= TAB 4: VELOCITY & RHYTHM ================= -->
+            <!-- ================= TAB 4: CODING RHYTHM ================= -->
             <div id="view-velocity" class="cockpit-view hidden space-y-6">
                 <!-- Velocity Line Graph -->
                 <div class="p-6 rounded-2xl glass-sub">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">Annualized Growth Velocity (DGV)</h3>
+                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">Year-by-Year Growth</h3>
                         <div class="flex items-center gap-2 text-xs font-mono c-sub" id="velocityYearChips"></div>
                     </div>
                     <div class="w-full h-56 flex items-center justify-center mb-3">
@@ -1621,11 +1621,11 @@ def index_html():
                     <div id="velocitySnapshotCard" class="p-3.5 rounded-xl glass-sub text-xs font-mono flex justify-between items-center">
                         <div>
                             <span id="snapshotYear" class="c-accent font-bold">2026 Snapshot:</span>
-                            <span id="snapshotNote" class="c-body ml-2">Applied AI architectures and gamified focus platforms</span>
+                            <span id="snapshotNote" class="c-body ml-2">Building full-stack apps and applied AI projects</span>
                         </div>
                         <div class="flex gap-4 c-sub">
-                            <span>Depth: <strong id="snapshotDepth" class="c-head">82</strong></span>
-                            <span>Complexity: <strong id="snapshotComplexity" class="c-accent">86</strong></span>
+                            <span>Knowledge: <strong id="snapshotDepth" class="c-head">82</strong></span>
+                            <span>Project Depth: <strong id="snapshotComplexity" class="c-accent">86</strong></span>
                         </div>
                     </div>
                 </div>
@@ -1633,8 +1633,8 @@ def index_html():
                 <!-- 7x24 Rhythm Matrix -->
                 <div class="p-6 rounded-2xl glass-sub">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">7x24 Focus Cadence Punchcard</h3>
-                        <span id="consistencyScoreVal" class="text-xs font-bold font-mono" style="color: var(--amber-accent);">Consistency: 84 / 100</span>
+                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono">When Do You Code? (Weekly Activity Heatmap)</h3>
+                        <span id="consistencyScoreVal" class="text-xs font-bold font-mono" style="color: var(--amber-accent);">Weekly Habit: 84 / 100</span>
                     </div>
                     <div class="space-y-1.5 overflow-x-auto min-w-[500px]" id="punchcardMatrix"></div>
                     <div id="rhythmInsightBox" class="mt-4 p-3 rounded-xl glass-sub text-xs font-mono c-body"></div>
@@ -1652,30 +1652,30 @@ def index_html():
             <div id="view-careers" class="cockpit-view hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-7 p-6 rounded-2xl glass-sub">
-                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono mb-4">Target Role Leaderboard (Cosine Similarity)</h3>
+                        <h3 class="text-xs font-bold uppercase tracking-wider c-head font-mono mb-4">Job Roles That Match Your Skills</h3>
                         <div class="space-y-3" id="careerBarsContainer"></div>
                     </div>
 
                     <div class="lg:col-span-5 space-y-4">
                         <!-- Next Best Skill -->
                         <div class="p-5 rounded-2xl glass-sub border-l-4" style="border-left-color: var(--cyan-accent);">
-                            <span class="text-[10px] font-mono uppercase c-accent font-bold">🚀 Next Best Skill</span>
+                            <span class="text-[10px] font-mono uppercase c-accent font-bold">🚀 Top Recommended Skill to Learn</span>
                             <h4 id="nextSkillName" class="text-base font-bold c-head mt-1 mb-1">Docker & Containerization</h4>
                             <p id="nextSkillWhy" class="text-xs c-body leading-relaxed mb-3">
-                                Containerizing full-stack web applications enables 1-click cloud deployment and microservices architecture.
+                                Packaging your web apps with Docker makes it easy to run them in the cloud with 1 click.
                             </p>
-                            <div class="text-xs font-mono font-bold" style="color: var(--emerald-accent);" id="nextSkillLeverage">+10% readiness lift across Full-Stack & SDE roles</div>
+                            <div class="text-xs font-mono font-bold" style="color: var(--emerald-accent);" id="nextSkillLeverage">+10% readiness boost for Full-Stack and Software Engineer roles</div>
                         </div>
 
                         <!-- Gaps -->
                         <div class="p-5 rounded-2xl glass-sub">
-                            <span class="text-[10px] font-mono uppercase c-sub font-bold">Audited Skill Gaps:</span>
+                            <span class="text-[10px] font-mono uppercase c-sub font-bold">Skills to Learn Next for Promotion:</span>
                             <div class="space-y-2 mt-2" id="skillGapsList"></div>
                         </div>
 
                         <!-- Peer Benchmark Percentiles -->
                         <div class="p-5 rounded-2xl glass-sub">
-                            <span class="text-[10px] font-mono uppercase c-sub font-bold">Peer Percentiles:</span>
+                            <span class="text-[10px] font-mono uppercase c-sub font-bold">How You Compare to Other Developers:</span>
                             <div class="space-y-2 mt-2" id="benchmarkPercentiles"></div>
                         </div>
                     </div>
@@ -1688,37 +1688,37 @@ def index_html():
         <!-- ===================================================================== -->
         <section id="methodSection" class="mb-16">
             <div class="text-center max-w-2xl mx-auto mb-8">
-                <span class="text-[10px] font-mono uppercase tracking-widest c-accent font-bold">THE CODEDNA METHOD</span>
-                <h2 class="text-2xl sm:text-3xl font-black c-head tracking-tight mt-1">How We Sequence Any Developer</h2>
-                <p class="text-xs sm:text-sm c-body mt-1.5">Replacing superficial vanity counters with 3-stage empirical intelligence.</p>
+                <span class="text-[10px] font-mono uppercase tracking-widest c-accent font-bold">HOW CODEDNA WORKS</span>
+                <h2 class="text-2xl sm:text-3xl font-black c-head tracking-tight mt-1">3 Simple Steps to Analyze Any Developer</h2>
+                <p class="text-xs sm:text-sm c-body mt-1.5">We look beyond superficial commit counts to uncover your authentic coding style.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                 <div class="glass-card p-6 flex flex-col justify-between">
                     <div>
                         <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs mb-3" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border: 1px solid var(--cyan-border);">01</span>
-                        <h3 class="text-base font-bold c-head mb-1.5">Ingest Git Artifacts</h3>
-                        <p class="text-xs c-body leading-relaxed">Audits public repositories, commit cadence, language byte-mass, dependencies, and code hygiene.</p>
+                        <h3 class="text-base font-bold c-head mb-1.5">Scan Public GitHub</h3>
+                        <p class="text-xs c-body leading-relaxed">We check your public repositories, how often you push code, and what languages you use.</p>
                     </div>
-                    <span class="text-[11px] font-mono c-accent pt-3 border-t mt-4" style="border-color: var(--border-hairline);">✓ 16+ Repos Audited</span>
+                    <span class="text-[11px] font-mono c-accent pt-3 border-t mt-4" style="border-color: var(--border-hairline);">✓ 16 Clean Repos Checked</span>
                 </div>
 
                 <div class="glass-card p-6 flex flex-col justify-between">
                     <div>
                         <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs mb-3" style="background-color: rgba(99, 102, 241, 0.15); color: var(--indigo-accent); border: 1px solid rgba(99, 102, 241, 0.35);">02</span>
-                        <h3 class="text-base font-bold c-head mb-1.5">Biological Code Genome</h3>
-                        <p class="text-xs c-body leading-relaxed">Evaluates anti-burstiness consistency (CV), Shannon polyglot entropy, and Scikit-Learn KMeans clustering.</p>
+                        <h3 class="text-base font-bold c-head mb-1.5">Spot Honest Coding Habits</h3>
+                        <p class="text-xs c-body leading-relaxed">Our algorithm rewards steady weekly coding, filters out bot spam or artificial bulk dumps, and identifies your coding personality.</p>
                     </div>
-                    <span class="text-[11px] font-mono pt-3 border-t mt-4" style="border-color: var(--border-hairline); color: var(--indigo-accent);">✓ Anti-Burstiness Filter</span>
+                    <span class="text-[11px] font-mono pt-3 border-t mt-4" style="border-color: var(--border-hairline); color: var(--indigo-accent);">✓ Real Weekly Rhythm</span>
                 </div>
 
                 <div class="glass-card p-6 flex flex-col justify-between">
                     <div>
                         <span class="w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs mb-3" style="background-color: rgba(16, 185, 129, 0.15); color: var(--emerald-accent); border: 1px solid rgba(16, 185, 129, 0.35);">03</span>
-                        <h3 class="text-base font-bold c-head mb-1.5">Predictive Trajectory</h3>
-                        <p class="text-xs c-body leading-relaxed">Calculates multi-dimensional vector career similarity, optimal role matches, and high-leverage skill recommendations.</p>
+                        <h3 class="text-base font-bold c-head mb-1.5">Career & Growth Match</h3>
+                        <p class="text-xs c-body leading-relaxed">We match your real skills with real industry jobs and tell you the exact next skill that will boost your career.</p>
                     </div>
-                    <span class="text-[11px] font-mono pt-3 border-t mt-4" style="border-color: var(--border-hairline); color: var(--emerald-accent);">✓ Predictive Radar</span>
+                    <span class="text-[11px] font-mono pt-3 border-t mt-4" style="border-color: var(--border-hairline); color: var(--emerald-accent);">✓ Best Career Match</span>
                 </div>
             </div>
 
@@ -1726,22 +1726,22 @@ def index_html():
             <div class="glass-card p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="p-4 rounded-xl border" style="background-color: rgba(244, 63, 94, 0.05); border-color: rgba(244, 63, 94, 0.2);">
-                        <div class="text-xs font-mono font-bold text-rose-500 mb-2">✕ Standard GitHub Vanity Metrics</div>
+                        <div class="text-xs font-mono font-bold text-rose-500 mb-2">✕ Traditional GitHub Stats (Misleading)</div>
                         <ul class="text-xs font-mono c-body space-y-1.5">
                             <li>✕ Raw Commit Counts (easily spammed by bots)</li>
                             <li>✕ Green Calendar Grid (rewards empty typo fixes)</li>
-                            <li>✕ Social Star Vanity (measures hype, not architecture)</li>
-                            <li>✕ Zero Career Guidance (no trajectory advice)</li>
+                            <li>✕ Star Chasing (popularity contest, not true skill)</li>
+                            <li>✕ Zero Career Guidance (leaves you guessing what to learn)</li>
                         </ul>
                     </div>
 
                     <div class="p-4 rounded-xl border" style="background-color: var(--cyan-bg); border-color: var(--cyan-border);">
-                        <div class="text-xs font-mono font-bold c-accent mb-2">⚡ CodeDNA Empirical Intelligence</div>
+                        <div class="text-xs font-mono font-bold c-accent mb-2">⚡ What CodeDNA Does Better</div>
                         <ul class="text-xs font-mono c-body space-y-1.5">
-                            <li>✓ Anti-Burstiness Filtering (penalizes commit dumps)</li>
-                            <li>✓ Shannon Polyglot Entropy (measures stack breadth)</li>
-                            <li>✓ Architectural Rigor (evaluates CI/CD and tests)</li>
-                            <li>✓ Vector Career Fit (identifies highest leverage skill)</li>
+                            <li>✓ Real Coding Rhythm (rewards honest, regular coding habits)</li>
+                            <li>✓ Real Skill Breadth (shows what languages you actually master)</li>
+                            <li>✓ Real Code Quality (checks project depth and clean structure)</li>
+                            <li>✓ Clear Career Advice (tells you the exact next skill to learn)</li>
                         </ul>
                     </div>
                 </div>
@@ -1758,7 +1758,7 @@ def index_html():
                         <span class="c-accent">GET</span>
                         <span>/api/profile?username=<span id="apiTerminalUser">shrutirai29</span></span>
                     </h3>
-                    <p class="text-xs c-sub font-mono mt-0.5">Live JSON payload accessible by recruiting pipelines, automated screening bots, and analytics marts.</p>
+                    <p class="text-xs c-sub font-mono mt-0.5">Free JSON data accessible by anyone for portfolios, recruiting, or student projects.</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <button onclick="copyApiUrl()" class="px-3.5 py-1.5 rounded-full glass-sub text-xs font-mono c-body hover:opacity-80 transition-opacity">
@@ -1779,10 +1779,10 @@ def index_html():
     <footer class="border-t py-10 text-center text-xs font-mono c-sub" style="border-color: var(--border-hairline);">
         <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-                <strong class="c-head">CODEDNA</strong> • Developer Career Intelligence Platform
+                <strong class="c-head">CODEDNA</strong> • Smart Developer Career & Skills Platform
             </div>
             <div>
-                Python 3.11 • Three.js WebGL • Scikit-Learn • FastAPI Serverless
+                Created with Python • Scikit-Learn • Three.js • FastAPI
             </div>
         </div>
     </footer>
@@ -1811,10 +1811,10 @@ def index_html():
                 </div>
                 <div>
                     <div class="flex items-center gap-1.5">
-                        <h3 class="text-xs font-bold c-head font-mono">CodeDNA AI</h3>
+                        <h3 class="text-xs font-bold c-head font-mono">CodeDNA Assistant</h3>
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-beacon"></span>
                     </div>
-                    <span class="text-[9px] font-mono c-accent">Platform Scoped • Online</span>
+                    <span class="text-[9px] font-mono c-accent">Online • Ask me anything!</span>
                 </div>
             </div>
             <div class="flex items-center gap-1.5">
@@ -1830,10 +1830,10 @@ def index_html():
         <!-- Quick Topic Chips -->
         <div class="p-2 border-b glass-sub flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono shrink-0" style="border-color: var(--border-hairline);">
             <button onclick="sendQuickPrompt('What is CodeDNA?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">What is CodeDNA?</button>
-            <button onclick="sendQuickPrompt('How is score calculated?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">Score Quotient</button>
-            <button onclick="sendQuickPrompt('What is Anti-Burstiness?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">Anti-Burstiness</button>
+            <button onclick="sendQuickPrompt('How is my score calculated?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">How Score Works</button>
+            <button onclick="sendQuickPrompt('What is Anti-Burstiness?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">What is Anti-Burstiness?</button>
             <button onclick="sendQuickPrompt('Who is Shruti Rai?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">Shruti Rai</button>
-            <button onclick="sendQuickPrompt('How do I use the API?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">REST API</button>
+            <button onclick="sendQuickPrompt('How do I use the API?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">Free API</button>
         </div>
 
         <!-- Chat Messages Container -->
@@ -1846,7 +1846,7 @@ def index_html():
             <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
             <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style="animation-delay: 0.15s"></span>
             <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style="animation-delay: 0.3s"></span>
-            <span class="ml-1 text-[10px]">Analyzing query...</span>
+            <span class="ml-1 text-[10px]">Thinking...</span>
         </div>
 
         <!-- Chat Input Form -->
@@ -1855,7 +1855,7 @@ def index_html():
                 <input 
                     type="text" 
                     id="chatInput" 
-                    placeholder="Ask about CodeDNA metrics, scoring, or profile..." 
+                    placeholder="Ask a question in simple words..." 
                     class="flex-1 px-3 py-2 text-xs rounded-xl bg-black/10 dark:bg-white/5 border c-head placeholder-slate-400 focus:outline-none focus:border-cyan-500 font-mono transition-colors"
                     style="border-color: var(--border-hairline);"
                     autocomplete="off"
@@ -1865,7 +1865,7 @@ def index_html():
                 </button>
             </div>
             <div class="text-[9px] font-mono c-sub text-center flex items-center justify-center gap-1">
-                <span>🔒 Strictly scoped to CodeDNA platform questions</span>
+                <span>💡 Ready to answer any question about this website</span>
             </div>
         </form>
     </div>
@@ -1886,27 +1886,27 @@ def index_html():
             </div>
             <div class="space-y-1 font-mono text-xs max-h-64 overflow-y-auto" id="cmdResults">
                 <div onclick="switchTab('overview'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
-                    <span>01 Overview & Intelligence Score</span>
+                    <span>01 Overview & Developer Score</span>
                     <span class="c-sub">Cockpit</span>
                 </div>
                 <div onclick="switchTab('radar'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
-                    <span>02 7D Digital Twin Radar</span>
+                    <span>02 Skills Radar</span>
                     <span class="c-sub">Cockpit</span>
                 </div>
                 <div onclick="switchTab('dna'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
-                    <span>03 Technology Ecosystem</span>
+                    <span>03 Tech Stack</span>
                     <span class="c-sub">Cockpit</span>
                 </div>
                 <div onclick="switchTab('velocity'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
-                    <span>04 Growth Velocity & Rhythm</span>
+                    <span>04 Coding Rhythm</span>
                     <span class="c-sub">Cockpit</span>
                 </div>
                 <div onclick="switchTab('projects'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
-                    <span>05 Audited Repositories</span>
+                    <span>05 Projects</span>
                     <span class="c-sub">Cockpit</span>
                 </div>
                 <div onclick="switchTab('careers'); jumpToSection('#cockpitSection')" class="p-2.5 rounded-xl hover:opacity-80 cursor-pointer flex items-center justify-between c-body glass-sub">
-                    <span>06 Career Role Matching</span>
+                    <span>06 Career Matches</span>
                     <span class="c-sub">Cockpit</span>
                 </div>
             </div>
@@ -2133,7 +2133,7 @@ def index_html():
             renderVelocityTimeline(p.growth_timeline || []);
             renderPunchcard(p.rhythm);
 
-            document.getElementById('consistencyScoreVal').textContent = `Consistency: ${{p.consistency}} / 100`;
+            document.getElementById('consistencyScoreVal').textContent = `Weekly Habit: ${{p.consistency}} / 100`;
 
             const projGrid = document.getElementById('projectCardsGrid');
             projGrid.innerHTML = (p.projects || []).map(pr => `
@@ -2183,12 +2183,12 @@ def index_html():
         function renderDimensionBars(dims) {{
             const container = document.getElementById('dimensionBars');
             const labels = [
-                ['Technical Depth', dims.technical_depth, '#06B6D4'],
-                ['Technical Breadth', dims.technical_breadth, '#6366F1'],
-                ['Consistency Index', dims.consistency, '#F59E0B'],
-                ['Project Complexity', dims.project_complexity, '#8B5CF6'],
-                ['Collaboration', dims.collaboration, '#10B981'],
-                ['Adaptability', dims.adaptability, '#06B6D4']
+                ['Code Depth', dims.technical_depth, '#06B6D4'],
+                ['Tech Variety', dims.technical_breadth, '#6366F1'],
+                ['Weekly Habit', dims.consistency, '#F59E0B'],
+                ['Project Depth', dims.project_complexity, '#8B5CF6'],
+                ['Teamwork', dims.collaboration, '#10B981'],
+                ['Fast Learner', dims.adaptability, '#06B6D4']
             ];
 
             container.innerHTML = labels.map(([label, val, color]) => `
@@ -2209,7 +2209,7 @@ def index_html():
             const svg = document.getElementById('radarSvg');
             const cx = 150, cy = 150, maxR = 105;
             const keys = ['technical_depth', 'technical_breadth', 'consistency', 'project_complexity', 'collaboration', 'adaptability', 'impact'];
-            const labels = ['Depth', 'Breadth', 'Consistency', 'Complexity', 'Collab', 'Adaptability', 'Impact'];
+            const labels = ['Code Depth', 'Tech Variety', 'Habit', 'Projects', 'Teamwork', 'Learning', 'Impact'];
             const total = keys.length;
 
             const isLight = document.documentElement.classList.contains('light');
@@ -2263,11 +2263,11 @@ def index_html():
         }}
 
         function showRadarTooltip(label, val) {{
-            document.getElementById('radarHoverLabel').textContent = `Metric: ${{label}} — Empirical signal verified`;
+            document.getElementById('radarHoverLabel').textContent = `Skill: ${{label}} — Score: ${{val}} / 100`;
             document.getElementById('radarHoverScore').textContent = `${{val}} / 100`;
         }}
         function resetRadarTooltip() {{
-            document.getElementById('radarHoverLabel').textContent = 'Hover on any vertex node to inspect empirical signals';
+            document.getElementById('radarHoverLabel').textContent = 'Hover on any point to see your skill score';
             document.getElementById('radarHoverScore').textContent = '';
         }}
 
@@ -2517,10 +2517,10 @@ def index_html():
         function renderPeerBenchmarking(pcts) {{
             const box = document.getElementById('benchmarkPercentiles');
             const items = [
-                ['Technical Breadth', pcts.technical_breadth || 94],
-                ['Project Complexity', pcts.project_complexity || 86],
-                ['Consistency Index', pcts.consistency || 84],
-                ['Technical Depth', pcts.technical_depth || 82]
+                ['Tech Variety', pcts.technical_breadth || 94],
+                ['Project Depth', pcts.project_complexity || 86],
+                ['Weekly Habit', pcts.consistency || 84],
+                ['Code Depth', pcts.technical_depth || 82]
             ];
             box.innerHTML = items.map(([k, v]) => `
                 <div>
@@ -2713,7 +2713,7 @@ def index_html():
                 launcher.classList.add('hidden');
                 if (chatHistory.length === 0) {{
                     appendBotMessage(
-                        "👋 **Greetings! I am CodeDNA Platform Assistant.**\\n\\nI can answer questions about the **CodeDNA platform**, developer intelligence metrics, scoring formulas, and Shruti Rai's profile.\\n\\n*(Note: I strictly decline off-topic queries to keep conversations focused.)*\\n\\nWhat would you like to explore?"
+                        "👋 **Hi there! I'm the CodeDNA Assistant.**\\n\\nI can answer questions about how your **Developer Score** is calculated, what honest weekly coding habits mean, your skills radar, and Shruti Rai's profile.\\n\\n*(Note: I only answer questions about CodeDNA to keep things helpful and quick.)*\\n\\nWhat would you like to know?"
                     );
                 }}
                 setTimeout(() => document.getElementById('chatInput').focus(), 50);
@@ -2766,7 +2766,7 @@ def index_html():
                 chatHistory.push({{ role: 'assistant', content: data.response }});
             }} catch (err) {{
                 typing.classList.add('hidden');
-                appendBotMessage("⚠️ Network error communicating with assistant endpoint.", false);
+                appendBotMessage("⚠️ Could not connect to the assistant. Please try again.", false);
             }}
         }}
 
