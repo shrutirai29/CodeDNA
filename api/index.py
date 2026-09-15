@@ -1,3 +1,4 @@
+import re
 import math
 import time
 import json
@@ -940,6 +941,251 @@ def simulate_career_path(role: str = Query("Data Scientist"), skills: str = Quer
         "disclaimer": "Scenario model estimate based on vector space similarity; not an employment guarantee."
     }
 
+# =====================================================================
+# CODEDNA AI PLATFORM ASSISTANT ENGINE (STRICT DOMAIN GUARDRAILS)
+# =====================================================================
+class CodeDNAChatEngine:
+    """
+    Empirical AI Chatbot Engine for CodeDNA.
+    - Handles greetings and platform introductions.
+    - Deep knowledge about CodeDNA algorithms, scoring, dimensions, 7D radar,
+      Technology DNA, anti-burstiness, Shannon entropy, KMeans archetypes,
+      Shruti Rai's profile, projects, and REST API.
+    - STRICT GUARDRAILS: Automatically detects and refuses off-topic, unrelated,
+      or general queries ("aaltu phaltu saval") with an informative scoped response.
+    """
+    GREETINGS_REGEX = re.compile(
+        r'^\s*(hi|hello|hey|greetings|namaste|hlo|helo|ola|hola|good\s*(morning|afternoon|evening|day)|howdy|sup|kaise ho|kya hal|kya chal raha|who are you|what are you|what can you do|help me|help|tum kaun ho|tum kon ho|aap kaun ho|aap kon ho|kya kar sakte ho)\b',
+        re.IGNORECASE
+    )
+    THANKS_REGEX = re.compile(r'\b(thank\s*you|thanks|thx|dhanyawad|shukriya|bye|goodbye|alvida|cya)\b', re.IGNORECASE)
+
+    TOPIC_PATTERNS = [
+        ("anti_burstiness", re.compile(r'\b(anti-burstiness|burstiness|bursty|spam commit|commit spam|cheat|hackathon dump|cadence)\b', re.IGNORECASE)),
+        ("shannon_entropy", re.compile(r'\b(shannon|entropy|polyglot|entropy formula)\b', re.IGNORECASE)),
+        ("archetypes", re.compile(r'\b(archetype|archetypes|cluster|clustering|kmeans|technology explorer|enterprise builder)\b', re.IGNORECASE)),
+        ("score", re.compile(r'\b(score|quotient|calculate|how is score|dimensions|competency|intelligence score|depth|breadth|consistency)\b', re.IGNORECASE)),
+        ("tech_dna", re.compile(r'\b(tech dna|technology dna|network|graph|node|nodes|pill|pills|capsule|capsules|stack shifts|momentum)\b', re.IGNORECASE)),
+        ("radar", re.compile(r'\b(radar|7d radar|vertex|polygon|radar chart)\b', re.IGNORECASE)),
+        ("velocity_rhythm", re.compile(r'\b(velocity|dgv|growth velocity|growth timeline|punchcard|7x24|focus cadence|focus rhythm)\b', re.IGNORECASE)),
+        ("shruti_rai", re.compile(r'\b(shruti|shruti rai|creator|shrutirai29|featured profile|rashtriya raksha)\b', re.IGNORECASE)),
+        ("projects", re.compile(r'\b(projects|repos|repositories|study-roulette|code4nature|leetcode|fleetra|sih)\b', re.IGNORECASE)),
+        ("career_matching", re.compile(r'\b(career(\s*match(ing)?)?|career recommendation|target role|roles|job readiness|next best skill|next skill|skill gap(s)?)\b', re.IGNORECASE)),
+        ("api", re.compile(r'\b(api|rest api|endpoint|json|curl|fetch|integration|webhook)\b', re.IGNORECASE)),
+        ("analyze_search", re.compile(r'\b(how to (analyze|decode|search|use)|enter username|input|different profile|another user|search bar)\b', re.IGNORECASE)),
+        ("theme", re.compile(r'\b(theme|light mode|dark mode|toggle theme|studio light|dark void)\b', re.IGNORECASE)),
+        ("codedna_overview", re.compile(r'\b(what is codedna|about codedna|what does (this|codedna) do|overview|purpose|how does it work|explain codedna|intro|platform)\b', re.IGNORECASE)),
+    ]
+    RESPONSES = {
+        "greeting": (
+            "👋 **Greetings! I am CodeDNA Platform Assistant.**\n\n"
+            "I am your empirical guide to the **CodeDNA Developer Career Intelligence & Digital Twin platform**.\n\n"
+            "I can assist you with:\n"
+            "• **Platform Overview:** What CodeDNA does & how it sequences GitHub telemetry\n"
+            "• **Scoring Quotient:** How the Developer Intelligence Score (0–100) is calculated\n"
+            "• **Behavioral Algorithms:** Anti-burstiness filtering & Shannon polyglot entropy\n"
+            "• **Interactive Visualizations:** The 7D Radar, Technology DNA graph & 7x24 Focus Punchcard\n"
+            "• **Developer Dossier:** Shruti Rai (@shrutirai29) audited profile & projects\n"
+            "• **Developer API:** How to integrate with `/api/profile`\n\n"
+            "How can I help you explore your code genome today?"
+        ),
+        "thanks": (
+            "You're very welcome! Feel free to ask anytime you want to decode developer intelligence or explore GitHub code genomes. Have a productive day coding! ⚡"
+        ),
+        "anti_burstiness": (
+            "🛡️ **The Anti-Burstiness Filter**\n\n"
+            "Traditional platforms can be gamed by dumping 50 automated commits in one day. CodeDNA's **Anti-Burstiness algorithm** uses statistical variance and the **Coefficient of Variation (CV)** over temporal intervals:\n\n"
+            "$$\\text{CV} = \\frac{\\sigma}{\\mu}$$\n\n"
+            "• **Spam Penalization:** Large bursts of low-effort commits are filtered out.\n"
+            "• **Consistency Reward:** Developers maintaining disciplined weekly development rhythms receive high consistency scores (e.g. Shruti Rai: **84/100 low volatility**).\n"
+            "• **True Cadence:** Reflects authentic problem-solving consistency over vanity streaks."
+        ),
+        "shannon_entropy": (
+            "🌐 **Shannon Polyglot Entropy**\n\n"
+            "CodeDNA applies Claude Shannon's Information Theory entropy formula to language byte distributions across audited repositories:\n\n"
+            "$$H = -\\sum_{i=1}^{n} p_i \\log_2(p_i)$$\n\n"
+            "• Measures whether a developer is a **one-trick programmer** or a **polyglot architect**.\n"
+            "• A balanced distribution across systems languages (C++), scripting/analytics (Python), and web ecosystems (JavaScript, TypeScript) yields higher entropy, reflecting cross-stack adaptability."
+        ),
+        "archetypes": (
+            "🧬 **Scikit-Learn KMeans Developer Archetypes ($k=6$)**\n\n"
+            "CodeDNA clusters developers into 6 empirical archetypes based on 7-dimensional vector coordinates:\n\n"
+            "1. **The Technology Explorer:** High adaptability, rapid cross-stack exploration (Shruti Rai's archetype).\n"
+            "2. **The Enterprise Builder:** Massive scalability, Kubernetes, Go microservices, and distributed reliability.\n"
+            "3. **The Applied AI Architect:** Machine learning pipelines, FastAPI serving, and PyTorch models.\n"
+            "4. **The Systems Polymath:** Low-level memory safety, Rust/C++, and operating system internals.\n"
+            "5. **The Frontend Virtuoso:** Creative UX, WebGL/Three.js, dynamic motion design, and accessibility.\n"
+            "6. **The Emerging Craftsperson:** High growth velocity and strong computer science DSA fundamentals."
+        ),
+        "score": (
+            "📊 **Developer Intelligence Score (Quotient)**\n\n"
+            "The CodeDNA Intelligence Quotient (0–100) is an empirical composite evaluated across **6 core competency dimensions**:\n\n"
+            "1. **Technical Depth (82/100):** Algorithmic complexity, framework mastery, and language sophistication.\n"
+            "2. **Technical Breadth (92/100):** Shannon entropy across modern web, backend, and systems stacks.\n"
+            "3. **Consistency Index (84/100):** Anti-burstiness coefficient of variation (CV) penalizing bulk commit drops.\n"
+            "4. **Project Complexity (86/100):** Full-stack architecture, deployment configurations, and modular design.\n"
+            "5. **Collaboration (85/100):** Open-source contributions, hackathon teamwork, and multi-contributor hygiene.\n"
+            "6. **Adaptability (94/100):** Rapid adoption of emerging frameworks (e.g. Next.js, FastAPI, TypeScript).\n\n"
+            "For Shruti Rai, the active score is **86.4 (Tier: High Momentum, +42% YoY growth)**."
+        ),
+        "tech_dna": (
+            "🕸️ **Technology DNA Network Graph**\n\n"
+            "The Technology DNA visualization (under Cockpit Tab 03) maps a developer's technology ecosystem:\n\n"
+            "• **Nodes & Capsules:** Each technology is represented by a high-contrast pill badge displaying its full name, active momentum status, and percentage of stack mass.\n"
+            "• **Momentum Signals:**\n"
+            "  - 🟢 **RISING:** Accelerated commit velocity over the last 90 days (e.g., TypeScript, Python, DSA).\n"
+            "  - 🔵 **NEW:** Fresh framework adopted recently (e.g., FastAPI).\n"
+            "  - 🟣 **STABLE:** Mature foundational baseline (e.g., JavaScript, C++).\n"
+            "• **Zero Collisions:** Hovering over any node dynamically updates the top live inspection header with project counts and mass without obstructing the graph."
+        ),
+        "radar": (
+            "🎯 **The 7D Competency Radar**\n\n"
+            "Located in Cockpit Tab 02, the interactive 7D Radar visually plots mathematical competency across 7 axes: **Depth, Breadth, Consistency, Complexity, Collaboration, Adaptability, and Impact**.\n\n"
+            "You can hover on any vertex node to view the empirical percentile signal verified from GitHub repositories."
+        ),
+        "velocity_rhythm": (
+            "📈 **Growth Velocity & Focus Cadence (Tab 04)**\n\n"
+            "• **Annualized Growth Velocity (DGV):** Traces multi-year development momentum (2024: 71.0 → 2025: 80.5 → 2026: 86.4, +42% YoY growth).\n"
+            "• **7x24 Focus Rhythm Punchcard:** Audits commit timestamps across all 7 days of the week and 24 hourly buckets. For Shruti Rai, peak development focus occurs during **Thursday evenings (18:00 – 22:00)**."
+        ),
+        "shruti_rai": (
+            "👩‍💻 **Featured Profile: Shruti Rai (@shrutirai29)**\n\n"
+            "• **Title:** Full-Stack Developer & CSE Engineer at Rashtriya Raksha University.\n"
+            "• **Intelligence Score:** 86.4 / 100 (Tier: High Momentum, 92nd percentile).\n"
+            "• **Archetype:** *The Technology Explorer* (Polyglot Architecture & Cross-Stack Agility).\n"
+            "• **Top Stacks:** JavaScript (35%), Python (30%), TypeScript (20%), C++ (10%), TailwindCSS.\n"
+            "• **Key Audited Repositories:** CodeDNA, study-roulette, code4nature, LeetCode-Problems, FLEETRA, SIH.\n"
+            "• **Optimal Career Match:** Full-Stack Developer (89.5% vector similarity).\n"
+            "• **Next Best Skill:** Docker & Containerization (+10% readiness lift)."
+        ),
+        "projects": (
+            "🚀 **Audited Projects (Tab 05)**\n\n"
+            "Shruti Rai's repository portfolio includes:\n"
+            "1. **CodeDNA:** Flagship developer intelligence & behavioral analytics platform (FastAPI, Python, ML).\n"
+            "2. **study-roulette:** Gamified focus platform with real-time room matching (TypeScript, React).\n"
+            "3. **code4nature:** Green-technology and environmental sustainability platform (Next.js, TypeScript).\n"
+            "4. **LeetCode-Problems:** Algorithmic solutions and data structures (Python, C++).\n"
+            "5. **FLEETRA:** Logistics telemetry and microservice backend (Python).\n"
+            "6. **SIH:** Smart India Hackathon prototype for civic innovation (JavaScript)."
+        ),
+        "career_matching": (
+            "🎯 **Predictive Career Matching (Tab 06)**\n\n"
+            "CodeDNA uses cosine similarity between a developer's 7D skill vector and industry engineering roles:\n\n"
+            "• **Full-Stack Developer:** 89.5% fit (Optimal Fit)\n"
+            "• **Software Engineer (SDE):** 87.8% fit\n"
+            "• **Frontend Engineer:** 86.2% fit\n"
+            "• **Applied AI / Python Developer:** 82.4% fit\n"
+            "• **Backend Engineer:** 80.0% fit\n\n"
+            "🚀 **Next Best Skill:** **Docker & Containerization** — provides a +10% readiness lift across SDE & Full-Stack roles by enabling 1-click cloud deployments."
+        ),
+        "api": (
+            "⚡ **CodeDNA Developer REST API**\n\n"
+            "CodeDNA exposes a high-performance REST API for recruiting tools and analytics marts:\n\n"
+            "• **Endpoint:** `GET /api/profile?username={handle}`\n"
+            "• **Example:** `/api/profile?username=shrutirai29`\n"
+            "• **Output:** Clean, empirical JSON with intelligence quotient, 7D dimensions, technology DNA nodes, growth timeline, and career matches.\n\n"
+            "You can click **'Copy Endpoint'** or **'View Raw JSON ↗'** in Section 04 of the page to test it live!"
+        ),
+        "analyze_search": (
+            "🔍 **How to Decode Any GitHub Profile:**\n\n"
+            "1. Go to the top search bar in the Hero section.\n"
+            "2. Enter any valid public GitHub username (e.g. `shrutirai29`, `alex-datascientist`, `elena-mlops`).\n"
+            "3. Click **'Decode ⚡'** (or press Enter).\n"
+            "4. The platform instantly sequences public repositories, calculates the intelligence quotient, and visualizes the 3D developer twin!"
+        ),
+        "theme": (
+            "🌓 **Theme System**\n\n"
+            "CodeDNA offers two luxury themes:\n"
+            "• **Dark Void Mode:** Obsidian glass cards, neon electric cyan & violet 3D helix cosmos.\n"
+            "• **Studio Light Mode:** Alabaster canvas, ceramic cards, high-contrast typography, and sapphire 3D particles.\n\n"
+            "Click the theme icon (Sun/Moon) in the top floating capsule navbar to toggle anytime!"
+        ),
+        "codedna_overview": (
+            "🧬 **About CodeDNA: Developer Career Intelligence Platform**\n\n"
+            "**CodeDNA** is an empirical developer career intelligence platform that replaces superficial vanity metrics (like raw star counts or green calendar commits) with a **biological code genome and 3D digital twin**.\n\n"
+            "**The 3-Phase Method:**\n"
+            "1. **Ingest Git Artifacts:** Audits public GitHub repositories, commit cadence, language byte-mass, and dependency hygiene.\n"
+            "2. **Biological Code Genome:** Evaluates anti-burstiness consistency (CV), Shannon polyglot entropy, and Scikit-Learn KMeans clustering.\n"
+            "3. **Predictive Trajectory:** Calculates multi-dimensional vector career similarity, optimal role matches, and high-leverage skill recommendations.\n\n"
+            "Try entering any GitHub username in the top search terminal to sequence a developer digital twin!"
+        ),
+        "out_of_scope": (
+            "⚠️ **Query Out of Scope**\n\n"
+            "I am the dedicated **CodeDNA Platform Assistant**. I am strictly programmed to answer questions regarding CodeDNA, developer career intelligence, scoring algorithms, and developer digital twins.\n\n"
+            "I cannot assist with off-topic queries (such as general trivia, jokes, weather, recipes, or unrelated tasks).\n\n"
+            "**You can ask me about:**\n"
+            "• What is CodeDNA and how does it work?\n"
+            "• How is the Developer Intelligence Score calculated?\n"
+            "• What is the Anti-Burstiness filter & Shannon Entropy?\n"
+            "• What are the KMeans Developer Archetypes?\n"
+            "• Tell me about Shruti Rai (@shrutirai29) & audited projects\n"
+            "• How to use the Developer REST API"
+        )
+    }
+
+    @classmethod
+    def answer(cls, user_message: str) -> dict:
+        msg = (user_message or "").strip()
+        if not msg:
+            return {
+                "response": cls.RESPONSES["greeting"],
+                "topic": "greeting",
+                "in_scope": True
+            }
+
+        # Check thanks / bye
+        if cls.THANKS_REGEX.search(msg):
+            return {
+                "response": cls.RESPONSES["thanks"],
+                "topic": "pleasantry",
+                "in_scope": True
+            }
+
+        # Check greeting
+        if cls.GREETINGS_REGEX.search(msg):
+            return {
+                "response": cls.RESPONSES["greeting"],
+                "topic": "greeting",
+                "in_scope": True
+            }
+
+        # Check platform topics
+        for topic_key, pattern in cls.TOPIC_PATTERNS:
+            if pattern.search(msg):
+                return {
+                    "response": cls.RESPONSES[topic_key],
+                    "topic": topic_key,
+                    "in_scope": True
+                }
+
+        # Off-topic / Aaltu-phaltu query: strictly decline
+        return {
+            "response": cls.RESPONSES["out_of_scope"],
+            "topic": "out_of_scope",
+            "in_scope": False
+        }
+
+
+@app.post("/api/chat")
+async def chat_post(request: Request):
+    """
+    CodeDNA AI Assistant Endpoint.
+    Accepts { "message": "..." } and returns scoped answer with guardrails.
+    """
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    message = str(data.get("message", "")).strip()
+    result = CodeDNAChatEngine.answer(message)
+    return result
+
+
+@app.get("/api/chat")
+def chat_get(message: str = Query(default="hi", description="User question")):
+    """GET endpoint for CodeDNA AI Assistant for quick testing."""
+    return CodeDNAChatEngine.answer(message)
+
 @app.post("/api/simulate")
 async def simulate_career_path_post(request: Request):
     """Dynamic Career Simulator API endpoint accepting POST JSON payload."""
@@ -1715,6 +1961,89 @@ def index_html():
             </div>
         </div>
     </footer>
+
+    <!-- ===================================================================== -->
+    <!-- FLOATING AI ASSISTANT CHATBOT WIDGET -->
+    <!-- ===================================================================== -->
+    <button id="chatLauncherBtn" onclick="toggleChatbot()" class="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-2.5 rounded-full glass-card border shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer group" style="border-color: var(--cyan-border); background: var(--pill-bg);" aria-label="Open CodeDNA Assistant">
+        <div class="relative w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-400 via-indigo-500 to-purple-500 flex items-center justify-center text-black font-mono font-black text-[10px] shadow-sm">
+            ⚡
+            <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-black pulse-beacon"></span>
+        </div>
+        <div class="flex flex-col text-left">
+            <span class="text-xs font-bold c-head tracking-tight font-mono">Ask AI</span>
+            <span class="text-[9px] font-mono c-accent font-semibold">CodeDNA Assistant</span>
+        </div>
+    </button>
+
+    <!-- Interactive Chatbot Cockpit Modal -->
+    <div id="chatModal" class="hidden fixed bottom-6 right-4 sm:right-6 z-50 w-[370px] sm:w-[410px] max-w-[94vw] h-[550px] max-h-[85vh] glass-card rounded-2xl shadow-2xl flex flex-col border transition-all duration-300 overflow-hidden" style="border-color: var(--border-glow);">
+        <!-- Chat Header -->
+        <div class="p-3.5 px-4 border-b flex items-center justify-between glass-sub shrink-0" style="border-color: var(--border-hairline);">
+            <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-400 to-indigo-500 flex items-center justify-center text-black font-mono font-black text-[10px] shadow-sm">
+                    DNA
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <h3 class="text-xs font-bold c-head font-mono">CodeDNA AI</h3>
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-beacon"></span>
+                    </div>
+                    <span class="text-[9px] font-mono c-accent">Platform Scoped • Online</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <button onclick="clearChat()" class="p-1.5 rounded-lg glass-sub c-sub hover:c-head hover:opacity-80 transition-colors text-xs font-mono" title="Clear Conversation" aria-label="Clear Chat">
+                    ↺
+                </button>
+                <button onclick="toggleChatbot()" class="p-1.5 rounded-lg glass-sub c-sub hover:c-head hover:opacity-80 transition-colors text-xs font-mono" title="Close Chat" aria-label="Close Chat">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Topic Chips -->
+        <div class="p-2 border-b glass-sub flex items-center gap-1.5 overflow-x-auto text-[10px] font-mono shrink-0" style="border-color: var(--border-hairline);">
+            <button onclick="sendQuickPrompt('What is CodeDNA?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">What is CodeDNA?</button>
+            <button onclick="sendQuickPrompt('How is score calculated?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">Score Quotient</button>
+            <button onclick="sendQuickPrompt('What is Anti-Burstiness?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">Anti-Burstiness</button>
+            <button onclick="sendQuickPrompt('Who is Shruti Rai?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">Shruti Rai</button>
+            <button onclick="sendQuickPrompt('How do I use the API?')" class="px-2.5 py-1 rounded-full glass-card border c-body hover:border-cyan-500 whitespace-nowrap transition-colors" style="border-color: var(--border-hairline);">REST API</button>
+        </div>
+
+        <!-- Chat Messages Container -->
+        <div id="chatMessages" class="flex-1 p-3.5 space-y-3 overflow-y-auto text-xs font-sans">
+            <!-- Injected dynamically -->
+        </div>
+
+        <!-- Typing Indicator -->
+        <div id="chatTyping" class="hidden px-4 py-1.5 flex items-center gap-1 text-[11px] font-mono c-sub">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style="animation-delay: 0.15s"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style="animation-delay: 0.3s"></span>
+            <span class="ml-1 text-[10px]">Analyzing query...</span>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form onsubmit="handleChatSubmit(event)" class="p-2.5 border-t glass-sub flex flex-col gap-1.5 shrink-0" style="border-color: var(--border-hairline);">
+            <div class="flex items-center gap-1.5">
+                <input 
+                    type="text" 
+                    id="chatInput" 
+                    placeholder="Ask about CodeDNA metrics, scoring, or profile..." 
+                    class="flex-1 px-3 py-2 text-xs rounded-xl bg-black/10 dark:bg-white/5 border c-head placeholder-slate-400 focus:outline-none focus:border-cyan-500 font-mono transition-colors"
+                    style="border-color: var(--border-hairline);"
+                    autocomplete="off"
+                />
+                <button type="submit" class="p-2 px-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white dark:text-black font-bold text-xs flex items-center justify-center transition-all cursor-pointer font-mono shrink-0 shadow-md">
+                    <span>Send</span>
+                </button>
+            </div>
+            <div class="text-[9px] font-mono c-sub text-center flex items-center justify-center gap-1">
+                <span>🔒 Strictly scoped to CodeDNA platform questions</span>
+            </div>
+        </form>
+    </div>
 
     <!-- Command Palette (⌘K) Modal -->
     <div id="cmdPalette" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start justify-center pt-24 p-4">
@@ -2517,6 +2846,8 @@ def index_html():
             if (e.key === 'Escape') {{
                 const cmd = document.getElementById('cmdPalette');
                 if (cmd && !cmd.classList.contains('hidden')) toggleCmdPalette();
+                const chat = document.getElementById('chatModal');
+                if (chat && !chat.classList.contains('hidden')) toggleChatbot();
             }}
         }});
 
@@ -2545,6 +2876,131 @@ def index_html():
                 window.scrollTo(0, 0);
             }}, 0);
         }});
+
+        // --- 14. CodeDNA AI Platform Chatbot ---
+        let chatHistory = [];
+
+        function toggleChatbot() {{
+            const modal = document.getElementById('chatModal');
+            const launcher = document.getElementById('chatLauncherBtn');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {{
+                launcher.classList.add('hidden');
+                if (chatHistory.length === 0) {{
+                    appendBotMessage(
+                        "👋 **Greetings! I am CodeDNA Platform Assistant.**\n\n" +
+                        "I can answer questions about the **CodeDNA platform**, developer intelligence metrics, scoring formulas, and Shruti Rai's profile.\n\n" +
+                        "*(Note: I strictly decline off-topic queries to keep conversations focused.)*\n\n" +
+                        "What would you like to explore?"
+                    );
+                }}
+                setTimeout(() => document.getElementById('chatInput').focus(), 50);
+            }} else {{
+                launcher.classList.remove('hidden');
+            }}
+        }}
+
+        function clearChat() {{
+            chatHistory = [];
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            appendBotMessage(
+                "Conversation cleared. How can I help you explore CodeDNA today?"
+            );
+        }}
+
+        function sendQuickPrompt(promptText) {{
+            const input = document.getElementById('chatInput');
+            input.value = promptText;
+            handleChatSubmit(new Event('submit'));
+        }}
+
+        async function handleChatSubmit(e) {{
+            if (e) e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const userText = input.value.trim();
+            if (!userText) return;
+
+            // Clear input & append user message
+            input.value = '';
+            appendUserMessage(userText);
+            chatHistory.push({{ role: 'user', content: userText }});
+
+            const typing = document.getElementById('chatTyping');
+            typing.classList.remove('hidden');
+            scrollChatToBottom();
+
+            try {{
+                const res = await fetch('/api/chat', {{
+                    method: 'POST',
+                    headers: {{ 'Content-Type': 'application/json' }},
+                    body: JSON.stringify({{ message: userText, history: chatHistory }})
+                }});
+
+                if (!res.ok) throw new Error('API query failed');
+                const data = await res.json();
+                typing.classList.add('hidden');
+                appendBotMessage(data.response, data.in_scope);
+                chatHistory.push({{ role: 'assistant', content: data.response }});
+            }} catch (err) {{
+                typing.classList.add('hidden');
+                appendBotMessage("⚠️ Network error communicating with assistant endpoint.", false);
+            }}
+        }}
+
+        function appendUserMessage(text) {{
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'flex justify-end';
+            div.innerHTML = `
+                <div class="p-2.5 px-3.5 max-w-[85%] rounded-2xl rounded-tr-none bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md text-xs leading-relaxed font-medium">
+                    ${{escapeHtml(text)}}
+                </div>
+            `;
+            container.appendChild(div);
+            scrollChatToBottom();
+        }}
+
+        function appendBotMessage(markdownText, inScope = true) {{
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'flex justify-start';
+            const borderStyle = inScope ? 'border-color: var(--border-hairline);' : 'border-color: rgba(244, 63, 94, 0.4); background: rgba(244, 63, 94, 0.06);';
+            div.innerHTML = `
+                <div class="p-3 px-3.5 max-w-[88%] rounded-2xl rounded-tl-none glass-sub border shadow-sm text-xs leading-relaxed c-body" style="${{borderStyle}}">
+                    ${{formatBotMarkdown(markdownText)}}
+                </div>
+            `;
+            container.appendChild(div);
+            scrollChatToBottom();
+        }}
+
+        function scrollChatToBottom() {{
+            const container = document.getElementById('chatMessages');
+            container.scrollTop = container.scrollHeight;
+        }}
+
+        function escapeHtml(str) {{
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }}
+
+        function formatBotMarkdown(str) {{
+            let html = escapeHtml(str);
+            // Bold **text**
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="c-head font-bold">$1</strong>');
+            // Bullet points
+            html = html.replace(/^[•\-]\s+(.*)$/gm, '<li class="ml-3">$1</li>');
+            // Math equations $$\\text{...}$$
+            html = html.replace(/\$\$(.*?)\$\$/g, '<div class="p-1.5 my-1 rounded glass-card font-mono text-[11px] text-center c-accent">$1</div>');
+            // Numbered lists
+            html = html.replace(/^(\d+\.)\s+(.*)$/gm, '<div class="ml-1 my-0.5"><strong class="c-accent">$1</strong> $2</div>');
+            // Inline code `code`
+            html = html.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded glass-sub font-mono text-[10px] c-accent font-bold">$1</code>');
+            // Line breaks
+            html = html.replace(/\n\n/g, '<div class="h-2"></div>');
+            html = html.replace(/\n/g, '<br>');
+            return html;
+        }}
     </script>
 </body>
 </html>"""
