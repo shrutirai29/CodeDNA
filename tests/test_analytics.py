@@ -67,3 +67,53 @@ def test_portfolio_auditor():
     assert 20.0 <= audit["portfolio_score"] <= 100.0
     assert len(audit["recommendations"]) > 0
     assert len(audit["audited_repos"]) == 2
+
+
+def test_dynamic_live_github_intelligence():
+    """Verify that fetch_live_github produces authentic, varied, non-clone profiles with rich tech stacks."""
+    from unittest.mock import patch, MagicMock
+    from api.index import fetch_live_github
+
+    # 1. Mock Data Scientist Profile
+    mock_ds_user = {"login": "datasci", "name": "Data Scientist", "followers": 25, "created_at": "2023-01-01"}
+    mock_ds_repos = [
+        {"name": "fastapi-ml-service", "language": "Python", "stargazers_count": 12, "forks_count": 3, "description": "Production ML model serving with FastAPI and PyTorch", "topics": ["pytorch", "fastapi"]},
+        {"name": "timeseries-analytics", "language": "Python", "stargazers_count": 8, "forks_count": 2, "description": "Pandas and Scikit-Learn forecasting", "topics": ["pandas", "sklearn"]},
+        {"name": "data-pipeline", "language": "Python", "stargazers_count": 4, "forks_count": 1, "description": "PostgreSQL data warehouse pipeline", "topics": ["postgres", "sql"]}
+    ]
+
+    # 2. Mock Systems Programmer Profile
+    mock_sys_user = {"login": "sysdev", "name": "Systems Dev", "followers": 60, "created_at": "2021-01-01"}
+    mock_sys_repos = [
+        {"name": "kernel-driver", "language": "C", "stargazers_count": 45, "forks_count": 10, "description": "Linux kernel character device driver", "topics": ["linux", "kernel"]},
+        {"name": "allocator-cpp", "language": "C++", "stargazers_count": 22, "forks_count": 4, "description": "Custom lock-free memory allocator", "topics": ["dsa", "systems"]}
+    ]
+
+    with patch("requests.get") as mock_get:
+        # Test Data Scientist
+        mock_get.side_effect = [
+            MagicMock(status_code=200, json=lambda: mock_ds_user),
+            MagicMock(status_code=200, json=lambda: mock_ds_repos)
+        ]
+        p_ds = fetch_live_github("datasci")
+        assert p_ds is not None
+        assert p_ds["top_career"] in ("Data Scientist / ML Engineer", "Backend Engineer", "Full-Stack Developer")
+        ds_tech_names = [n["name"] for n in p_ds["dna_nodes"]]
+        assert "Other" not in ds_tech_names
+        assert any(t in ds_tech_names for t in ["FastAPI", "PyTorch", "Python", "Pandas"])
+
+        # Test Systems Programmer
+        mock_get.side_effect = [
+            MagicMock(status_code=200, json=lambda: mock_sys_user),
+            MagicMock(status_code=200, json=lambda: mock_sys_repos)
+        ]
+        p_sys = fetch_live_github("sysdev")
+        assert p_sys is not None
+        assert p_sys["top_career"] == "Systems & Software Engineer (SDE)"
+        sys_tech_names = [n["name"] for n in p_sys["dna_nodes"]]
+        assert "Other" not in sys_tech_names
+        assert any(t in sys_tech_names for t in ["C", "C++", "Algorithms / DSA"])
+
+        # Confirm career fit scores and roles differ between the two profiles
+        assert p_ds["top_career"] != p_sys["top_career"] or p_ds["top_fit"] != p_sys["top_fit"]
+
