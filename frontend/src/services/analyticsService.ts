@@ -51,27 +51,97 @@ export class AnalyticsService {
     ];
   }
 
-  public static generateRhythmMatrix(): number[][] {
+  /**
+   * Parses authentic GitHub Events API array into real 7x24 activity matrix and peak times.
+   */
+  public static parseEventsToRhythm(events: any[]): {
+    matrix: number[][];
+    peak_time: string;
+    most_active_day: string;
+  } {
+    const rawMatrix: number[][] = Array.from({ length: 7 }, () => Array(24).fill(0));
+    const dayTotals = Array(7).fill(0);
+    const hourTotals = Array(24).fill(0);
+
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    if (Array.isArray(events) && events.length > 0) {
+      for (const e of events) {
+        if (!e.created_at) continue;
+        const dt = new Date(e.created_at);
+        // getDay: 0 is Sun, 1 is Mon. Convert so Mon is 0, Sun is 6
+        const d = (dt.getDay() + 6) % 7;
+        const h = dt.getHours();
+
+        const commits = e.payload?.commits?.length || 1;
+        rawMatrix[d][h] += commits;
+        dayTotals[d] += commits;
+        hourTotals[h] += commits;
+      }
+    }
+
+    let maxVal = 1;
+    for (let d = 0; d < 7; d++) {
+      for (let h = 0; h < 24; h++) {
+        if (rawMatrix[d][h] > maxVal) maxVal = rawMatrix[d][h];
+      }
+    }
+
+    const scaledMatrix = rawMatrix.map(row =>
+      row.map(cell => (cell > 0 ? Math.min(4, Math.max(1, Math.round((cell / maxVal) * 4))) : 0))
+    );
+
+    let maxDayIdx = 3;
+    let maxDayVal = -1;
+    dayTotals.forEach((total, idx) => {
+      if (total > maxDayVal) {
+        maxDayVal = total;
+        maxDayIdx = idx;
+      }
+    });
+
+    let maxHourIdx = 20;
+    let maxHourVal = -1;
+    hourTotals.forEach((total, idx) => {
+      if (total > maxHourVal) {
+        maxHourVal = total;
+        maxHourIdx = idx;
+      }
+    });
+
+    const startH = String(maxHourIdx).padStart(2, '0');
+    const endH = String((maxHourIdx + 2) % 24).padStart(2, '0');
+
+    return {
+      matrix: scaledMatrix,
+      peak_time: `${startH}:00 – ${endH}:00`,
+      most_active_day: days[maxDayIdx]
+    };
+  }
+
+  public static generateRhythmMatrix(seed = 'shrutirai29', peakDay = 3, peakHour = 20): number[][] {
+    // Deterministic pseudo-random generation based on character codes
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+      hash = (hash << 5) - hash + seed.charCodeAt(i);
+      hash |= 0;
+    }
+
     const matrix: number[][] = [];
     for (let day = 0; day < 7; day++) {
       const row: number[] = [];
       for (let hour = 0; hour < 24; hour++) {
+        const val = Math.sin((day * 24 + hour + Math.abs(hash % 100)) * 0.3) * 0.5 + 0.5;
         let intensity = 0;
-        const isPeakHour = (hour >= 18 && hour <= 23);
-        const isMidday = (hour >= 10 && hour <= 14);
 
-        if (day === 3) {
-          if (isPeakHour) intensity = Math.random() > 0.2 ? 4 : 3;
-          else if (isMidday) intensity = Math.random() > 0.4 ? 3 : 2;
-          else intensity = Math.random() > 0.7 ? 1 : 0;
-        } else if (day < 5) {
-          if (isPeakHour) intensity = Math.random() > 0.3 ? 3 : 2;
-          else if (isMidday) intensity = Math.random() > 0.5 ? 2 : 1;
-          else intensity = Math.random() > 0.8 ? 1 : 0;
-        } else {
-          if (hour >= 14 && hour <= 20) intensity = Math.random() > 0.4 ? 3 : 1;
-          else intensity = Math.random() > 0.85 ? 1 : 0;
+        if (day === peakDay && Math.abs(hour - peakHour) <= 2) {
+          intensity = val > 0.3 ? 4 : 3;
+        } else if (day >= 1 && day <= 4 && hour >= 16 && hour <= 22) {
+          intensity = val > 0.4 ? 3 : (val > 0.2 ? 2 : 1);
+        } else if (val > 0.75) {
+          intensity = 1;
         }
+
         row.push(intensity);
       }
       matrix.push(row);

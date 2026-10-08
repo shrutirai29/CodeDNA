@@ -119,8 +119,9 @@ export interface DeveloperProfile {
     most_active_day: string;
     current_streak_weeks: number;
     consistency_score: number;
-    matrix: number[][]; // 7 days x 24 hours (or 7 x 7 buckets)
+    matrix: number[][]; // 7 days x 24 hours
   };
+  contributionWeeks?: number[][]; // 30+ weeks x 7 days real contribution matrix
   achievements: AchievementBadge[];
   motivationNotes: string[];
 }

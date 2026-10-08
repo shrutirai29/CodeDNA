@@ -4,6 +4,7 @@ import { TechnologyService } from './technologyService';
 import { CareerService } from './careerService';
 import { RepositoryService } from './repositoryService';
 import { AnalyticsService } from './analyticsService';
+import { REAL_GITHUB_BENCHMARK_DATA } from './githubData';
 
 export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
   shrutirai29: {
@@ -632,7 +633,20 @@ Object.values(BENCHMARK_PROFILES).forEach(profile => {
     profile.dimensions.technical_breadth
   );
   profile.growth_timeline = AnalyticsService.getGrowthTimeline(profile.developer_score);
-  profile.rhythm.matrix = AnalyticsService.generateRhythmMatrix();
+
+  // Connect authentic GitHub contributions calendar and 7x24 events rhythm
+  const realData = REAL_GITHUB_BENCHMARK_DATA[profile.username];
+  if (realData) {
+    profile.stats.contributions = realData.total_contributions;
+    profile.contributionWeeks = realData.weeks;
+    profile.rhythm.matrix = realData.matrix;
+    profile.rhythm.peak_time = realData.peak_time;
+    profile.rhythm.most_active_day = realData.most_active_day;
+    profile.rhythm.current_streak_weeks = realData.streak_weeks;
+  } else {
+    profile.rhythm.matrix = AnalyticsService.generateRhythmMatrix(profile.username);
+  }
+
   profile.achievements = AnalyticsService.calculateAchievements({
     weekStreak: profile.stats.week_streak,
     technologies: profile.tech_dna,
@@ -722,6 +736,49 @@ export class GithubService {
 
       const nextBestSkill = CareerService.getNextBestSkill(careers);
 
+      // Fetch authentic GitHub contributions & rhythm from /api/contributions or events fallback
+      let contribWeeks: number[][] = [];
+      let rhythmMatrix: number[][] = [];
+      let peakTime = '20:00 – 23:00';
+      let mostActiveDay = 'Wednesday';
+      let totalContributions = Math.round((user.public_repos || 10) * 12 + (user.followers || 2) * 3);
+      let streakWeeks = Math.max(4, Math.min(30, Math.round((user.public_repos || 5) * 1.5)));
+      let consistencyScore = consistency;
+
+      try {
+        const contribRes = await fetch(`/api/contributions?username=${cleanUsername}`);
+        if (contribRes.ok) {
+          const cd = await contribRes.json();
+          if (cd.weeks && cd.weeks.length > 0) contribWeeks = cd.weeks;
+          if (cd.matrix && cd.matrix.length > 0) rhythmMatrix = cd.matrix;
+          if (cd.total_contributions > 0) totalContributions = cd.total_contributions;
+          if (cd.peak_time) peakTime = cd.peak_time;
+          if (cd.most_active_day) mostActiveDay = cd.most_active_day;
+          if (cd.current_streak_weeks) streakWeeks = cd.current_streak_weeks;
+          if (cd.consistency_score) consistencyScore = cd.consistency_score;
+        }
+      } catch {
+        // Fallback: fetch events client-side directly from GitHub API
+        try {
+          const evRes = await fetch(`https://api.github.com/users/${cleanUsername}/events?per_page=100`);
+          if (evRes.ok) {
+            const evList = await evRes.json();
+            if (Array.isArray(evList) && evList.length > 0) {
+              const parsed = AnalyticsService.parseEventsToRhythm(evList);
+              rhythmMatrix = parsed.matrix;
+              peakTime = parsed.peak_time;
+              mostActiveDay = parsed.most_active_day;
+            }
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      if (rhythmMatrix.length === 0) {
+        rhythmMatrix = AnalyticsService.generateRhythmMatrix(user.login);
+      }
+
       return {
         username: user.login,
         name: user.name || user.login,
@@ -730,8 +787,8 @@ export class GithubService {
         tags: ['Software Developer', 'GitHub Contributor', 'Problem Solver'],
         stats: {
           repositories: user.public_repos || repos.length,
-          contributions: Math.round((user.public_repos || 10) * 12 + (user.followers || 2) * 3),
-          week_streak: Math.max(4, Math.min(30, Math.round((user.public_repos || 5) * 1.5))),
+          contributions: totalContributions,
+          week_streak: streakWeeks,
           followers: user.followers || 0,
           following: user.following || 0
         },
@@ -753,19 +810,20 @@ export class GithubService {
         repositories: auditedRepos,
         growth_timeline: AnalyticsService.getGrowthTimeline(scoring.score),
         rhythm: {
-          peak_time: '20:00 – 23:00',
-          most_active_day: 'Wednesday',
-          current_streak_weeks: Math.max(6, Math.round((user.public_repos || 5) * 1.2)),
-          consistency_score: consistency,
-          matrix: AnalyticsService.generateRhythmMatrix()
+          peak_time: peakTime,
+          most_active_day: mostActiveDay,
+          current_streak_weeks: streakWeeks,
+          consistency_score: consistencyScore,
+          matrix: rhythmMatrix
         },
+        contributionWeeks: contribWeeks.length > 0 ? contribWeeks : undefined,
         achievements: AnalyticsService.calculateAchievements({
-          weekStreak: Math.max(4, Math.min(30, Math.round((user.public_repos || 5) * 1.5))),
+          weekStreak: streakWeeks,
           technologies: techNodes,
           repositories: auditedRepos,
           dimensions: dims,
           followers: user.followers || 0,
-          contributions: Math.round((user.public_repos || 10) * 12 + (user.followers || 2) * 3)
+          contributions: totalContributions
         }),
         motivationNotes: AnalyticsService.getMotivationalNotes()
       };

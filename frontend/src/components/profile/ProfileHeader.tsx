@@ -5,17 +5,10 @@ import { CheckCircle2, GitCommit, Flame, Users, BookOpen, ExternalLink } from 'l
 export const ProfileHeader: React.FC = () => {
   const { profile } = useDeveloperStore();
 
-  // Generate 52 weeks of mock contribution activity cells
-  const contributionWeeks = Array.from({ length: 30 }, (_, w) => 
-    Array.from({ length: 7 }, (_, d) => {
-      const rand = Math.sin(w * 0.7 + d) * 0.5 + 0.5;
-      if (rand > 0.8) return 4;
-      if (rand > 0.5) return 3;
-      if (rand > 0.25) return 2;
-      if (rand > 0.1) return 1;
-      return 0;
-    })
-  );
+  // Authentic 30 weeks of GitHub contribution activity cells
+  const contributionWeeks = (profile.contributionWeeks && profile.contributionWeeks.length > 0)
+    ? profile.contributionWeeks.slice(-30)
+    : Array.from({ length: 30 }, () => Array(7).fill(0));
 
   const getHeatmapColor = (intensity: number) => {
     switch (intensity) {
