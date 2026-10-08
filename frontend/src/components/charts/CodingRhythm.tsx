@@ -10,11 +10,11 @@ export const CodingRhythm: React.FC = () => {
 
   const getCellColor = (val: number) => {
     switch (val) {
-      case 4: return 'bg-[#6366F1] dark:bg-[#818CF8]';
-      case 3: return 'bg-indigo-400 dark:bg-indigo-600';
-      case 2: return 'bg-[#06B6D4] dark:bg-[#0891B2]';
-      case 1: return 'bg-cyan-100 dark:bg-cyan-950';
-      default: return 'bg-[#EEF2F7] dark:bg-[#161B22]';
+      case 4: return 'bg-[#312E81] dark:bg-[#E0E7FF]';
+      case 3: return 'bg-[#6366F1] dark:bg-[#A855F7]';
+      case 2: return 'bg-[#818CF8] dark:bg-[#6366F1]';
+      case 1: return 'bg-[#38BDF8] dark:bg-[#0284C7]';
+      default: return 'bg-[#E2E8F0] dark:bg-[#1E293B]/80';
     }
   };
 
@@ -77,14 +77,14 @@ export const CodingRhythm: React.FC = () => {
             ) : (
               <span>Hover over matrix cells to inspect hourly coding patterns.</span>
             )}
-            <div className="flex items-center gap-1">
-              <span className="text-[9px] text-[#94A3B8]">Low</span>
-              <span className="w-2 h-2 rounded-xs bg-[#EEF2F7] dark:bg-[#161B22]" />
-              <span className="w-2 h-2 rounded-xs bg-cyan-100 dark:bg-cyan-950" />
-              <span className="w-2 h-2 rounded-xs bg-[#06B6D4]" />
-              <span className="w-2 h-2 rounded-xs bg-indigo-400" />
-              <span className="w-2 h-2 rounded-xs bg-[#6366F1]" />
-              <span className="text-[9px] text-[#94A3B8]">High</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] text-[#64748B] dark:text-[#94A3B8]">Low</span>
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#E2E8F0] dark:bg-[#1E293B]/80" title="0" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#38BDF8] dark:bg-[#0284C7]" title="Level 1" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#818CF8] dark:bg-[#6366F1]" title="Level 2" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#6366F1] dark:bg-[#A855F7]" title="Level 3" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#312E81] dark:bg-[#E0E7FF]" title="Level 4" />
+              <span className="text-[9px] text-[#64748B] dark:text-[#94A3B8]">High</span>
             </div>
           </div>
         </div>

@@ -12,11 +12,11 @@ export const ProfileHeader: React.FC = () => {
 
   const getHeatmapColor = (intensity: number) => {
     switch (intensity) {
-      case 4: return 'bg-[#6366F1] dark:bg-[#818CF8]';
-      case 3: return 'bg-indigo-400 dark:bg-indigo-600';
-      case 2: return 'bg-indigo-200 dark:bg-indigo-900';
-      case 1: return 'bg-indigo-100 dark:bg-indigo-950';
-      default: return 'bg-[#EEF2F7] dark:bg-[#161B22]';
+      case 4: return 'bg-[#312E81] dark:bg-[#E0E7FF] shadow-xs';
+      case 3: return 'bg-[#6366F1] dark:bg-[#A855F7]';
+      case 2: return 'bg-[#818CF8] dark:bg-[#6366F1]';
+      case 1: return 'bg-[#38BDF8] dark:bg-[#0284C7] ring-1 ring-sky-300/40 dark:ring-sky-500/30';
+      default: return 'bg-[#E2E8F0] dark:bg-[#1E293B]/80';
     }
   };
 
@@ -112,21 +112,21 @@ export const ProfileHeader: React.FC = () => {
                   <div
                     key={`${wi}-${di}`}
                     className={`w-2.5 h-2.5 rounded-xs ${getHeatmapColor(val)} transition-all hover:scale-125`}
-                    title={`Day activity level: ${val}/4`}
+                    title={val > 0 ? `Activity level: ${val}/4 (${val === 1 ? '1-2' : val === 2 ? '3-5' : val === 3 ? '6-9' : '10+'} commits)` : 'No commits recorded'}
                   />
                 ))
               )}
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[9px] font-mono text-[#94A3B8]">
+          <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8] pt-0.5">
             <span>Less Active</span>
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-xs bg-[#EEF2F7] dark:bg-[#161B22]" />
-              <span className="w-2 h-2 rounded-xs bg-indigo-100 dark:bg-indigo-950" />
-              <span className="w-2 h-2 rounded-xs bg-indigo-200 dark:bg-indigo-900" />
-              <span className="w-2 h-2 rounded-xs bg-indigo-400 dark:bg-indigo-600" />
-              <span className="w-2 h-2 rounded-xs bg-[#6366F1] dark:bg-[#818CF8]" />
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#E2E8F0] dark:bg-[#1E293B]/80" title="0 Commits" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#38BDF8] dark:bg-[#0284C7]" title="1-2 Commits (Low)" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#818CF8] dark:bg-[#6366F1]" title="3-5 Commits (Medium)" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#6366F1] dark:bg-[#A855F7]" title="6-9 Commits (High)" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#312E81] dark:bg-[#E0E7FF]" title="10+ Commits (Peak)" />
             </div>
             <span>Peak Velocity</span>
           </div>
