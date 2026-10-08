@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
-import { Dna } from 'lucide-react';
+import { Dna, Box, CircleDot } from 'lucide-react';
 import type { TechnologyNode } from '../../types/developer';
+import { ThreeGalaxyView } from './ThreeGalaxyView';
+import { TiltCard } from '../common/TiltCard';
 
 export const TechnologyDNA: React.FC = () => {
   const { profile } = useDeveloperStore();
   const nodes = profile.tech_dna;
   const [hoveredNode, setHoveredNode] = useState<TechnologyNode | null>(null);
+  const [viewMode, setViewMode] = useState<'3d' | '2d'>('3d');
 
   const cx = 310;
   const cy = 180;
@@ -32,30 +35,70 @@ export const TechnologyDNA: React.FC = () => {
   });
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative overflow-hidden">
+    <TiltCard
+      maxTilt={4}
+      scale={1.005}
+      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative group"
+    >
       {/* Top Header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
-          <Dna size={18} className="text-[#6366F1] dark:text-[#818CF8]" />
-          <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-[#111827] dark:text-[#F8FAFC]">
-            Technology DNA Constellation
-          </h2>
+          <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-[#6366F1] dark:text-[#818CF8]">
+            <Dna size={16} />
+          </div>
+          <div>
+            <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-[#111827] dark:text-[#F8FAFC]">
+              Technology DNA Constellation
+            </h2>
+            <p className="text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8]">
+              Interactive Multi-Stack Neural Graph
+            </p>
+          </div>
         </div>
-        <span className="text-[11px] font-mono text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800">
-          {nodes.length} Stacks Audited • Zero "Other" Nodes
-        </span>
+
+        {/* View Mode Toggle & Audited Count */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-[#F1F5F9] dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B]">
+            <button
+              onClick={() => setViewMode('3d')}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all ${
+                viewMode === '3d'
+                  ? 'bg-white dark:bg-[#0D1117] text-[#6366F1] dark:text-[#818CF8] shadow-xs'
+                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
+              }`}
+            >
+              <Box size={12} />
+              3D NEURAL GALAXY
+            </button>
+            <button
+              onClick={() => setViewMode('2d')}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all ${
+                viewMode === '2d'
+                  ? 'bg-white dark:bg-[#0D1117] text-[#6366F1] dark:text-[#818CF8] shadow-xs'
+                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
+              }`}
+            >
+              <CircleDot size={12} />
+              2D ORBIT MAP
+            </button>
+          </div>
+
+          <span className="hidden md:inline-block text-[11px] font-mono text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-1 rounded-full border border-indigo-200 dark:border-indigo-800">
+            {nodes.length} Stacks Audited
+          </span>
+        </div>
       </div>
 
-      {/* Live Inspector Strip */}
-      <div className="h-14 p-3 px-4 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] text-xs font-mono flex items-center justify-between mb-2">
+      {/* Live Cyber Inspector Strip */}
+      <div className="h-14 p-3 px-4 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] text-xs font-mono flex items-center justify-between mb-3 shadow-2xs">
         {hoveredNode ? (
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3">
               <span
-                className="w-3 h-3 rounded-full shrink-0"
+                className="w-3.5 h-3.5 rounded-full shrink-0 shadow-xs"
                 style={{ backgroundColor: hoveredNode.color || '#6366F1' }}
               />
-              <span className="font-bold text-sm text-[#111827] dark:text-[#F8FAFC]">
+              <span className="font-extrabold text-sm text-[#111827] dark:text-[#F8FAFC]">
                 {hoveredNode.name}
               </span>
               <span className="text-[#64748B] dark:text-[#94A3B8]">
@@ -65,12 +108,12 @@ export const TechnologyDNA: React.FC = () => {
                 Audited Projects: <strong className="text-[#111827] dark:text-[#F8FAFC]">{hoveredNode.projects}</strong>
               </span>
               <span className="text-[#64748B] dark:text-[#94A3B8]">
-                Repos: <strong className="text-[#111827] dark:text-[#F8FAFC]">{hoveredNode.repositories}</strong>
+                Repositories: <strong className="text-[#111827] dark:text-[#F8FAFC]">{hoveredNode.repositories}</strong>
               </span>
             </div>
 
             <span
-              className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${
+              className={`text-[10px] font-bold px-2.5 py-1 rounded-full border shadow-2xs ${
                 hoveredNode.momentum === 'RISING'
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'
                   : hoveredNode.momentum === 'NEW'
@@ -89,143 +132,176 @@ export const TechnologyDNA: React.FC = () => {
           <div className="flex items-center justify-between w-full text-[#64748B] dark:text-[#94A3B8]">
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#6366F1] animate-ping" />
-              Hover over any technology node to inspect project share, code mass & momentum
+              {viewMode === '3d'
+                ? 'Spin the 3D neural universe with your mouse & click any node to inspect'
+                : 'Hover over any technology node to inspect project share, code mass & momentum'}
             </span>
-            <span className="text-[10px] text-[#94A3B8]">INTERACTIVE GRAPH</span>
+            <span className="text-[10px] text-[#94A3B8] font-bold tracking-wider">
+              {viewMode === '3d' ? 'WEBGL ACCELERATED' : 'VECTOR TOPOLOGY'}
+            </span>
           </div>
         )}
       </div>
 
-      {/* SVG Interactive Constellation Canvas */}
-      <div className="w-full h-88 flex items-center justify-center relative overflow-visible">
-        <svg viewBox="0 0 620 360" className="w-full h-full overflow-visible select-none">
-          <defs>
-            <filter id="dnaNodeGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="1" stdDeviation="3" floodOpacity="0.12" />
-            </filter>
-          </defs>
+      {/* Main View Area: 3D Three.js Galaxy or 2D Vector Map */}
+      {viewMode === '3d' ? (
+        <ThreeGalaxyView
+          nodes={nodes}
+          selectedNode={hoveredNode}
+          onSelectNode={setHoveredNode}
+        />
+      ) : (
+        /* SVG 2D Constellation Canvas */
+        <div className="w-full h-88 flex items-center justify-center relative overflow-visible">
+          <svg viewBox="0 0 620 360" className="w-full h-full overflow-visible select-none">
+            <defs>
+              <filter id="dnaNodeGlow2D" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="1" stdDeviation="3" floodOpacity="0.12" />
+              </filter>
+            </defs>
 
-          {/* Central Developer Core Hub */}
-          <circle cx={cx} cy={cy} r="38" fill="none" stroke="#6366F1" strokeOpacity="0.25" strokeWidth="1.5" />
-          <circle
-            cx={cx}
-            cy={cy}
-            r="30"
-            className="fill-white dark:fill-[#0D1117] stroke-[#6366F1] dark:stroke-[#818CF8]"
-            strokeWidth="2.5"
-            filter="url(#dnaNodeGlow)"
-          />
-          <text
-            x={cx}
-            y={cy + 4}
-            textAnchor="middle"
-            className="font-mono text-[9px] font-bold fill-[#111827] dark:fill-[#F8FAFC] tracking-wider"
-          >
-            CODEDNA
-          </text>
+            {/* Central Developer Core Hub */}
+            <circle cx={cx} cy={cy} r="38" fill="none" stroke="#6366F1" strokeOpacity="0.25" strokeWidth="1.5" />
+            <circle
+              cx={cx}
+              cy={cy}
+              r="30"
+              className="fill-white dark:fill-[#0D1117] stroke-[#6366F1] dark:stroke-[#818CF8]"
+              strokeWidth="2.5"
+              filter="url(#dnaNodeGlow2D)"
+            />
+            <text
+              x={cx}
+              y={cy + 4}
+              textAnchor="middle"
+              className="font-mono text-[11px] font-extrabold fill-[#6366F1] dark:fill-[#818CF8]"
+            >
+              CORE DNA
+            </text>
 
-          {/* Connector Lines */}
-          {positionedNodes.map((node) => {
-            const parentNode = node.parent ? positionedNodes.find(p => p.id === node.parent) : null;
-            const targetX = parentNode ? parentNode.x : cx;
-            const targetY = parentNode ? parentNode.y : cy;
+            {/* Parent-Child Relationships */}
+            {positionedNodes.map((childNode) => {
+              if (!childNode.parent) return null;
+              const parentNode = positionedNodes.find((p) => p.id === childNode.parent);
+              if (!parentNode) return null;
 
-            return (
-              <line
-                key={`line-${node.id}`}
-                x1={targetX}
-                y1={targetY}
-                x2={node.x}
-                y2={node.y}
-                stroke={node.color || '#6366F1'}
-                strokeOpacity={parentNode ? '0.45' : '0.25'}
-                strokeWidth={parentNode ? '2' : '1.5'}
-                strokeDasharray={parentNode ? '4 3' : 'none'}
-                style={{ pointerEvents: 'none' }}
-              />
-            );
-          })}
-
-          {/* Interactive Technology Node Pills */}
-          {positionedNodes.map((node) => {
-            const isHovered = hoveredNode?.id === node.id;
-            const strokeColor = node.color || '#6366F1';
-
-            return (
-              <g
-                key={node.id}
-                transform={`translate(${node.x}, ${node.y})`}
-                className="cursor-pointer transition-all duration-150"
-                onMouseEnter={() => setHoveredNode(node)}
-                onMouseLeave={() => setHoveredNode(null)}
-              >
-                {/* Pill Background Rect */}
-                <rect
-                  x={-node.pillW / 2}
-                  y={-node.pillH / 2}
-                  width={node.pillW}
-                  height={node.pillH}
-                  rx="14"
-                  className="fill-white dark:fill-[#161B22] transition-all"
-                  stroke={strokeColor}
-                  strokeWidth={isHovered ? '2.5' : '1.5'}
-                  filter={isHovered ? 'url(#dnaNodeGlow)' : undefined}
+              return (
+                <line
+                  key={`dep-${childNode.id}-${parentNode.id}`}
+                  x1={parentNode.x}
+                  y1={parentNode.y}
+                  x2={childNode.x}
+                  y2={childNode.y}
+                  stroke="#06B6D4"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 4"
+                  strokeOpacity="0.65"
+                  className="animate-pulse"
                 />
+              );
+            })}
 
-                {/* Status Dot */}
-                <circle
-                  cx={-node.pillW / 2 + 13}
-                  cy="0"
-                  r="3.5"
-                  fill={strokeColor}
-                  style={{ pointerEvents: 'none' }}
+            {/* Core to Node Laser Connections */}
+            {positionedNodes.map((node) => {
+              const isTargeted = hoveredNode?.id === node.id;
+              return (
+                <line
+                  key={`link-${node.id}`}
+                  x1={cx}
+                  y1={cy}
+                  x2={node.x}
+                  y2={node.y}
+                  stroke={node.color || '#6366F1'}
+                  strokeWidth={isTargeted ? 2.5 : 1.2}
+                  strokeOpacity={isTargeted ? 0.9 : 0.25}
+                  className="transition-all duration-200"
                 />
+              );
+            })}
 
-                {/* Tech Name */}
-                <text
-                  x={-node.pillW / 2 + 23}
-                  y="3.5"
-                  className="text-[10.5px] font-semibold fill-[#111827] dark:fill-[#F8FAFC]"
-                  style={{ pointerEvents: 'none' }}
+            {/* Technology Nodes */}
+            {positionedNodes.map((node) => {
+              const isHovered = hoveredNode?.id === node.id;
+              const rx_pill = node.x - node.pillW / 2;
+              const ry_pill = node.y - node.pillH / 2;
+
+              return (
+                <g
+                  key={node.id}
+                  className="cursor-pointer transition-transform duration-200"
+                  onMouseEnter={() => setHoveredNode(node)}
+                  onMouseLeave={() => setHoveredNode(null)}
                 >
-                  {node.name}
-                </text>
+                  <rect
+                    x={rx_pill}
+                    y={ry_pill}
+                    width={node.pillW}
+                    height={node.pillH}
+                    rx="14"
+                    className={`transition-all duration-200 ${
+                      isHovered
+                        ? 'fill-white dark:fill-[#161B22] stroke-indigo-500 shadow-lg'
+                        : 'fill-white/95 dark:fill-[#0D1117]/95 stroke-[#E2E8F0] dark:stroke-[#1E293B]'
+                    }`}
+                    strokeWidth={isHovered ? 2 : 1}
+                    filter="url(#dnaNodeGlow2D)"
+                  />
 
-                {/* Usage Percentage */}
-                <text
-                  x={node.pillW / 2 - 10}
-                  y="3.5"
-                  textAnchor="end"
-                  className="text-[9px] font-mono font-bold fill-[#64748B] dark:fill-[#94A3B8]"
-                  style={{ pointerEvents: 'none' }}
-                >
-                  {node.usage}%
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-      </div>
+                  {/* Brand Color Dot */}
+                  <circle
+                    cx={rx_pill + 14}
+                    cy={node.y}
+                    r={isHovered ? 5 : 4}
+                    fill={node.color || '#6366F1'}
+                    className="transition-all duration-200"
+                  />
 
-      {/* Footer Momentum Legend */}
-      <div className="pt-2 border-t border-[#E2E8F0] dark:border-[#1E293B] flex flex-wrap items-center justify-between text-xs font-mono text-[#64748B] dark:text-[#94A3B8]">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
+                  {/* Technology Name */}
+                  <text
+                    x={rx_pill + 26}
+                    y={node.y + 4}
+                    className="font-mono text-[10px] font-bold fill-[#111827] dark:fill-[#F8FAFC]"
+                  >
+                    {node.name}
+                  </text>
+
+                  {/* Usage Badge */}
+                  <text
+                    x={rx_pill + node.pillW - 8}
+                    y={node.y + 3.5}
+                    textAnchor="end"
+                    className="font-mono text-[9px] font-semibold fill-[#64748B] dark:fill-[#94A3B8]"
+                  >
+                    {node.usage}%
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      )}
+
+      {/* Footer Stack Depth Bar */}
+      <div className="mt-4 pt-3 border-t border-[#E2E8F0] dark:border-[#1E293B] flex flex-wrap items-center justify-between text-xs font-mono text-[#64748B] dark:text-[#94A3B8] gap-2">
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            ↑ Accelerating Momentum
+            Accelerating: {nodes.filter(n => n.momentum === 'RISING').length}
           </span>
-          <span className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400 font-semibold">
+          <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-cyan-500" />
-            ✦ New Stack Adoption
+            New Tech: {nodes.filter(n => n.momentum === 'NEW').length}
           </span>
-          <span className="flex items-center gap-1.5 text-indigo-500 font-semibold">
+          <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-indigo-500" />
-            → Stable Primary
+            Stable: {nodes.filter(n => n.momentum === 'STABLE').length}
           </span>
         </div>
 
-        <span className="text-[10px] text-[#94A3B8]">Parent-child graph topology</span>
+        <span className="text-[11px] text-[#94A3B8]">
+          Stack Depth: <strong className="text-[#111827] dark:text-[#F8FAFC]">{profile.dimensions.technical_breadth} / 100</strong>
+        </span>
       </div>
-    </div>
+    </TiltCard>
   );
 };

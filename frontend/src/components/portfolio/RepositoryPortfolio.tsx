@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { FolderGit2, Star, GitFork, ExternalLink } from 'lucide-react';
+import { TiltCard } from '../common/TiltCard';
 
 export const RepositoryPortfolio: React.FC = () => {
   const { profile } = useDeveloperStore();
@@ -65,11 +66,13 @@ export const RepositoryPortfolio: React.FC = () => {
       {/* Grid of Repository Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {repos.map((repo) => (
-          <div
+          <TiltCard
             key={repo.id}
-            className="p-5 rounded-2xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] flex flex-col justify-between hover:border-indigo-500/40 transition-all group"
+            maxTilt={6}
+            scale={1.015}
+            className="p-5 rounded-2xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] flex flex-col justify-between hover:border-indigo-500/40 transition-colors group shadow-2xs"
           >
-            <div>
+            <div style={{ transform: 'translateZ(10px)' }}>
               {/* Top Row: Name, Status Badge, Complexity Grade */}
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 truncate">
@@ -96,7 +99,7 @@ export const RepositoryPortfolio: React.FC = () => {
                 {repo.technologies.map((t) => (
                   <span
                     key={t}
-                    className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-white dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B] text-[#475569] dark:text-[#94A3B8]"
+                    className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-white dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B] text-[#475569] dark:text-[#94A3B8] shadow-2xs"
                   >
                     {t}
                   </span>
@@ -105,7 +108,10 @@ export const RepositoryPortfolio: React.FC = () => {
             </div>
 
             {/* Bottom Row: Stars, Forks, Complexity Score, View Repo Link */}
-            <div className="pt-3 border-t border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between text-xs font-mono">
+            <div
+              className="pt-3 border-t border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between text-xs font-mono"
+              style={{ transform: 'translateZ(12px)' }}
+            >
               <div className="flex items-center gap-3 text-[#64748B] dark:text-[#94A3B8]">
                 <span className="flex items-center gap-1">
                   <Star size={12} className="text-amber-500" />
@@ -130,7 +136,7 @@ export const RepositoryPortfolio: React.FC = () => {
                 <ExternalLink size={11} />
               </a>
             </div>
-          </div>
+          </TiltCard>
         ))}
       </div>
     </div>

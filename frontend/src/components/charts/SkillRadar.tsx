@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { Radar, Sparkles } from 'lucide-react';
+import { TiltCard } from '../common/TiltCard';
 
 interface RadarVertex {
   key: string;
@@ -45,7 +46,11 @@ export const SkillRadar: React.FC = () => {
   const gridLevels = [0.25, 0.5, 0.75, 1.0];
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative overflow-hidden">
+    <TiltCard
+      maxTilt={6}
+      scale={1.01}
+      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative overflow-hidden group"
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -194,6 +199,6 @@ export const SkillRadar: React.FC = () => {
           High Breadth & Depth
         </span>
       </div>
-    </div>
+    </TiltCard>
   );
 };

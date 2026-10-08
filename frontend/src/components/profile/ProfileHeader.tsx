@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { CheckCircle2, GitCommit, Flame, Users, BookOpen, ExternalLink } from 'lucide-react';
+import { TiltCard } from '../common/TiltCard';
 
 export const ProfileHeader: React.FC = () => {
   const { profile } = useDeveloperStore();
@@ -21,7 +22,11 @@ export const ProfileHeader: React.FC = () => {
   };
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs relative overflow-hidden">
+    <TiltCard
+      maxTilt={3}
+      scale={1.003}
+      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs relative overflow-hidden group"
+    >
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-center">
         {/* Left: Avatar, Bio, Badges, Stats */}
         <div className="xl:col-span-7 flex flex-col sm:flex-row items-start sm:items-center gap-5">
@@ -132,6 +137,6 @@ export const ProfileHeader: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </TiltCard>
   );
 };

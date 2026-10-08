@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { Clock, Calendar, Flame, Activity } from 'lucide-react';
+import { TiltCard } from '../common/TiltCard';
 
 export const CodingRhythm: React.FC = () => {
   const { profile } = useDeveloperStore();
@@ -19,7 +20,11 @@ export const CodingRhythm: React.FC = () => {
   };
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs relative overflow-hidden">
+    <TiltCard
+      maxTilt={5}
+      scale={1.01}
+      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs relative overflow-hidden group"
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -132,6 +137,6 @@ export const CodingRhythm: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </TiltCard>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { Zap, ArrowRight, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
+import { TiltCard } from '../common/TiltCard';
 
 export const NextBestSkill: React.FC = () => {
   const { profile } = useDeveloperStore();
@@ -8,7 +9,11 @@ export const NextBestSkill: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-white to-cyan-50/80 dark:from-[#0D1117] dark:via-[#111622] dark:to-[#09101E] border-2 border-indigo-500/30 dark:border-indigo-500/30 shadow-lg relative overflow-hidden group">
+    <TiltCard
+      maxTilt={5}
+      scale={1.01}
+      className="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-white to-cyan-50/80 dark:from-[#0D1117] dark:via-[#111622] dark:to-[#09101E] border-2 border-indigo-500/30 dark:border-indigo-500/30 shadow-lg relative overflow-hidden group"
+    >
       {/* Background neon ambient highlight */}
       <div className="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-gradient-to-tr from-indigo-500/15 to-cyan-500/15 blur-2xl pointer-events-none" />
 
@@ -86,6 +91,6 @@ export const NextBestSkill: React.FC = () => {
           <ArrowRight size={14} />
         </button>
       </div>
-    </div>
+    </TiltCard>
   );
 };

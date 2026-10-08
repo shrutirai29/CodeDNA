@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { TrendingUp, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { TiltCard } from '../common/TiltCard';
 
 export const GrowthVelocity: React.FC = () => {
   const { profile } = useDeveloperStore();
@@ -26,7 +27,11 @@ export const GrowthVelocity: React.FC = () => {
   const areaD = `${pathD} L ${points[points.length - 1].x} ${height - paddingY} L ${points[0].x} ${height - paddingY} Z`;
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative overflow-hidden">
+    <TiltCard
+      maxTilt={5}
+      scale={1.01}
+      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative overflow-hidden group"
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -171,6 +176,6 @@ export const GrowthVelocity: React.FC = () => {
           </div>
         </motion.div>
       )}
-    </div>
+    </TiltCard>
   );
 };

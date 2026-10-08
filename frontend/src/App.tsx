@@ -15,6 +15,7 @@ import { CodingRhythm } from './components/charts/CodingRhythm';
 import { TechnologyDNA } from './components/tech/TechnologyDNA';
 import { CareerMatch } from './components/career/CareerMatch';
 import { NextBestSkill } from './components/career/NextBestSkill';
+import { SkillSimulator } from './components/career/SkillSimulator';
 import { RepositoryPortfolio } from './components/portfolio/RepositoryPortfolio';
 import { DeveloperComparison } from './components/comparison/DeveloperComparison';
 import { MotivationBanners } from './components/motivation/MotivationBanners';
@@ -103,8 +104,11 @@ export const App: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Signature Technology DNA Constellation */}
+                  {/* Signature Technology DNA Constellation (3D Neural Galaxy + 2D) */}
                   <TechnologyDNA />
+
+                  {/* Interactive Developer Skill Sandbox & Level-Up Simulator */}
+                  <SkillSimulator />
 
                   {/* 5. WHERE DO YOU FIT? -> Career Match */}
                   <CareerMatch />
@@ -162,6 +166,7 @@ export const App: React.FC = () => {
                 >
                   <ProfileHeader />
                   <NextBestSkill />
+                  <SkillSimulator />
                   <CareerMatch />
                 </motion.div>
               )}
