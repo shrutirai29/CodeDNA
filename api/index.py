@@ -4,12 +4,19 @@ import time
 import json
 import datetime
 import hashlib
+import os
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 import requests
 
 app = FastAPI(title="CodeDNA • Developer Career Intelligence & Analytics Platform")
+
+# Mount React Vite frontend dist assets if compiled
+FRONTEND_DIST = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "dist"))
+if os.path.exists(os.path.join(FRONTEND_DIST, "assets")):
+    app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIST, "assets")), name="frontend_assets")
 
 # =====================================================================
 # CURATED BENCHMARK PROFILES (100% Empirically Structured & Realistic)
@@ -1309,13 +1316,11 @@ async def simulate_career_path_post(request: Request):
 # =====================================================================
 @app.get("/", response_class=HTMLResponse)
 def index_html():
-    """
-    Renders the clean, hyper-premium CodeDNA Developer Intelligence Platform:
-    Synthesizing WeEvolveIT (floating pill navbar, card candle-glow, ambient WebGL cosmos),
-    Spyker Cars (clean luxury craftsmanship, refined Swiss typography, razor hairlines, generous negative space),
-    and Creche Tank (interactive visual cockpit, tactile micro-states, zero textbook clutter).
-    Default featured profile: Shruti Rai (@shrutirai29).
-    """
+    dist_file = os.path.join(FRONTEND_DIST, "index.html")
+    if os.path.exists(dist_file):
+        with open(dist_file, "r", encoding="utf-8") as f:
+            return f.read()
+
     profiles_json = json.dumps(SAMPLE_PROFILES)
 
     return f"""<!DOCTYPE html>
