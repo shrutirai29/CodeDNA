@@ -79,10 +79,10 @@ export const NextBestSkill: React.FC = () => {
         </button>
 
         <button
-          onClick={() => alert(`Starting interactive learning pathway for ${nbs.skill}!`)}
+          onClick={() => setIsExpanded(prev => !prev)}
           className="px-4 py-2 rounded-xl text-xs font-mono font-bold text-white bg-[#6366F1] hover:bg-[#4F46E5] shadow-md shadow-indigo-500/25 transition-all flex items-center gap-1.5 cursor-pointer"
         >
-          EXPLORE SKILL
+          {isExpanded ? 'LEARNING ROADMAP' : 'EXPLORE SKILL'}
           <ArrowRight size={14} />
         </button>
       </div>

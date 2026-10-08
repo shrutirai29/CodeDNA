@@ -167,16 +167,16 @@ export const Sidebar: React.FC = () => {
 
         {/* Settings */}
         <button
-          onClick={() => alert('CodeDNA Settings: API Keys configured, GitHub Token active, Local ML Cache enabled.')}
+          onClick={toggleCopilot}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#F1F5F9] dark:hover:bg-[#161B22] transition-colors"
         >
           <Settings size={18} className="shrink-0" />
-          {!isSidebarCollapsed && <span className="truncate">Settings</span>}
+          {!isSidebarCollapsed && <span className="truncate">Settings & Copilot</span>}
         </button>
 
         {/* Help & Support */}
         <button
-          onClick={() => alert('CodeDNA Platform Documentation: Understand the developer behind the code. Algorithm: 6-Dimension Developer Score with Anti-Burstiness discounting.')}
+          onClick={toggleCopilot}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#F1F5F9] dark:hover:bg-[#161B22] transition-colors"
         >
           <HelpCircle size={18} className="shrink-0" />

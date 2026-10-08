@@ -8,6 +8,7 @@ export const Header: React.FC = () => {
     searchDeveloper,
     isDarkMode,
     toggleTheme,
+    toggleCopilot,
     isSidebarCollapsed
   } = useDeveloperStore();
 
@@ -127,9 +128,9 @@ export const Header: React.FC = () => {
 
         {/* Settings button */}
         <button
-          onClick={() => alert('CodeDNA Environment: Production v2.4 (React + TypeScript + Vite + Tailwind CSS)')}
+          onClick={toggleCopilot}
           className="p-2 rounded-xl text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B] transition-colors"
-          title="Settings"
+          title="AI Assistant & Platform Status"
         >
           <Settings size={18} />
         </button>
