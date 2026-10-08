@@ -1591,13 +1591,16 @@ def index_html():
             font-weight: 700;
         }}
 
-        /* SVG Node Pill Hover */
+        /* SVG Node Pill Styling - Rock-Solid & Glitch-Free */
         .dna-node-group {{
             cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }}
-        .dna-node-group:hover {{
-            transform: scale(1.06);
+        .dna-node-group rect {{
+            transition: stroke-width 0.15s ease, filter 0.15s ease;
+        }}
+        .dna-node-group:hover rect {{
+            stroke-width: 2.5px;
+            filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.45));
         }}
     </style>
 </head>
@@ -1928,7 +1931,7 @@ def index_html():
                         <div id="dnaLiveInspector" class="p-3 px-4 rounded-xl glass-card text-xs font-mono flex items-center justify-between mb-3 border min-h-[52px] h-[52px] overflow-hidden" style="border-color: var(--border-hairline); min-height: 52px; height: 52px;">
                             <div class="flex items-center gap-2.5 min-w-0 flex-1 mr-2">
                                 <span class="w-2 h-2 rounded-full pulse-beacon shrink-0" style="background-color: var(--cyan-accent);"></span>
-                                <span id="dnaInspectorText" class="c-body font-medium truncate">Hover over any tool to see where you use it and how active you are</span>
+                                <span id="dnaInspectorText" class="c-body font-medium truncate">Hover over any tool to see project depth & activity</span>
                             </div>
                             <span id="dnaInspectorBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 whitespace-nowrap" style="background-color: var(--cyan-bg); color: var(--cyan-accent); border-color: var(--cyan-border);">8 TOOLS ANALYZED</span>
                         </div>
@@ -2745,6 +2748,7 @@ def index_html():
 
         // --- 7. Technology DNA Network (PERFECTED: ZERO CLIPPING, NO OVERLAPS & ZERO FLICKER) ---
         let _activeDnaHover = null;
+        let _dnaResetTimer = null;
 
         function renderDnaNetwork(nodes) {{
             const svg = document.getElementById('dnaNetworkSvg');
@@ -2804,7 +2808,9 @@ def index_html():
                         <!-- Pill Background with pointer-events: all -->
                         <rect x="${{-pillW / 2}}" y="${{-pillH / 2}}" width="${{pillW}}" height="${{pillH}}" rx="13" 
                               fill="${{nodeFill}}" stroke="${{color}}" stroke-width="1.5" ${{shadowFilter}}
-                              style="pointer-events: all; cursor: pointer; transition: stroke-width 0.15s ease;"/>
+                              style="pointer-events: all; cursor: pointer;"
+                              onmouseenter="showDnaTooltip('${{n.name}}', '${{n.usage}}', '${{n.momentum}}', '${{n.projects}}', '${{color}}')" 
+                              onmouseleave="resetDnaTooltip()"/>
                         
                         <!-- Status dot with pointer-events: none -->
                         <circle cx="${{-pillW / 2 + 12}}" cy="0" r="3.5" fill="${{color}}" style="pointer-events: none;"/>
@@ -2829,29 +2835,36 @@ def index_html():
         }}
 
         function showDnaTooltip(name, usage, momentum, projects, color) {{
+            if (_dnaResetTimer) {{
+                clearTimeout(_dnaResetTimer);
+                _dnaResetTimer = null;
+            }}
             if (_activeDnaHover === name) return;
             _activeDnaHover = name;
             const text = document.getElementById('dnaInspectorText');
             const badge = document.getElementById('dnaInspectorBadge');
             if (text && badge) {{
-                text.innerHTML = `<strong>${{name}}</strong> • <span class="c-accent font-bold">${{usage}}% stack mass</span> • <strong>${{projects}}</strong> projects audited • Momentum: <span class="font-bold" style="color: ${{color}};">${{momentum}}</span>`;
-                badge.textContent = momentum === 'RISING' ? '↑ ACCELERATING' : (momentum === 'NEW' ? '✦ NEW STACK' : '→ STABLE');
+                text.innerHTML = `<strong>${{name}}</strong> • <span class="c-accent font-bold">${{usage}}% share</span> • <strong>${{projects}}</strong> projects audited`;
+                badge.textContent = momentum === 'RISING' ? '↑ ACCELERATING' : (momentum === 'NEW' ? '✦ NEW TECH' : '→ STABLE');
                 badge.style.color = color;
                 badge.style.borderColor = color;
             }}
         }}
 
         function resetDnaTooltip() {{
-            _activeDnaHover = null;
-            const text = document.getElementById('dnaInspectorText');
-            const badge = document.getElementById('dnaInspectorBadge');
-            if (text && badge) {{
-                text.innerHTML = 'Hover over any tool to see where you use it and how active you are';
-                const count = (currentProfile && currentProfile.dna_nodes ? currentProfile.dna_nodes.filter(n => n.id !== 'developer').length : 8);
-                badge.textContent = `${{count}} TOOLS AUDITED`;
-                badge.style.color = 'var(--cyan-accent)';
-                badge.style.borderColor = 'var(--cyan-border)';
-            }}
+            if (_dnaResetTimer) clearTimeout(_dnaResetTimer);
+            _dnaResetTimer = setTimeout(() => {{
+                _activeDnaHover = null;
+                const text = document.getElementById('dnaInspectorText');
+                const badge = document.getElementById('dnaInspectorBadge');
+                if (text && badge) {{
+                    text.innerHTML = 'Hover over any tool to see project depth & activity';
+                    const count = (currentProfile && currentProfile.dna_nodes ? currentProfile.dna_nodes.filter(n => n.id !== 'developer').length : 8);
+                    badge.textContent = `${{count}} TOOLS AUDITED`;
+                    badge.style.color = 'var(--cyan-accent)';
+                    badge.style.borderColor = 'var(--cyan-border)';
+                }}
+            }}, 60);
         }}
 
         // --- 8. Growth Velocity Timeline ---
