@@ -39,11 +39,18 @@ interface DeveloperStore {
 
 export const useDeveloperStore = create<DeveloperStore>((set, get) => {
   const savedTheme = localStorage.getItem('codedna_theme');
-  const isDark = savedTheme ? savedTheme === 'dark' : false;
-  if (isDark) {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.remove('dark');
+  const isDark = savedTheme === 'dark'; // Defaults to false (Light Mode)
+
+  if (typeof document !== 'undefined') {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+      if (document.body) document.body.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+      if (document.body) document.body.classList.remove('dark');
+    }
   }
 
   const defaultProfile = BENCHMARK_PROFILES.shrutirai29;
@@ -76,12 +83,18 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
 
     toggleTheme: () => {
       const nextDark = !get().isDarkMode;
-      if (nextDark) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('codedna_theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('codedna_theme', 'light');
+      if (typeof document !== 'undefined') {
+        if (nextDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+          if (document.body) document.body.classList.add('dark');
+          localStorage.setItem('codedna_theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.setAttribute('data-theme', 'light');
+          if (document.body) document.body.classList.remove('dark');
+          localStorage.setItem('codedna_theme', 'light');
+        }
       }
       set({ isDarkMode: nextDark });
     },

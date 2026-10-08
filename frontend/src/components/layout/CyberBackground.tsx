@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useDeveloperStore } from '../../store/useDeveloperStore';
 
 export const CyberBackground: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const { isDarkMode } = useDeveloperStore();
 
   useEffect(() => {
     const currentMount = mountRef.current;
@@ -39,7 +41,7 @@ export const CyberBackground: React.FC = () => {
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     // Particle material
-    const isDark = document.documentElement.classList.contains('dark');
+    const isDark = isDarkMode;
     const particleColor = isDark ? 0x00F0FF : 0x6366F1;
     const lineColor = isDark ? 0x8B5CF6 : 0x06B6D4;
 
@@ -137,7 +139,7 @@ export const CyberBackground: React.FC = () => {
       }
       renderer.dispose();
     };
-  }, []);
+  }, [isDarkMode]);
 
   return (
     <div
