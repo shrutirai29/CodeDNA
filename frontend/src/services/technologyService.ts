@@ -44,7 +44,9 @@ export const TECH_CATALOG: TechDefinition[] = [
   { id: 'git', name: 'Git & GitHub Actions', type: 'supporting', parent: 'devops', category: 'devops', keywords: ['git', 'github-actions', 'ci-cd'], color: '#F05032' },
   { id: 'linux', name: 'Linux / Systems', type: 'supporting', parent: 'system', category: 'system', keywords: ['linux', 'bash', 'shell'], color: '#FCC624' },
   { id: 'flutter', name: 'Flutter', type: 'framework', parent: 'javascript', category: 'mobile', keywords: ['flutter', 'dart'], color: '#02569B' },
-  { id: 'dsa', name: 'Algorithms / DSA', type: 'framework', parent: 'cpp', category: 'system', keywords: ['dsa', 'leetcode', 'algorithms', 'competitive-programming'], color: '#8B5CF6' }
+  { id: 'dsa', name: 'Algorithms / DSA', type: 'framework', parent: 'cpp', category: 'system', keywords: ['dsa', 'leetcode', 'algorithms', 'competitive-programming'], color: '#8B5CF6' },
+  { id: 'html', name: 'HTML / Web', type: 'secondary', category: 'frontend', keywords: ['html', 'html5'], color: '#E34F26' },
+  { id: 'markdown', name: 'Markdown / Docs', type: 'supporting', category: 'frontend', keywords: ['markdown', 'docs', 'readme'], color: '#083FA1' }
 ];
 
 export class TechnologyService {

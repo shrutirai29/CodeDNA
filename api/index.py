@@ -30,7 +30,7 @@ SAMPLE_PROFILES = {
         "location": "India",
         "bio": "BTech CSE student at Rashtriya Raksha University • Building scalable web applications, applied AI tools, and algorithmic systems.",
         "followers": 17,
-        "public_repos": 16,
+        "public_repos": 18,
         "account_age": "2.4 years",
         "avatar_url": "https://avatars.githubusercontent.com/u/167513467?v=4",
         "is_demo": False,
@@ -85,12 +85,12 @@ SAMPLE_PROFILES = {
             "insight": "Peak development focus during Sunday morning hack sessions and active repository sprints."
         },
         "projects": [
-            {"name": "CodeDNA", "tech": "Python • FastAPI • ML", "stars": 3, "complexity": "VERY HIGH", "rating": "A+", "age": "Recent", "description": "Smart developer profile analyzer and career matching platform."},
-            {"name": "study-roulette", "tech": "TypeScript • React • Web", "stars": 2, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Gamified focus and study challenge platform with real-time room matching."},
-            {"name": "code4nature", "tech": "TypeScript • Next.js", "stars": 1, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Environmental green-technology and sustainability awareness platform."},
-            {"name": "LeetCode-Problems", "tech": "Python • Algorithms", "stars": 1, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Comprehensive algorithmic problem solving and data structure solutions."},
-            {"name": "FLEETRA", "tech": "Python • Backend", "stars": 1, "complexity": "MEDIUM", "rating": "B+", "age": "2025", "description": "Vehicle tracking and logistics management service."},
-            {"name": "SIH", "tech": "JavaScript • Web", "stars": 2, "complexity": "HIGH", "rating": "A", "age": "2024", "description": "Smart India Hackathon innovation prototype solving real-world civic challenges."}
+            {"name": "CodeDNA", "tech": "Python • FastAPI • ML", "stars": 0, "complexity": "VERY HIGH", "rating": "A+", "age": "Recent", "description": "Smart developer profile analyzer and career matching platform."},
+            {"name": "study-roulette", "tech": "TypeScript • React • Web", "stars": 0, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Gamified focus and study challenge platform with real-time room matching."},
+            {"name": "code4nature", "tech": "TypeScript • Next.js", "stars": 0, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Environmental green-technology and sustainability awareness platform."},
+            {"name": "LeetCode-Problems", "tech": "Python • Algorithms", "stars": 0, "complexity": "HIGH", "rating": "A", "age": "Active", "description": "Comprehensive algorithmic problem solving and data structure solutions."},
+            {"name": "FLEETRA", "tech": "Python • Backend", "stars": 0, "complexity": "MEDIUM", "rating": "B+", "age": "2025", "description": "Vehicle tracking and logistics management service."},
+            {"name": "SIH", "tech": "JavaScript • Web", "stars": 0, "complexity": "HIGH", "rating": "A", "age": "2024", "description": "Smart India Hackathon innovation prototype solving real-world civic challenges."}
         ],
         "careers": [
             {"role": "Full-Stack Developer", "fit": 89.5, "strengths": ["JavaScript / TypeScript", "React / UI Architecture", "API Integration"], "gaps": ["Kubernetes Clusters"]},

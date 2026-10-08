@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDeveloperStore } from './store/useDeveloperStore';
+import { GithubService } from './services/githubService';
 import { CyberBackground } from './components/layout/CyberBackground';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -25,6 +26,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export const App: React.FC = () => {
   const { activeTab, isSidebarCollapsed, profile } = useDeveloperStore();
+
+  useEffect(() => {
+    // Automatically fetch fresh live profile data from GitHub API
+    GithubService.fetchProfile(profile.username).then((live) => {
+      if (live && live.username.toLowerCase() === profile.username.toLowerCase()) {
+        useDeveloperStore.setState({ profile: live });
+      }
+    }).catch(() => {
+      // Kept on authentic benchmark profile
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F7F9FC] dark:bg-[#070A0F] text-[#111827] dark:text-[#F8FAFC] flex transition-colors duration-200 relative selection:bg-indigo-500 selection:text-white">

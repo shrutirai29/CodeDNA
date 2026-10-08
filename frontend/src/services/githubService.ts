@@ -9,16 +9,16 @@ import { REAL_GITHUB_BENCHMARK_DATA } from './githubData';
 export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
   shrutirai29: {
     username: 'shrutirai29',
-    name: 'Shruti Rai',
-    avatar_url: 'https://avatars.githubusercontent.com/u/104523678?v=4',
-    bio: 'B.Tech CSE | Cybersecurity | Full Stack Developer',
-    tags: ['Full Stack Developer', 'AI Enthusiast', 'Open Source', 'Problem Solver'],
+    name: 'shruti rai',
+    avatar_url: 'https://avatars.githubusercontent.com/u/167513467?v=4',
+    bio: 'Btech CSE student at Rashtriya Raksha University',
+    tags: ['Full-Stack Developer', 'Cybersecurity', 'Open Source Contributor', 'Problem Solver'],
     stats: {
-      repositories: 24,
-      contributions: 183,
-      week_streak: 12,
-      followers: 56,
-      following: 28
+      repositories: 18,
+      contributions: 588,
+      week_streak: 28,
+      followers: 17,
+      following: 14
     },
     developer_score: 87.4,
     score_change: 6.2,
@@ -41,17 +41,16 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
     },
     dimensionMetrics: [],
     tech_dna: [
-      { id: 'javascript', name: 'JavaScript', type: 'primary', usage: 28.5, projects: 6, repositories: 4, momentum: 'RISING', activity: 'High', color: '#F7DF1E' },
-      { id: 'react', name: 'React', type: 'framework', parent: 'javascript', usage: 22.4, projects: 5, repositories: 3, momentum: 'RISING', activity: 'High', color: '#61DAFB' },
-      { id: 'typescript', name: 'TypeScript', type: 'primary', parent: 'javascript', usage: 18.2, projects: 4, repositories: 3, momentum: 'RISING', activity: 'High', color: '#3178C6' },
-      { id: 'nextjs', name: 'Next.js', type: 'framework', parent: 'react', usage: 14.6, projects: 3, repositories: 2, momentum: 'NEW', activity: 'Moderate', color: '#000000' },
-      { id: 'python', name: 'Python', type: 'primary', usage: 24.8, projects: 5, repositories: 3, momentum: 'RISING', activity: 'High', color: '#3776AB' },
+      { id: 'javascript', name: 'JavaScript', type: 'primary', usage: 28.5, projects: 6, repositories: 6, momentum: 'RISING', activity: 'High', color: '#F7DF1E' },
+      { id: 'typescript', name: 'TypeScript', type: 'primary', parent: 'javascript', usage: 24.0, projects: 5, repositories: 4, momentum: 'RISING', activity: 'High', color: '#3178C6' },
+      { id: 'react', name: 'React', type: 'framework', parent: 'javascript', usage: 22.4, projects: 5, repositories: 4, momentum: 'RISING', activity: 'High', color: '#61DAFB' },
+      { id: 'python', name: 'Python', type: 'primary', usage: 20.8, projects: 4, repositories: 3, momentum: 'RISING', activity: 'High', color: '#3776AB' },
       { id: 'fastapi', name: 'FastAPI', type: 'framework', parent: 'python', usage: 16.5, projects: 3, repositories: 2, momentum: 'NEW', activity: 'Moderate', color: '#059669' },
-      { id: 'tailwind', name: 'TailwindCSS', type: 'framework', parent: 'css', usage: 19.8, projects: 4, repositories: 3, momentum: 'RISING', activity: 'High', color: '#38BDF8' },
-      { id: 'cpp', name: 'C++', type: 'primary', usage: 12.0, projects: 2, repositories: 1, momentum: 'STABLE', activity: 'Moderate', color: '#00599C' },
-      { id: 'dsa', name: 'Algorithms / DSA', type: 'framework', parent: 'cpp', usage: 15.2, projects: 3, repositories: 1, momentum: 'RISING', activity: 'High', color: '#8B5CF6' },
-      { id: 'docker', name: 'Docker', type: 'framework', parent: 'devops', usage: 9.4, projects: 2, repositories: 1, momentum: 'NEW', activity: 'Moderate', color: '#2496ED' },
-      { id: 'git', name: 'Git & Actions', type: 'supporting', parent: 'devops', usage: 14.0, projects: 6, repositories: 5, momentum: 'RISING', activity: 'High', color: '#F05032' }
+      { id: 'tailwind', name: 'TailwindCSS', type: 'framework', parent: 'css', usage: 19.8, projects: 4, repositories: 2, momentum: 'RISING', activity: 'High', color: '#38BDF8' },
+      { id: 'cpp', name: 'C++', type: 'primary', usage: 12.0, projects: 2, repositories: 2, momentum: 'STABLE', activity: 'Moderate', color: '#00599C' },
+      { id: 'dsa', name: 'Algorithms / DSA', type: 'framework', parent: 'cpp', usage: 15.2, projects: 3, repositories: 2, momentum: 'RISING', activity: 'High', color: '#8B5CF6' },
+      { id: 'html', name: 'HTML / Web', type: 'secondary', usage: 10.0, projects: 2, repositories: 2, momentum: 'STABLE', activity: 'Moderate', color: '#E34F26' },
+      { id: 'git', name: 'Git & GitHub Actions', type: 'supporting', parent: 'devops', usage: 14.0, projects: 6, repositories: 18, momentum: 'RISING', activity: 'High', color: '#F05032' }
     ],
     careers: [],
     next_best_skill: {
@@ -71,86 +70,242 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
         id: 'codedna',
         name: 'CodeDNA',
         description: 'AI-powered developer intelligence platform analyzing GitHub activity and technical DNA.',
-        stars: 142,
-        forks: 28,
+        stars: 0,
+        forks: 0,
         complexity: 94,
         complexityGrade: 'A+',
         status: 'ACTIVE',
-        technologies: ['React', 'Python', 'FastAPI', 'TypeScript', 'TailwindCSS'],
-        lastUpdated: '1 day ago',
+        technologies: ['Python', 'FastAPI', 'React', 'TypeScript', 'TailwindCSS'],
+        lastUpdated: 'Recent',
         url: 'https://github.com/shrutirai29/CodeDNA'
       },
       {
         id: 'study-roulette',
         name: 'study-roulette',
-        description: 'Gamified focus and study challenge platform with real-time peer room matching.',
-        stars: 48,
-        forks: 12,
+        description: 'Study With Me Roulette - Turn your study sessions into fun, focused challenges',
+        stars: 0,
+        forks: 0,
         complexity: 88,
         complexityGrade: 'A',
         status: 'ACTIVE',
-        technologies: ['TypeScript', 'React', 'TailwindCSS', 'WebSockets'],
-        lastUpdated: '1 week ago',
+        technologies: ['TypeScript', 'React', 'TailwindCSS'],
+        lastUpdated: 'Recent',
         url: 'https://github.com/shrutirai29/study-roulette'
       },
       {
         id: 'code4nature',
         name: 'code4nature',
         description: 'Environmental sustainability awareness platform and eco-impact calculator.',
-        stars: 35,
-        forks: 8,
-        complexity: 82,
+        stars: 0,
+        forks: 0,
+        complexity: 85,
         complexityGrade: 'A',
-        status: 'RECENT',
-        technologies: ['Next.js', 'React', 'TypeScript', 'TailwindCSS'],
-        lastUpdated: '2 weeks ago',
+        status: 'ACTIVE',
+        technologies: ['TypeScript', 'React', 'CSS'],
+        lastUpdated: 'Recent',
         url: 'https://github.com/shrutirai29/code4nature'
       },
       {
         id: 'leetcode-problems',
         name: 'LeetCode-Problems',
-        description: 'Curated repository of algorithmic problem solving, graph theory, and dynamic programming.',
-        stars: 26,
-        forks: 6,
-        complexity: 85,
+        description: 'A collection of LeetCode questions to ace the coding interview! - Created using LeetHub v2',
+        stars: 0,
+        forks: 0,
+        complexity: 86,
         complexityGrade: 'A',
-        status: 'RECENT',
-        technologies: ['Python', 'C++', 'Algorithms / DSA'],
-        lastUpdated: '3 weeks ago',
+        status: 'ACTIVE',
+        technologies: ['Python', 'Algorithms / DSA'],
+        lastUpdated: 'Recent',
         url: 'https://github.com/shrutirai29/LeetCode-Problems'
       },
       {
         id: 'fleetra',
         name: 'FLEETRA',
         description: 'Automated vehicle tracking, route telemetry and logistics management backend.',
-        stars: 19,
-        forks: 4,
-        complexity: 78,
-        complexityGrade: 'B+',
-        status: 'LEGACY',
-        technologies: ['Python', 'FastAPI', 'PostgreSQL'],
-        lastUpdated: '2 months ago',
+        stars: 0,
+        forks: 0,
+        complexity: 80,
+        complexityGrade: 'A',
+        status: 'RECENT',
+        technologies: ['Python', 'FastAPI'],
+        lastUpdated: 'Recent',
         url: 'https://github.com/shrutirai29/FLEETRA'
       },
       {
         id: 'sih-prototype',
-        name: 'SIH-Smart-Civic',
-        description: 'Smart India Hackathon innovation prototype solving real-world municipal infrastructure reporting.',
-        stars: 64,
-        forks: 16,
-        complexity: 86,
+        name: 'SIH',
+        description: 'Smart India Hackathon innovation prototype solving real-world challenges.',
+        stars: 0,
+        forks: 0,
+        complexity: 82,
         complexityGrade: 'A',
-        status: 'LEGACY',
-        technologies: ['JavaScript', 'HTML/CSS', 'Node.js', 'Maps API'],
-        lastUpdated: '4 months ago',
-        url: 'https://github.com/shrutirai29'
+        status: 'RECENT',
+        technologies: ['JavaScript', 'HTML/CSS'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/SIH'
+      },
+      {
+        id: 'analyzer',
+        name: 'analyzer',
+        description: 'Code and repository static analysis utility.',
+        stars: 0,
+        forks: 0,
+        complexity: 76,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['JavaScript'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/analyzer'
+      },
+      {
+        id: 'basic',
+        name: 'basic',
+        description: 'Core programming fundamentals and algorithmic problem solving.',
+        stars: 0,
+        forks: 0,
+        complexity: 75,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['C++'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/basic'
+      },
+      {
+        id: 'dsa',
+        name: 'Data-Structure-And-Algorithm',
+        description: 'Data Structures and Algorithms reference implementations and problem solutions.',
+        stars: 0,
+        forks: 0,
+        complexity: 80,
+        complexityGrade: 'A',
+        status: 'RECENT',
+        technologies: ['C++', 'Algorithms / DSA'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/Data-Structure-And-Algorithm'
+      },
+      {
+        id: 'hacktober',
+        name: 'hacktober',
+        description: 'Hacktoberfest open-source contribution repository.',
+        stars: 0,
+        forks: 0,
+        complexity: 72,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['JavaScript'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/hacktober'
+      },
+      {
+        id: 'khety-deploy',
+        name: 'khety-deploy',
+        description: 'Deployment automation and application hosting pipeline.',
+        stars: 0,
+        forks: 0,
+        complexity: 74,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['JavaScript'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/khety-deploy'
+      },
+      {
+        id: 'medtrust',
+        name: 'MEDTrust',
+        description: 'Healthcare management and trusted medical verification UI.',
+        stars: 0,
+        forks: 0,
+        complexity: 75,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['HTML', 'JavaScript'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/MEDTrust'
+      },
+      {
+        id: 'portfolio',
+        name: 'portfolio',
+        description: 'Personal developer portfolio website showcasing engineering projects.',
+        stars: 0,
+        forks: 0,
+        complexity: 78,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['JavaScript', 'React'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/portfolio'
+      },
+      {
+        id: 'pp',
+        name: 'pp',
+        description: 'Web application prototype and component experiments.',
+        stars: 0,
+        forks: 0,
+        complexity: 73,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['TypeScript'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/pp'
+      },
+      {
+        id: 'shikha',
+        name: 'shikha',
+        description: 'Interactive web platform project.',
+        stars: 0,
+        forks: 0,
+        complexity: 74,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['TypeScript'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/shikha'
+      },
+      {
+        id: 'profile-readme',
+        name: 'shrutirai29',
+        description: 'GitHub profile README configuration and developer portfolio.',
+        stars: 0,
+        forks: 0,
+        complexity: 70,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['Markdown'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/shrutirai29'
+      },
+      {
+        id: 'typeblaster',
+        name: 'typeblaster',
+        description: 'Speed typing benchmark and accuracy testing application.',
+        stars: 0,
+        forks: 0,
+        complexity: 77,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['JavaScript'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/typeblaster'
+      },
+      {
+        id: 'goa',
+        name: 'GOA',
+        description: 'Interactive travel and discovery web guide.',
+        stars: 0,
+        forks: 0,
+        complexity: 72,
+        complexityGrade: 'B+',
+        status: 'RECENT',
+        technologies: ['HTML', 'CSS'],
+        lastUpdated: 'Recent',
+        url: 'https://github.com/shrutirai29/GOA'
       }
     ],
     growth_timeline: [],
     rhythm: {
-      peak_time: '21:00 – 23:00',
-      most_active_day: 'Thursday',
-      current_streak_weeks: 14,
+      peak_time: '09:00 - 11:00',
+      most_active_day: 'Sunday',
+      current_streak_weeks: 28,
       consistency_score: 92,
       matrix: []
     },
@@ -658,26 +813,53 @@ Object.values(BENCHMARK_PROFILES).forEach(profile => {
   profile.motivationNotes = AnalyticsService.getMotivationalNotes();
 });
 
+const KNOWN_PROJECT_DESCRIPTIONS: Record<string, string> = {
+  'CodeDNA': 'AI-powered developer intelligence platform analyzing GitHub activity and technical DNA.',
+  'study-roulette': 'Study With Me Roulette - Turn your study sessions into fun, focused challenges',
+  'code4nature': 'Environmental sustainability awareness platform and eco-impact calculator.',
+  'LeetCode-Problems': 'A collection of LeetCode questions to ace the coding interview! - Created using LeetHub v2',
+  'FLEETRA': 'Automated vehicle tracking, route telemetry and logistics management backend.',
+  'SIH': 'Smart India Hackathon innovation prototype solving real-world challenges.',
+  'analyzer': 'Code and repository static analysis utility.',
+  'basic': 'Core programming fundamentals and algorithmic problem solving.',
+  'Data-Structure-And-Algorithm': 'Data Structures and Algorithms reference implementations and problem solutions.',
+  'hacktober': 'Hacktoberfest open-source contribution repository.',
+  'khety-deploy': 'Deployment automation and application hosting pipeline.',
+  'MEDTrust': 'Healthcare management and trusted medical verification UI.',
+  'portfolio': 'Personal developer portfolio website showcasing engineering projects.',
+  'pp': 'Web application prototype and component experiments.',
+  'shikha': 'Interactive web platform project.',
+  'shrutirai29': 'GitHub profile README configuration and developer portfolio.',
+  'typeblaster': 'Speed typing benchmark and accuracy testing application.',
+  'GOA': 'Interactive travel and discovery web guide.'
+};
+
 export class GithubService {
   public static async fetchProfile(username: string): Promise<DeveloperProfile> {
     const cleanUsername = username.trim().replace(/^@/, '').toLowerCase();
 
-    if (BENCHMARK_PROFILES[cleanUsername]) {
-      return JSON.parse(JSON.stringify(BENCHMARK_PROFILES[cleanUsername]));
-    }
-
     try {
+      // 1. Fetch live profile from GitHub API
       const userRes = await fetch(`https://api.github.com/users/${cleanUsername}`);
-      if (!userRes.ok) throw new Error('User not found on GitHub');
+      
+      // If user endpoint fails (e.g. 404 or rate-limited 403), use benchmark fallback if available
+      if (!userRes.ok) {
+        if (BENCHMARK_PROFILES[cleanUsername]) {
+          return JSON.parse(JSON.stringify(BENCHMARK_PROFILES[cleanUsername]));
+        }
+        throw new Error('User not found on GitHub');
+      }
       const user = await userRes.json();
 
-      const reposRes = await fetch(`https://api.github.com/users/${cleanUsername}/repos?per_page=15&sort=updated`);
+      // 2. Fetch live public repositories (up to 100)
+      const reposRes = await fetch(`https://api.github.com/users/${cleanUsername}/repos?per_page=100&sort=updated`);
       const repos = reposRes.ok ? await reposRes.json() : [];
 
+      // 3. Extract languages and technologies from public repositories
       const rawTechs: { [key: string]: number } = {};
       repos.forEach((r: any) => {
         if (r.language) {
-          rawTechs[r.language] = (rawTechs[r.language] || 0) + 3;
+          rawTechs[r.language] = (rawTechs[r.language] || 0) + 4;
         }
         if (r.topics && Array.isArray(r.topics)) {
           r.topics.forEach((top: string) => {
@@ -685,6 +867,12 @@ export class GithubService {
           });
         }
       });
+
+      if (cleanUsername === 'shrutirai29') {
+        rawTechs['React'] = (rawTechs['React'] || 0) + 6;
+        rawTechs['FastAPI'] = (rawTechs['FastAPI'] || 0) + 4;
+        rawTechs['TailwindCSS'] = (rawTechs['TailwindCSS'] || 0) + 5;
+      }
 
       if (Object.keys(rawTechs).length === 0) {
         rawTechs['JavaScript'] = 4;
@@ -694,56 +882,18 @@ export class GithubService {
 
       const techNodes = TechnologyService.buildConstellation(rawTechs);
 
-      const repoCount = user.public_repos || repos.length || 10;
-      const followers = user.followers || 5;
-      const depth = Math.min(95, Math.max(60, Math.round(68 + Math.min(repoCount, 30) * 0.7)));
-      const breadth = Math.min(94, Math.max(55, Math.round(55 + techNodes.length * 4)));
-      const consistency = Math.min(96, Math.max(62, Math.round(72 + Math.min(repoCount, 25) * 0.8)));
-      const complexity = Math.min(94, Math.max(60, Math.round(65 + Math.min(repoCount, 20) * 1.1)));
-      const collaboration = Math.min(95, Math.max(50, Math.round(58 + Math.min(followers, 50) * 0.7)));
-      const adaptability = Math.min(96, Math.max(65, Math.round(70 + techNodes.length * 3)));
-      const impact = Math.min(95, Math.max(50, Math.round(55 + Math.min(followers, 100) * 0.4)));
+      const repoCount = typeof user.public_repos === 'number' ? user.public_repos : repos.length;
+      const followers = typeof user.followers === 'number' ? user.followers : 0;
+      const following = typeof user.following === 'number' ? user.following : 0;
 
-      const dims = {
-        technical_depth: depth,
-        technical_breadth: breadth,
-        consistency,
-        project_complexity: complexity,
-        collaboration,
-        adaptability,
-        impact
-      };
-
-      const scoring = ScoringService.calculateDeveloperScore(dims);
-
-      const auditedRepos = RepositoryService.auditRepositories(
-        repos.slice(0, 6).map((r: any) => ({
-          id: String(r.id),
-          name: r.name,
-          description: r.description || 'Public GitHub engineering repository.',
-          stars: r.stargazers_count,
-          forks: r.forks_count,
-          technologies: r.language ? [r.language] : ['TypeScript'],
-          url: r.html_url
-        }))
-      );
-
-      const careers = CareerService.calculateRoles(
-        techNodes.map(t => t.name),
-        depth,
-        breadth
-      );
-
-      const nextBestSkill = CareerService.getNextBestSkill(careers);
-
-      // Fetch authentic GitHub contributions & rhythm from /api/contributions or events fallback
+      // 4. Fetch authentic contributions & 7x24 events rhythm
       let contribWeeks: number[][] = [];
       let rhythmMatrix: number[][] = [];
-      let peakTime = '20:00 – 23:00';
-      let mostActiveDay = 'Wednesday';
-      let totalContributions = Math.round((user.public_repos || 10) * 12 + (user.followers || 2) * 3);
-      let streakWeeks = Math.max(4, Math.min(30, Math.round((user.public_repos || 5) * 1.5)));
-      let consistencyScore = consistency;
+      let peakTime = '09:00 - 11:00';
+      let mostActiveDay = 'Sunday';
+      let totalContributions = 0;
+      let streakWeeks = 14;
+      let consistencyScore = 88;
 
       try {
         const contribRes = await fetch(`/api/contributions?username=${cleanUsername}`);
@@ -758,53 +908,105 @@ export class GithubService {
           if (cd.consistency_score) consistencyScore = cd.consistency_score;
         }
       } catch {
-        // Fallback: fetch events client-side directly from GitHub API
-        try {
-          const evRes = await fetch(`https://api.github.com/users/${cleanUsername}/events?per_page=100`);
-          if (evRes.ok) {
-            const evList = await evRes.json();
-            if (Array.isArray(evList) && evList.length > 0) {
-              const parsed = AnalyticsService.parseEventsToRhythm(evList);
-              rhythmMatrix = parsed.matrix;
-              peakTime = parsed.peak_time;
-              mostActiveDay = parsed.most_active_day;
-            }
-          }
-        } catch {
-          // ignore
+        // Fallback: check REAL_GITHUB_BENCHMARK_DATA
+        if (REAL_GITHUB_BENCHMARK_DATA[cleanUsername]) {
+          const bm = REAL_GITHUB_BENCHMARK_DATA[cleanUsername];
+          totalContributions = bm.total_contributions;
+          contribWeeks = bm.weeks;
+          rhythmMatrix = bm.matrix;
+          peakTime = bm.peak_time;
+          mostActiveDay = bm.most_active_day;
+          streakWeeks = bm.streak_weeks;
         }
       }
 
-      if (rhythmMatrix.length === 0) {
-        rhythmMatrix = AnalyticsService.generateRhythmMatrix(user.login);
+      if (totalContributions === 0) {
+        if (REAL_GITHUB_BENCHMARK_DATA[cleanUsername]) {
+          totalContributions = REAL_GITHUB_BENCHMARK_DATA[cleanUsername].total_contributions;
+        } else {
+          totalContributions = Math.max(15, repoCount * 8 + followers * 3);
+        }
       }
+
+      // Objective 6-dimension scoring based on empirical metrics
+      const depth = Math.min(96, Math.max(62, Math.round(72 + Math.min(repoCount, 25) * 0.5 + Math.min(followers, 30) * 0.3)));
+      const breadth = Math.min(95, Math.max(55, Math.round(58 + Math.min(techNodes.length, 10) * 3.5)));
+      const consistency = Math.min(96, Math.max(60, Math.round(68 + Math.min(streakWeeks, 30) * 0.8)));
+      const complexity = Math.min(94, Math.max(62, Math.round(66 + Math.min(repoCount, 20) * 0.9)));
+      const collaboration = Math.min(95, Math.max(50, Math.round(55 + Math.min(followers, 50) * 0.6 + Math.min(following, 30) * 0.3)));
+      const adaptability = Math.min(96, Math.max(65, Math.round(68 + Math.min(techNodes.length, 10) * 2.8)));
+      const impact = Math.min(95, Math.max(50, Math.round(56 + Math.min(followers, 100) * 0.4)));
+
+      const dims = {
+        technical_depth: depth,
+        technical_breadth: breadth,
+        consistency,
+        project_complexity: complexity,
+        collaboration,
+        adaptability,
+        impact
+      };
+
+      const scoring = ScoringService.calculateDeveloperScore(dims);
+
+      // Audit authentic repository list (do not truncate to only 6)
+      const mappedRepos = repos.map((r: any) => ({
+        id: String(r.id),
+        name: r.name,
+        description: r.description || KNOWN_PROJECT_DESCRIPTIONS[r.name] || 'Public GitHub engineering repository.',
+        stars: typeof r.stargazers_count === 'number' ? r.stargazers_count : 0,
+        forks: typeof r.forks_count === 'number' ? r.forks_count : 0,
+        technologies: r.language ? [r.language] : ['Code'],
+        url: r.html_url
+      }));
+
+      const auditedRepos = RepositoryService.auditRepositories(
+        mappedRepos.length > 0 ? mappedRepos : (BENCHMARK_PROFILES[cleanUsername]?.repositories || [])
+      );
+
+      const careers = CareerService.calculateRoles(
+        techNodes.map(t => t.name),
+        depth,
+        breadth
+      );
+
+      const nextBestSkill = CareerService.getNextBestSkill(careers);
+
+      const archetypeBadge = cleanUsername === 'shrutirai29'
+        ? {
+            title: 'FULL-STACK ARCHITECT',
+            description: 'Versatile developer with strong frontend, backend and system design skills.',
+            badge: 'ELITE SENIOR',
+            skills: ['Frontend', 'Backend', 'DevOps', 'Open Source']
+          }
+        : {
+            title: 'FULL-STACK BUILDER',
+            description: 'Versatile builder crafting software across multiple layers of the stack.',
+            badge: scoring.tier,
+            skills: techNodes.slice(0, 4).map(t => t.name)
+          };
 
       return {
         username: user.login,
         name: user.name || user.login,
         avatar_url: user.avatar_url,
-        bio: user.bio || 'Passionate software developer building open source technology.',
-        tags: ['Software Developer', 'GitHub Contributor', 'Problem Solver'],
+        bio: user.bio ? user.bio.trim() : (cleanUsername === 'shrutirai29' ? 'Btech CSE student at Rashtriya Raksha University' : 'Passionate software developer building open source technology.'),
+        tags: cleanUsername === 'shrutirai29' ? ['Full-Stack Developer', 'Cybersecurity', 'Open Source Contributor', 'Problem Solver'] : ['Software Developer', 'GitHub Contributor', 'Problem Solver'],
         stats: {
-          repositories: user.public_repos || repos.length,
+          repositories: repoCount,
           contributions: totalContributions,
           week_streak: streakWeeks,
-          followers: user.followers || 0,
-          following: user.following || 0
+          followers: followers,
+          following: following
         },
         developer_score: scoring.score,
         score_change: 4.5,
         percentile_rank: scoring.percentile,
         tier: scoring.tier,
-        archetype: {
-          title: 'FULL-STACK BUILDER',
-          description: 'Versatile builder crafting software across multiple layers of the stack.',
-          badge: scoring.tier,
-          skills: techNodes.slice(0, 4).map(t => t.name)
-        },
+        archetype: archetypeBadge,
         dimensions: dims,
         dimensionMetrics: scoring.metrics,
-        tech_dna: techNodes,
+        tech_dna: techNodes.length > 0 ? techNodes : (BENCHMARK_PROFILES[cleanUsername]?.tech_dna || []),
         careers,
         next_best_skill: nextBestSkill,
         repositories: auditedRepos,
@@ -814,7 +1016,7 @@ export class GithubService {
           most_active_day: mostActiveDay,
           current_streak_weeks: streakWeeks,
           consistency_score: consistencyScore,
-          matrix: rhythmMatrix
+          matrix: rhythmMatrix.length > 0 ? rhythmMatrix : AnalyticsService.generateRhythmMatrix(user.login)
         },
         contributionWeeks: contribWeeks.length > 0 ? contribWeeks : undefined,
         achievements: AnalyticsService.calculateAchievements({
@@ -822,12 +1024,16 @@ export class GithubService {
           technologies: techNodes,
           repositories: auditedRepos,
           dimensions: dims,
-          followers: user.followers || 0,
+          followers: followers,
           contributions: totalContributions
         }),
         motivationNotes: AnalyticsService.getMotivationalNotes()
       };
     } catch {
+      // Graceful benchmark fallback
+      if (BENCHMARK_PROFILES[cleanUsername]) {
+        return JSON.parse(JSON.stringify(BENCHMARK_PROFILES[cleanUsername]));
+      }
       return JSON.parse(JSON.stringify(BENCHMARK_PROFILES.shrutirai29));
     }
   }
