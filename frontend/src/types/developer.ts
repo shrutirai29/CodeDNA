@@ -73,8 +73,13 @@ export interface AchievementBadge {
   id: string;
   title: string;
   description: string;
+  criteria: string;
+  evidence: string;
   icon: string;
   unlocked: boolean;
+  currentValue: number;
+  targetValue: number;
+  unit: string;
   progress: number;
   category: 'habit' | 'skill' | 'open-source' | 'architecture';
 }

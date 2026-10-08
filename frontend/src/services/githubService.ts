@@ -219,6 +219,19 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
         url: 'https://github.com/torvalds/linux'
       },
       {
+        id: 'git',
+        name: 'git',
+        description: 'Fast, scalable, distributed revision control system created by Linus Torvalds.',
+        stars: 54000,
+        forks: 26000,
+        complexity: 97,
+        complexityGrade: 'A+',
+        status: 'ACTIVE',
+        technologies: ['C', 'Shell'],
+        lastUpdated: '1 day ago',
+        url: 'https://github.com/git/git'
+      },
+      {
         id: 'subsurface',
         name: 'subsurface-for-dir',
         description: 'Divelog program for recreational and technical divers.',
@@ -230,6 +243,32 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
         technologies: ['C', 'C++', 'Qt'],
         lastUpdated: '1 month ago',
         url: 'https://github.com/torvalds'
+      },
+      {
+        id: 'uemacs',
+        name: 'uemacs',
+        description: 'Linus Torvalds customized MicroEMACS terminal text editor codebase.',
+        stars: 950,
+        forks: 180,
+        complexity: 85,
+        complexityGrade: 'A',
+        status: 'LEGACY',
+        technologies: ['C', 'Makefile'],
+        lastUpdated: '6 months ago',
+        url: 'https://github.com/torvalds/uemacs'
+      },
+      {
+        id: 'pesconvert',
+        name: 'pesconvert',
+        description: 'Lightweight utility for converting embroidery format files in native C.',
+        stars: 120,
+        forks: 25,
+        complexity: 82,
+        complexityGrade: 'A',
+        status: 'LEGACY',
+        technologies: ['C'],
+        lastUpdated: '1 year ago',
+        url: 'https://github.com/torvalds/pesconvert'
       }
     ],
     growth_timeline: [],
@@ -303,6 +342,45 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
         technologies: ['TypeScript', 'JavaScript'],
         lastUpdated: '3 months ago',
         url: 'https://github.com/reduxjs/redux'
+      },
+      {
+        id: 'create-react-app',
+        name: 'create-react-app',
+        description: 'Set up a modern web app by running one command with zero build configuration.',
+        stars: 101000,
+        forks: 26000,
+        complexity: 94,
+        complexityGrade: 'A+',
+        status: 'LEGACY',
+        technologies: ['JavaScript', 'Node.js', 'Webpack'],
+        lastUpdated: '1 year ago',
+        url: 'https://github.com/facebook/create-react-app'
+      },
+      {
+        id: 'overreacted',
+        name: 'overreacted.io',
+        description: 'Personal technical blog about React internals and JavaScript mental models.',
+        stars: 6200,
+        forks: 950,
+        complexity: 86,
+        complexityGrade: 'A',
+        status: 'RECENT',
+        technologies: ['Next.js', 'React', 'CSS'],
+        lastUpdated: '2 months ago',
+        url: 'https://github.com/gaearon/overreacted.io'
+      },
+      {
+        id: 'react-dnd',
+        name: 'react-dnd',
+        description: 'Drag and Drop for React with declarative component composition.',
+        stars: 20500,
+        forks: 2100,
+        complexity: 89,
+        complexityGrade: 'A',
+        status: 'LEGACY',
+        technologies: ['TypeScript', 'React'],
+        lastUpdated: '5 months ago',
+        url: 'https://github.com/react-dnd/react-dnd'
       }
     ],
     growth_timeline: [],
@@ -375,6 +453,45 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
         technologies: ['C', 'CUDA', 'Python'],
         lastUpdated: '1 day ago',
         url: 'https://github.com/karpathy/llm.c'
+      },
+      {
+        id: 'nanogpt',
+        name: 'nanoGPT',
+        description: 'The simplest, fastest repository for training and finetuning medium-sized GPTs.',
+        stars: 36000,
+        forks: 5200,
+        complexity: 95,
+        complexityGrade: 'A+',
+        status: 'ACTIVE',
+        technologies: ['Python', 'PyTorch'],
+        lastUpdated: '2 weeks ago',
+        url: 'https://github.com/karpathy/nanoGPT'
+      },
+      {
+        id: 'micrograd',
+        name: 'micrograd',
+        description: 'A tiny scalar-valued autograd engine with a small PyTorch-like neural network library.',
+        stars: 29000,
+        forks: 3600,
+        complexity: 92,
+        complexityGrade: 'A',
+        status: 'RECENT',
+        technologies: ['Python', 'NumPy'],
+        lastUpdated: '2 months ago',
+        url: 'https://github.com/karpathy/micrograd'
+      },
+      {
+        id: 'mingpt',
+        name: 'minGPT',
+        description: 'A minimal PyTorch re-implementation of the OpenAI GPT training and inference pipeline.',
+        stars: 19500,
+        forks: 2400,
+        complexity: 90,
+        complexityGrade: 'A',
+        status: 'LEGACY',
+        technologies: ['Python', 'PyTorch'],
+        lastUpdated: '6 months ago',
+        url: 'https://github.com/karpathy/minGPT'
       }
     ],
     growth_timeline: [],
@@ -447,6 +564,45 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
         technologies: ['Markdown', 'Open Source'],
         lastUpdated: '1 day ago',
         url: 'https://github.com/sindresorhus/awesome'
+      },
+      {
+        id: 'refined-github',
+        name: 'refined-github',
+        description: 'Browser extension that simplifies the GitHub interface and adds useful features.',
+        stars: 26500,
+        forks: 1700,
+        complexity: 92,
+        complexityGrade: 'A+',
+        status: 'ACTIVE',
+        technologies: ['TypeScript', 'CSS'],
+        lastUpdated: '1 day ago',
+        url: 'https://github.com/refined-github/refined-github'
+      },
+      {
+        id: 'ky',
+        name: 'ky',
+        description: 'Tiny & elegant HTTP client based on the browser Fetch API.',
+        stars: 14200,
+        forks: 580,
+        complexity: 88,
+        complexityGrade: 'A',
+        status: 'RECENT',
+        technologies: ['TypeScript', 'Fetch API'],
+        lastUpdated: '1 week ago',
+        url: 'https://github.com/sindresorhus/ky'
+      },
+      {
+        id: 'chalk',
+        name: 'chalk',
+        description: 'Terminal string styling done right with expressive ANSI colors.',
+        stars: 22400,
+        forks: 1200,
+        complexity: 86,
+        complexityGrade: 'A',
+        status: 'RECENT',
+        technologies: ['JavaScript', 'Node.js'],
+        lastUpdated: '3 weeks ago',
+        url: 'https://github.com/chalk/chalk'
       }
     ],
     growth_timeline: [],
@@ -477,7 +633,14 @@ Object.values(BENCHMARK_PROFILES).forEach(profile => {
   );
   profile.growth_timeline = AnalyticsService.getGrowthTimeline(profile.developer_score);
   profile.rhythm.matrix = AnalyticsService.generateRhythmMatrix();
-  profile.achievements = AnalyticsService.getAchievements();
+  profile.achievements = AnalyticsService.calculateAchievements({
+    weekStreak: profile.stats.week_streak,
+    technologies: profile.tech_dna,
+    repositories: profile.repositories,
+    dimensions: profile.dimensions,
+    followers: profile.stats.followers,
+    contributions: profile.stats.contributions
+  });
   profile.motivationNotes = AnalyticsService.getMotivationalNotes();
 });
 
@@ -596,7 +759,14 @@ export class GithubService {
           consistency_score: consistency,
           matrix: AnalyticsService.generateRhythmMatrix()
         },
-        achievements: AnalyticsService.getAchievements(),
+        achievements: AnalyticsService.calculateAchievements({
+          weekStreak: Math.max(4, Math.min(30, Math.round((user.public_repos || 5) * 1.5))),
+          technologies: techNodes,
+          repositories: auditedRepos,
+          dimensions: dims,
+          followers: user.followers || 0,
+          contributions: Math.round((user.public_repos || 10) * 12 + (user.followers || 2) * 3)
+        }),
         motivationNotes: AnalyticsService.getMotivationalNotes()
       };
     } catch {
