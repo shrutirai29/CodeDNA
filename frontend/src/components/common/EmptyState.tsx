@@ -6,7 +6,7 @@ export const EmptyState: React.FC = () => {
   const { searchDeveloper } = useDeveloperStore();
 
   return (
-    <div className="p-12 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs text-center flex flex-col items-center justify-center space-y-4 my-8 max-w-xl mx-auto">
+    <div className="p-12 rounded-2xl glass-card text-center flex flex-col items-center justify-center space-y-4 my-8 max-w-xl mx-auto shadow-xl">
       <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-[#6366F1] dark:text-[#818CF8] flex items-center justify-center shadow-xs">
         <Terminal size={28} />
       </div>

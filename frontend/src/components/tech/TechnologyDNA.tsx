@@ -38,7 +38,7 @@ export const TechnologyDNA: React.FC = () => {
     <TiltCard
       maxTilt={4}
       scale={1.005}
-      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative group"
+      className="p-6 rounded-2xl flex flex-col justify-between relative group"
     >
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
@@ -58,12 +58,12 @@ export const TechnologyDNA: React.FC = () => {
 
         {/* View Mode Toggle & Audited Count */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[#F1F5F9] dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B]">
+          <div className="flex items-center gap-1 p-1 rounded-xl glass-panel">
             <button
               onClick={() => setViewMode('3d')}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                 viewMode === '3d'
-                  ? 'bg-white dark:bg-[#0D1117] text-[#6366F1] dark:text-[#818CF8] shadow-xs'
+                  ? 'glass-pill text-[#6366F1] dark:text-[#818CF8] shadow-xs'
                   : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
               }`}
             >
@@ -72,9 +72,9 @@ export const TechnologyDNA: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode('2d')}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                 viewMode === '2d'
-                  ? 'bg-white dark:bg-[#0D1117] text-[#6366F1] dark:text-[#818CF8] shadow-xs'
+                  ? 'glass-pill text-[#6366F1] dark:text-[#818CF8] shadow-xs'
                   : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
               }`}
             >
@@ -90,7 +90,7 @@ export const TechnologyDNA: React.FC = () => {
       </div>
 
       {/* Live Cyber Inspector Strip */}
-      <div className="h-14 p-3 px-4 rounded-xl bg-white/80 dark:bg-[#070A0F]/80 backdrop-blur-md border border-white/70 dark:border-white/10 text-xs font-mono flex items-center justify-between mb-3 shadow-2xs">
+      <div className="h-14 p-3 px-4 rounded-xl glass-panel text-xs font-mono flex items-center justify-between mb-3 shadow-2xs">
         {hoveredNode ? (
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3">
@@ -282,7 +282,7 @@ export const TechnologyDNA: React.FC = () => {
       )}
 
       {/* Footer Stack Depth Bar */}
-      <div className="mt-4 pt-3 border-t border-[#E2E8F0] dark:border-[#1E293B] flex flex-wrap items-center justify-between text-xs font-mono text-[#64748B] dark:text-[#94A3B8] gap-2">
+      <div className="mt-4 pt-3 border-t border-white/40 dark:border-white/10 flex flex-wrap items-center justify-between text-xs font-mono text-[#64748B] dark:text-[#94A3B8] gap-2">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />

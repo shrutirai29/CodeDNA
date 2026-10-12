@@ -30,7 +30,7 @@ export const DeveloperComparison: React.FC = () => {
   const commonTech = devA.tech_dna.filter(t => setB.has(t.name.toLowerCase()));
 
   return (
-    <div className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 space-y-6">
+    <div className="glass-card p-6 rounded-2xl space-y-6">
       {/* Top Header & Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
@@ -51,10 +51,10 @@ export const DeveloperComparison: React.FC = () => {
           <select
             value={selectedCompUser}
             onChange={(e) => handleSelectDevB(e.target.value)}
-            className="px-3 py-1.5 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] text-xs font-mono font-semibold text-[#111827] dark:text-[#F8FAFC] focus:outline-none focus:ring-1 focus:ring-[#6366F1]"
+            className="px-3 py-1.5 rounded-xl glass-input text-xs font-mono font-semibold text-[#111827] dark:text-[#F8FAFC] focus:outline-none focus:ring-1 focus:ring-[#6366F1] cursor-pointer"
           >
             {Object.keys(BENCHMARK_PROFILES).map((u) => (
-              <option key={u} value={u}>
+              <option key={u} value={u} className="bg-white dark:bg-[#0D1117] text-[#111827] dark:text-[#F8FAFC]">
                 @{u} ({BENCHMARK_PROFILES[u].name})
               </option>
             ))}
@@ -65,7 +65,7 @@ export const DeveloperComparison: React.FC = () => {
       {/* Split-Screen Header Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Developer A (You) */}
-        <div className="p-5 rounded-2xl bg-white/80 dark:bg-[#161B22]/80 backdrop-blur-md border border-indigo-500/40 shadow-xs flex items-center justify-between">
+        <div className="glass-panel p-5 rounded-2xl border-indigo-500/40 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
               src={devA.avatar_url}
@@ -90,7 +90,7 @@ export const DeveloperComparison: React.FC = () => {
         </div>
 
         {/* Developer B */}
-        <div className="p-5 rounded-2xl bg-white/80 dark:bg-[#161B22]/80 backdrop-blur-md border border-white/70 dark:border-white/10 shadow-xs flex items-center justify-between">
+        <div className="glass-panel p-5 rounded-2xl flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
               src={devB.avatar_url}
@@ -117,7 +117,7 @@ export const DeveloperComparison: React.FC = () => {
 
       {/* Advantage & Opportunity Highlights */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-3">
+        <div className="p-4 rounded-xl glass-panel border border-emerald-300/60 dark:border-emerald-800/60 flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center shrink-0">
             <Sparkles size={16} />
           </div>
@@ -134,7 +134,7 @@ export const DeveloperComparison: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800/60 flex items-center gap-3">
+        <div className="p-4 rounded-xl glass-panel border border-indigo-300/60 dark:border-indigo-800/60 flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-[#6366F1] text-white flex items-center justify-center shrink-0">
             <ShieldCheck size={16} />
           </div>
@@ -159,7 +159,7 @@ export const DeveloperComparison: React.FC = () => {
           return (
             <div
               key={m.label}
-              className="p-3 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] space-y-1.5"
+              className="p-3 rounded-xl glass-panel space-y-1.5"
             >
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-[#111827] dark:text-[#F8FAFC]">{m.label}</span>
@@ -198,7 +198,7 @@ export const DeveloperComparison: React.FC = () => {
       </div>
 
       {/* Shared Technology Overlap */}
-      <div className="p-4 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] text-xs font-mono space-y-2">
+      <div className="p-4 rounded-xl glass-panel text-xs font-mono space-y-2">
         <span className="font-bold text-[#111827] dark:text-[#F8FAFC]">
           Shared Technology Overlap ({commonTech.length} Shared Stacks):
         </span>
@@ -206,7 +206,7 @@ export const DeveloperComparison: React.FC = () => {
           {commonTech.map((t) => (
             <span
               key={t.id}
-              className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B] font-semibold text-[#6366F1] dark:text-[#818CF8]"
+              className="px-2.5 py-1 rounded-lg glass-pill font-semibold text-[#6366F1] dark:text-[#818CF8]"
             >
               {t.name}
             </span>

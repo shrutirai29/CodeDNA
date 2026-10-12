@@ -25,7 +25,7 @@ export const ScoreRing: React.FC = () => {
     <TiltCard
       maxTilt={6}
       scale={1.01}
-      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative group"
+      className="p-6 rounded-2xl flex flex-col justify-between relative group"
     >
       {/* 3D Cyber Ambient Light */}
       <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-br from-indigo-500/15 via-cyan-500/10 to-purple-500/15 blur-3xl pointer-events-none" />
@@ -54,7 +54,7 @@ export const ScoreRing: React.FC = () => {
             className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold transition-all flex items-center gap-1 border ${
               isSurging
                 ? 'bg-amber-500 text-white border-amber-400 animate-pulse'
-                : 'bg-[#F1F5F9] dark:bg-[#161B22] text-[#475569] dark:text-[#94A3B8] border-[#E2E8F0] dark:border-[#1E293B] hover:text-[#6366F1] hover:border-indigo-400'
+                : 'glass-pill text-[#475569] dark:text-[#94A3B8] hover:text-[#6366F1] hover:border-indigo-400 cursor-pointer'
             }`}
             title="Simulate Real-time Quantum Verification Surge"
           >
@@ -176,15 +176,15 @@ export const ScoreRing: React.FC = () => {
 
           {/* Mini Interactive Dimension Gauge Preview */}
           <div className="grid grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
-            <div className="p-1.5 rounded-lg bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B]">
+            <div className="p-1.5 rounded-lg glass-panel">
               <span className="text-[9px] text-[#64748B] dark:text-[#94A3B8] block">DEPTH</span>
               <strong className="text-indigo-600 dark:text-indigo-400 font-bold">{profile.dimensions.technical_depth}</strong>
             </div>
-            <div className="p-1.5 rounded-lg bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B]">
+            <div className="p-1.5 rounded-lg glass-panel">
               <span className="text-[9px] text-[#64748B] dark:text-[#94A3B8] block">BREADTH</span>
               <strong className="text-cyan-600 dark:text-cyan-400 font-bold">{profile.dimensions.technical_breadth}</strong>
             </div>
-            <div className="p-1.5 rounded-lg bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B]">
+            <div className="p-1.5 rounded-lg glass-panel">
               <span className="text-[9px] text-[#64748B] dark:text-[#94A3B8] block">RHYTHM</span>
               <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{profile.dimensions.consistency}</strong>
             </div>

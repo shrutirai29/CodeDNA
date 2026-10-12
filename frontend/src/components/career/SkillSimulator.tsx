@@ -59,7 +59,7 @@ export const SkillSimulator: React.FC = () => {
     <TiltCard
       maxTilt={5}
       scale={1.008}
-      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative group"
+      className="p-6 rounded-2xl flex flex-col justify-between relative group"
     >
       {/* 3D Cyber Ambient Highlights */}
       <div className="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-gradient-to-br from-indigo-500/15 via-cyan-500/10 to-emerald-500/15 blur-3xl pointer-events-none" />
@@ -83,14 +83,14 @@ export const SkillSimulator: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={resetSkills}
-            className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold bg-[#F1F5F9] dark:bg-[#161B22] text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] border border-[#E2E8F0] dark:border-[#1E293B] flex items-center gap-1 transition-all"
+            className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold glass-pill text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] flex items-center gap-1 transition-all cursor-pointer"
           >
             <RotateCcw size={10} />
             Reset
           </button>
           <button
             onClick={equipAll}
-            className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-[#6366F1] dark:text-[#818CF8] hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 flex items-center gap-1 transition-all"
+            className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold glass-pill text-[#6366F1] dark:text-[#818CF8] hover:border-[#6366F1] flex items-center gap-1 transition-all cursor-pointer"
           >
             <Zap size={10} />
             Equip Full Tree
@@ -100,7 +100,7 @@ export const SkillSimulator: React.FC = () => {
 
       {/* Real-time Projection HUD */}
       <div
-        className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 rounded-xl bg-white/80 dark:bg-[#070A0F]/80 backdrop-blur-md border border-white/70 dark:border-white/10 mb-5 font-mono shadow-2xs"
+        className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 rounded-xl glass-panel mb-5 font-mono shadow-2xs"
         style={{ transform: 'translateZ(20px)' }}
       >
         {/* Score Lift */}
@@ -179,10 +179,10 @@ export const SkillSimulator: React.FC = () => {
               <button
                 key={skill.id}
                 onClick={() => toggleSkill(skill.id)}
-                className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden group flex flex-col justify-between ${
+                className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden group flex flex-col justify-between cursor-pointer ${
                   isEquipped
-                    ? 'bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10 border-indigo-500/50 dark:border-indigo-500/60 shadow-xs'
-                    : 'bg-[#F7F9FC] dark:bg-[#070A0F] border-[#E2E8F0] dark:border-[#1E293B] hover:border-indigo-400/40'
+                    ? 'glass-panel border-indigo-500/50 dark:border-indigo-500/60 shadow-xs'
+                    : 'glass-panel hover:border-indigo-400/40'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2 mb-1.5 w-full">

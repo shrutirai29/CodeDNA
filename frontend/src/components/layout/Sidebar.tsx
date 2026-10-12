@@ -47,7 +47,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed top-0 left-0 bottom-0 z-40 bg-white/80 dark:bg-[#0D1117]/90 backdrop-blur-2xl border-r border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 transition-all duration-300 ease-in-out flex flex-col ${
+      className={`glass-nav fixed top-0 left-0 bottom-0 z-40 border-r transition-all duration-300 ease-in-out flex flex-col ${
         isSidebarCollapsed ? 'w-20' : 'w-[230px]'
       }`}
     >
@@ -100,10 +100,10 @@ export const Sidebar: React.FC = () => {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all relative group ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all relative group cursor-pointer ${
                 isActive
-                  ? 'bg-indigo-50/80 dark:bg-indigo-950/40 text-[#6366F1] dark:text-[#818CF8] font-semibold'
-                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#F1F5F9] dark:hover:bg-[#161B22]'
+                  ? 'glass-pill text-[#6366F1] dark:text-[#818CF8] font-bold shadow-xs'
+                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10'
               }`}
             >
               {/* Active Left Accent Indicator */}
@@ -127,7 +127,7 @@ export const Sidebar: React.FC = () => {
 
         {/* Divider */}
         <div className="pt-3 pb-2 px-2">
-          <hr className="border-[#E2E8F0] dark:border-[#1E293B]" />
+          <hr className="border-white/40 dark:border-white/10" />
         </div>
 
         {/* AI Copilot Launch Button */}
@@ -137,7 +137,7 @@ export const Sidebar: React.FC = () => {
 
         <button
           onClick={toggleCopilot}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] hover:from-[#4F46E5] hover:to-[#7C3AED] shadow-sm shadow-indigo-500/25 transition-all group"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] hover:from-[#4F46E5] hover:to-[#7C3AED] shadow-sm shadow-indigo-500/25 transition-all group cursor-pointer"
         >
           <Sparkles size={18} className="shrink-0 animate-pulse" />
           {!isSidebarCollapsed && (
@@ -147,7 +147,7 @@ export const Sidebar: React.FC = () => {
 
         {/* Tools Section */}
         <div className="pt-4 pb-2 px-2">
-          <hr className="border-[#E2E8F0] dark:border-[#1E293B]" />
+          <hr className="border-white/40 dark:border-white/10" />
         </div>
 
         <div className="px-2 pb-1.5 text-[10px] font-mono uppercase tracking-wider font-semibold text-[#94A3B8] dark:text-[#64748B]">
@@ -157,7 +157,7 @@ export const Sidebar: React.FC = () => {
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#F1F5F9] dark:hover:bg-[#161B22] transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
         >
           {isDarkMode ? <Sun size={18} className="text-amber-400 shrink-0" /> : <Moon size={18} className="text-indigo-500 shrink-0" />}
           {!isSidebarCollapsed && (
@@ -168,7 +168,7 @@ export const Sidebar: React.FC = () => {
         {/* Settings */}
         <button
           onClick={toggleCopilot}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#F1F5F9] dark:hover:bg-[#161B22] transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
         >
           <Settings size={18} className="shrink-0" />
           {!isSidebarCollapsed && <span className="truncate">Settings & Copilot</span>}
@@ -177,7 +177,7 @@ export const Sidebar: React.FC = () => {
         {/* Help & Support */}
         <button
           onClick={toggleCopilot}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#F1F5F9] dark:hover:bg-[#161B22] transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
         >
           <HelpCircle size={18} className="shrink-0" />
           {!isSidebarCollapsed && <span className="truncate">Help & Docs</span>}
@@ -186,7 +186,7 @@ export const Sidebar: React.FC = () => {
 
       {/* Footer Tagline */}
       {!isSidebarCollapsed && (
-        <div className="p-3 border-t border-[#E2E8F0] dark:border-[#1E293B] text-[10px] text-[#94A3B8] font-mono text-center">
+        <div className="p-3 border-t border-white/40 dark:border-white/10 text-[10px] text-[#94A3B8] font-mono text-center">
           Build. Learn. Improve. Repeat.
         </div>
       )}

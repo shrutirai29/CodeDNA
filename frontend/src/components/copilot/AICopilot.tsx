@@ -65,10 +65,10 @@ export const AICopilot: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 z-50 w-96 sm:w-[420px] h-[540px] rounded-2xl bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-6 right-6 z-50 w-96 sm:w-[420px] h-[540px] rounded-2xl glass-card shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-4 bg-white/80 dark:bg-[#070A0F]/80 backdrop-blur-md border-b border-white/50 dark:border-white/10 flex items-center justify-between">
+            <div className="p-4 glass-panel border-b border-white/50 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6366F1] to-[#06B6D4] text-white flex items-center justify-center shrink-0">
                   <Bot size={16} />
@@ -88,7 +88,7 @@ export const AICopilot: React.FC = () => {
 
               <button
                 onClick={toggleCopilot}
-                className="p-1.5 rounded-lg text-[#64748B] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B] transition-colors"
+                className="p-1.5 rounded-lg text-[#64748B] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
               >
                 <X size={16} />
               </button>
@@ -110,8 +110,8 @@ export const AICopilot: React.FC = () => {
                   <div
                     className={`p-3 rounded-2xl max-w-[85%] leading-relaxed ${
                       msg.sender === 'user'
-                        ? 'bg-[#6366F1] text-white rounded-tr-xs font-mono'
-                        : 'bg-[#F7F9FC] dark:bg-[#161B22] text-[#111827] dark:text-[#F8FAFC] border border-[#E2E8F0] dark:border-[#1E293B] rounded-tl-xs'
+                        ? 'bg-[#6366F1] text-white rounded-tr-xs font-mono shadow-sm'
+                        : 'glass-panel text-[#111827] dark:text-[#F8FAFC] rounded-tl-xs'
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -146,12 +146,12 @@ export const AICopilot: React.FC = () => {
             </div>
 
             {/* Quick Prompts Suggestions */}
-            <div className="p-2.5 bg-[#F7F9FC] dark:bg-[#070A0F] border-t border-[#E2E8F0] dark:border-[#1E293B] overflow-x-auto whitespace-nowrap space-x-1.5 flex">
+            <div className="p-2.5 bg-white/40 dark:bg-black/30 backdrop-blur-md border-t border-white/20 dark:border-white/10 overflow-x-auto whitespace-nowrap space-x-1.5 flex">
               {quickPrompts.map((qp) => (
                 <button
                   key={qp}
                   onClick={() => handleQuickPrompt(qp)}
-                  className="px-2.5 py-1 rounded-lg text-[10px] font-mono bg-white dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B] text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:border-[#6366F1] shrink-0 transition-colors"
+                  className="px-2.5 py-1 rounded-lg text-[10px] font-mono glass-pill text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:border-[#6366F1] shrink-0 transition-colors cursor-pointer"
                 >
                   “{qp}”
                 </button>
@@ -159,19 +159,19 @@ export const AICopilot: React.FC = () => {
             </div>
 
             {/* Input Bar */}
-            <form onSubmit={handleSubmit} className="p-3 bg-white dark:bg-[#0D1117] border-t border-[#E2E8F0] dark:border-[#1E293B] flex items-center gap-2">
+            <form onSubmit={handleSubmit} className="p-3 bg-white/50 dark:bg-[#0D1117]/60 backdrop-blur-md border-t border-white/20 dark:border-white/10 flex items-center gap-2">
               <input
                 type="text"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
                 placeholder="Ask CodeDNA Copilot about this developer…"
                 disabled={isChatLoading}
-                className="flex-1 px-3 py-2 rounded-xl text-xs bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] text-[#111827] dark:text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none focus:ring-1 focus:ring-[#6366F1] font-mono"
+                className="flex-1 px-3 py-2 rounded-xl text-xs glass-input text-[#111827] dark:text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none focus:ring-1 focus:ring-[#6366F1] font-mono"
               />
               <button
                 type="submit"
                 disabled={!inputVal.trim() || isChatLoading}
-                className="p-2 rounded-xl bg-[#6366F1] text-white disabled:opacity-40 hover:bg-[#4F46E5] transition-colors"
+                className="p-2 rounded-xl bg-[#6366F1] text-white disabled:opacity-40 hover:bg-[#4F46E5] transition-colors cursor-pointer"
               >
                 <Send size={15} />
               </button>

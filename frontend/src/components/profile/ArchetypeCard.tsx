@@ -11,7 +11,7 @@ export const ArchetypeCard: React.FC = () => {
     <TiltCard
       maxTilt={7}
       scale={1.01}
-      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative group cursor-pointer"
+      className="p-6 rounded-2xl flex flex-col justify-between relative group cursor-pointer"
     >
       {/* 3D Iridescent Foil Sheen */}
       <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/5 via-cyan-500/5 to-purple-500/5 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -54,7 +54,7 @@ export const ArchetypeCard: React.FC = () => {
           {arch.skills.map((skill) => (
             <span
               key={skill}
-              className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-[#F1F5F9] dark:bg-[#161B22] text-[#334155] dark:text-[#CBD5E1] border border-[#E2E8F0] dark:border-[#1E293B] shadow-2xs hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+              className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium glass-pill text-[#334155] dark:text-[#CBD5E1] shadow-2xs hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             >
               {skill}
             </span>
@@ -64,7 +64,7 @@ export const ArchetypeCard: React.FC = () => {
 
       {/* Cyber Developer Workspace Holographic Terminal Canvas */}
       <div className="pt-2" style={{ transform: 'translateZ(16px)' }}>
-        <div className="w-full h-24 rounded-xl bg-gradient-to-r from-indigo-950/5 via-cyan-950/5 to-purple-950/5 dark:from-indigo-950/40 dark:via-[#070A0F] dark:to-cyan-950/30 border border-[#E2E8F0] dark:border-[#1E293B] flex flex-col justify-between p-3 relative overflow-hidden group-hover:border-indigo-500/40 transition-colors">
+        <div className="w-full h-24 rounded-xl glass-panel flex flex-col justify-between p-3 relative overflow-hidden group-hover:border-indigo-500/40 transition-colors">
           {/* Subtle Cyber Grid scanline */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
 

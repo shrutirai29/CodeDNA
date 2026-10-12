@@ -30,7 +30,7 @@ export const RepositoryPortfolio: React.FC = () => {
   };
 
   return (
-    <div className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 space-y-6">
+    <div className="glass-card p-6 rounded-2xl space-y-6">
       {/* Header and Filter Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
@@ -46,14 +46,14 @@ export const RepositoryPortfolio: React.FC = () => {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl glass-panel self-start sm:self-auto">
           {['ALL', 'ACTIVE', 'RECENT', 'LEGACY'].map((s) => (
             <button
               key={s}
               onClick={() => setFilterStatus(s)}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold transition-all cursor-pointer ${
                 filterStatus === s
-                  ? 'bg-white dark:bg-[#161B22] text-[#6366F1] dark:text-[#818CF8] shadow-xs'
+                  ? 'glass-pill text-[#6366F1] dark:text-[#818CF8] shadow-xs'
                   : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
               }`}
             >
@@ -70,7 +70,7 @@ export const RepositoryPortfolio: React.FC = () => {
             key={repo.id}
             maxTilt={6}
             scale={1.015}
-            className="p-5 rounded-2xl bg-white/80 dark:bg-[#161B22]/80 backdrop-blur-md border border-white/70 dark:border-white/10 flex flex-col justify-between hover:border-indigo-500/50 transition-colors group shadow-xs"
+            className="p-5 rounded-2xl flex flex-col justify-between hover:border-indigo-500/50 transition-colors group shadow-xs"
           >
             <div style={{ transform: 'translateZ(10px)' }}>
               {/* Top Row: Name, Status Badge, Complexity Grade */}
@@ -99,7 +99,7 @@ export const RepositoryPortfolio: React.FC = () => {
                 {repo.technologies.map((t) => (
                   <span
                     key={t}
-                    className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-white dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B] text-[#475569] dark:text-[#94A3B8] shadow-2xs"
+                    className="px-2 py-0.5 rounded-md text-[10px] font-mono glass-pill text-[#475569] dark:text-[#94A3B8] shadow-2xs"
                   >
                     {t}
                   </span>

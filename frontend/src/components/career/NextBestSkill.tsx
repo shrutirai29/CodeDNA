@@ -12,7 +12,7 @@ export const NextBestSkill: React.FC = () => {
     <TiltCard
       maxTilt={5}
       scale={1.01}
-      className="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-white/85 to-cyan-50/90 dark:from-[#0D1117]/90 dark:via-[#111622]/85 dark:to-[#09101E]/90 backdrop-blur-xl border-2 border-indigo-500/30 dark:border-indigo-500/30 shadow-lg shadow-indigo-500/5 relative overflow-hidden group"
+      className="p-6 rounded-2xl relative overflow-hidden group border border-indigo-500/30 dark:border-indigo-500/30"
     >
       {/* Background neon ambient highlight */}
       <div className="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-gradient-to-tr from-indigo-500/15 to-cyan-500/15 blur-2xl pointer-events-none" />
@@ -45,12 +45,12 @@ export const NextBestSkill: React.FC = () => {
 
       {/* Numerical Impact Metrics */}
       <div className="grid grid-cols-2 gap-3 my-4">
-        <div className="p-3 rounded-xl bg-white/85 dark:bg-[#161B22]/85 backdrop-blur-md border border-white/70 dark:border-white/10 shadow-2xs">
+        <div className="p-3 rounded-xl glass-panel shadow-2xs">
           <span className="text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8] block">Current Career Fit</span>
           <span className="text-xl font-bold font-mono text-[#111827] dark:text-[#F8FAFC]">{nbs.currentFit}%</span>
         </div>
 
-        <div className="p-3 rounded-xl bg-white/85 dark:bg-[#161B22]/85 backdrop-blur-md border border-emerald-500/40 shadow-2xs">
+        <div className="p-3 rounded-xl glass-panel border border-emerald-500/40 shadow-2xs">
           <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold block">Simulated Post-Skill Fit</span>
           <span className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400">
             {Math.min(99, Math.round(nbs.currentFit + nbs.potentialImprovement))}%
@@ -60,7 +60,7 @@ export const NextBestSkill: React.FC = () => {
 
       {/* Roadmap Dropdown (Optional Expansion) */}
       {isExpanded && (
-        <div className="mb-4 p-4 rounded-xl bg-white/90 dark:bg-[#161B22]/90 border border-[#E2E8F0] dark:border-[#1E293B] space-y-2 text-xs font-mono">
+        <div className="mb-4 p-4 rounded-xl glass-panel space-y-2 text-xs font-mono">
           <span className="font-bold text-[#111827] dark:text-[#F8FAFC] block mb-1">
             Accelerated 4-Step Skill Learning Track:
           </span>

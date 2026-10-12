@@ -39,7 +39,7 @@ export const Achievements: React.FC = () => {
   });
 
   return (
-    <div className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 space-y-5">
+    <div className="glass-card p-6 rounded-2xl space-y-5">
       {/* Header & Empirical Verification Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-white/50 dark:border-white/10">
         <div>
@@ -58,7 +58,7 @@ export const Achievements: React.FC = () => {
 
         {/* Global Progress Pill */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-900 border border-[#E2E8F0] dark:border-[#1E293B]">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-pill border border-white/40 dark:border-white/10">
             <span className="text-xs font-mono font-bold text-[#111827] dark:text-[#F8FAFC]">
               {unlockedCount} / {achievements.length}
             </span>
@@ -77,12 +77,12 @@ export const Achievements: React.FC = () => {
 
       {/* Filter Tabs */}
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#30363D]">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl glass-panel">
           <button
             onClick={() => setFilter('all')}
-            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all ${
+            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
               filter === 'all'
-                ? 'bg-white dark:bg-[#21262D] text-[#111827] dark:text-[#F8FAFC] shadow-xs'
+                ? 'glass-pill text-[#111827] dark:text-[#F8FAFC] shadow-xs'
                 : 'text-[#64748B] dark:text-[#8B949E] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
             }`}
           >
@@ -90,9 +90,9 @@ export const Achievements: React.FC = () => {
           </button>
           <button
             onClick={() => setFilter('unlocked')}
-            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all ${
+            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
               filter === 'unlocked'
-                ? 'bg-white dark:bg-[#21262D] text-emerald-600 dark:text-emerald-400 shadow-xs'
+                ? 'glass-pill text-emerald-600 dark:text-emerald-400 shadow-xs'
                 : 'text-[#64748B] dark:text-[#8B949E] hover:text-emerald-600 dark:hover:text-emerald-400'
             }`}
           >
@@ -100,9 +100,9 @@ export const Achievements: React.FC = () => {
           </button>
           <button
             onClick={() => setFilter('in_progress')}
-            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all ${
+            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
               filter === 'in_progress'
-                ? 'bg-white dark:bg-[#21262D] text-amber-600 dark:text-amber-400 shadow-xs'
+                ? 'glass-pill text-amber-600 dark:text-amber-400 shadow-xs'
                 : 'text-[#64748B] dark:text-[#8B949E] hover:text-amber-600 dark:hover:text-amber-400'
             }`}
           >
@@ -125,8 +125,8 @@ export const Achievements: React.FC = () => {
               key={b.id}
               className={`p-4 rounded-xl border flex flex-col justify-between transition-all duration-200 ${
                 b.unlocked
-                  ? 'bg-gradient-to-b from-[#FFFFFF] to-emerald-50/20 dark:from-[#0D1117] dark:to-emerald-950/10 border-emerald-200/80 dark:border-emerald-800/60 shadow-xs hover:border-emerald-400 dark:hover:border-emerald-600'
-                  : 'bg-slate-50/60 dark:bg-[#161B22]/50 border-slate-200 dark:border-slate-800 hover:border-amber-400/60 dark:hover:border-amber-600/60'
+                  ? 'glass-panel border-emerald-300/80 dark:border-emerald-700/60 shadow-xs hover:border-emerald-400 dark:hover:border-emerald-500'
+                  : 'glass-panel opacity-85 border-slate-200 dark:border-slate-800 hover:border-amber-400/60 dark:hover:border-amber-600/60'
               }`}
             >
               <div>

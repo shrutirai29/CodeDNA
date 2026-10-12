@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 right-0 z-30 h-16 bg-white/80 dark:bg-[#0D1117]/85 backdrop-blur-xl border-b border-white/60 dark:border-white/10 shadow-xs flex items-center justify-between px-6 transition-all duration-300 ${
+      className={`glass-nav fixed top-0 right-0 z-30 h-16 border-b flex items-center justify-between px-6 transition-all duration-300 ${
         isSidebarCollapsed ? 'left-20' : 'left-[230px]'
       }`}
     >
@@ -42,11 +42,11 @@ export const Header: React.FC = () => {
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
             placeholder="Enter GitHub username… (e.g. shrutirai29, torvalds)"
-            className="w-full pl-9 pr-20 py-2 rounded-xl text-xs bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] text-[#111827] dark:text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#6366F1]/30 focus:border-[#6366F1] font-mono transition-all"
+            className="w-full pl-9 pr-20 py-2 rounded-xl text-xs glass-input text-[#111827] dark:text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#6366F1]/40 font-mono transition-all"
           />
           <button
             type="submit"
-            className="absolute inset-y-1 right-1 px-2.5 bg-white dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B] rounded-lg text-[10px] font-mono font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] flex items-center gap-1 shadow-2xs cursor-pointer"
+            className="absolute inset-y-1 right-1 px-2.5 glass-pill rounded-lg text-[10px] font-mono font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] flex items-center gap-1 cursor-pointer"
           >
             <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
               <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
@@ -98,17 +98,17 @@ export const Header: React.FC = () => {
           </button>
 
           {showNotification && (
-            <div className="absolute right-0 mt-2 w-72 p-3 bg-white dark:bg-[#0D1117] rounded-2xl shadow-xl border border-[#E2E8F0] dark:border-[#1E293B] text-xs z-50">
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E2E8F0] dark:border-[#1E293B] font-mono font-bold">
+            <div className="absolute right-0 mt-2 w-72 p-3 glass-card rounded-2xl shadow-xl text-xs z-50">
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/50 dark:border-white/10 font-mono font-bold">
                 <span>Developer Notifications</span>
                 <span className="text-[10px] text-emerald-500">Live</span>
               </div>
               <div className="space-y-2">
-                <div className="p-2 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B]">
+                <div className="p-2 rounded-xl glass-panel">
                   <p className="font-semibold text-[#111827] dark:text-[#F8FAFC]">Consistency Peak</p>
                   <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8]">Streak passed 12 consecutive active weeks!</p>
                 </div>
-                <div className="p-2 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B]">
+                <div className="p-2 rounded-xl glass-panel">
                   <p className="font-semibold text-[#111827] dark:text-[#F8FAFC]">Next Skill Match</p>
                   <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8]">Docker containerization unlocks +8.5% career fit.</p>
                 </div>

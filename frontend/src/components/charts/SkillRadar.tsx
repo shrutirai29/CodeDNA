@@ -49,7 +49,7 @@ export const SkillRadar: React.FC = () => {
     <TiltCard
       maxTilt={6}
       scale={1.01}
-      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative overflow-hidden group"
+      className="p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden group"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
@@ -172,7 +172,7 @@ export const SkillRadar: React.FC = () => {
 
         {/* Dynamic Tooltip on Hover */}
         {hoveredIndex !== null && (
-          <div className="absolute top-2 right-2 p-3 rounded-xl bg-white/95 dark:bg-[#0D1117]/95 border border-indigo-500/40 shadow-xl backdrop-blur-md text-xs font-mono z-20 pointer-events-none transition-all">
+          <div className="absolute top-2 right-2 p-3 rounded-xl glass-panel border border-indigo-500/40 shadow-xl text-xs font-mono z-20 pointer-events-none transition-all">
             <div className="font-bold text-[#111827] dark:text-[#F8FAFC] flex items-center justify-between gap-4">
               <span>{vertices[hoveredIndex].label}</span>
               <span className="text-[#6366F1] dark:text-[#818CF8]">
@@ -190,7 +190,7 @@ export const SkillRadar: React.FC = () => {
       </div>
 
       {/* Footer Benchmark Note */}
-      <div className="pt-2 border-t border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between text-xs font-mono text-[#64748B] dark:text-[#94A3B8]">
+      <div className="pt-2 border-t border-white/40 dark:border-white/10 flex items-center justify-between text-xs font-mono text-[#64748B] dark:text-[#94A3B8]">
         <span className="flex items-center gap-1">
           <Sparkles size={12} className="text-amber-500" />
           Balanced Polyglot Profile

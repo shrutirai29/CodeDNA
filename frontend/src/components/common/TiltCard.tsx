@@ -57,7 +57,7 @@ export const TiltCard: React.FC<TiltCardProps> = ({
         transformStyle: 'preserve-3d',
         transition: 'transform 0.18s cubic-bezier(0.2, 0, 0, 1)'
       }}
-      className={`relative overflow-hidden ${className}`}
+      className={`glass-card relative overflow-hidden ${className}`}
     >
       {glare && (
         <div

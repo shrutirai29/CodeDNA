@@ -9,7 +9,7 @@ export const MotivationBanners: React.FC = () => {
   if (!notes || notes.length === 0) return null;
 
   return (
-    <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-50/85 via-white/85 to-cyan-50/85 dark:from-[#0D1117]/85 dark:via-[#111622]/85 dark:to-[#09101E]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-md shadow-indigo-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono">
+    <div className="p-4 rounded-2xl glass-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono">
       <div className="flex items-center gap-2.5">
         <span className="p-1.5 rounded-lg bg-[#6366F1] text-white shrink-0">
           <Sparkles size={14} />

@@ -30,7 +30,7 @@ export const GrowthVelocity: React.FC = () => {
     <TiltCard
       maxTilt={5}
       scale={1.01}
-      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative overflow-hidden group"
+      className="p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden group"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -144,7 +144,7 @@ export const GrowthVelocity: React.FC = () => {
           key={selectedItem.year}
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-2 p-4 rounded-xl bg-white/80 dark:bg-[#070A0F]/80 backdrop-blur-md border border-white/70 dark:border-white/10 text-xs font-mono space-y-2 shadow-2xs"
+          className="mt-2 p-4 rounded-xl glass-panel text-xs font-mono space-y-2 shadow-2xs"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -168,7 +168,7 @@ export const GrowthVelocity: React.FC = () => {
             {selectedItem.technologies.map((t) => (
               <span
                 key={t}
-                className="px-2 py-0.5 rounded-md bg-white dark:bg-[#161B22] border border-[#E2E8F0] dark:border-[#1E293B] text-[10px] font-medium text-[#111827] dark:text-[#F8FAFC]"
+                className="px-2 py-0.5 rounded-md glass-pill text-[10px] font-medium text-[#111827] dark:text-[#F8FAFC]"
               >
                 {t}
               </span>

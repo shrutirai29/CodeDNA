@@ -505,13 +505,13 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
   return (
     <div
       ref={mountRef}
-      className="w-full h-[460px] md:h-[480px] relative cursor-grab active:cursor-grabbing select-none overflow-hidden rounded-xl bg-white/60 dark:bg-[#070A0F]/70 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-inner"
+      className="w-full h-[460px] md:h-[480px] relative cursor-grab active:cursor-grabbing select-none overflow-hidden rounded-xl glass-panel shadow-inner"
     >
       {/* Floating 3D Navigation & Zoom Controls Overlay */}
-      <div className="absolute top-3 right-3 flex items-center gap-1 p-1 rounded-xl bg-white/90 dark:bg-[#161B22]/90 backdrop-blur-md border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs z-30 font-mono">
+      <div className="absolute top-3 right-3 flex items-center gap-1 p-1 rounded-xl glass-pill shadow-xs z-30 font-mono">
         <button
           onClick={handleZoomIn}
-          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B] transition-colors"
+          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
           title="Zoom In (Scroll Up)"
         >
           <ZoomIn size={14} />
@@ -523,17 +523,17 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
 
         <button
           onClick={handleZoomOut}
-          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B] transition-colors"
+          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
           title="Zoom Out (Scroll Down)"
         >
           <ZoomOut size={14} />
         </button>
 
-        <div className="w-[1px] h-4 bg-[#E2E8F0] dark:bg-[#1E293B] mx-0.5" />
+        <div className="w-[1px] h-4 bg-white/40 dark:border-white/10 mx-0.5" />
 
         <button
           onClick={handleResetView}
-          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B] transition-colors flex items-center gap-1 text-[10px] font-semibold"
+          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors flex items-center gap-1 text-[10px] font-semibold cursor-pointer"
           title="Reset View / Center (Double Click)"
         >
           <RotateCcw size={12} />
@@ -542,7 +542,7 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
       </div>
 
       {/* Bottom Hint Banner - Elevated frosted glass badge */}
-      <div className="absolute bottom-3 left-3 text-[11px] font-mono px-3 py-1.5 rounded-lg bg-white/90 dark:bg-[#161B22]/90 backdrop-blur-md border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs text-[#475569] dark:text-[#94A3B8] flex items-center gap-2 pointer-events-none z-20">
+      <div className="absolute bottom-3 left-3 text-[11px] font-mono px-3 py-1.5 rounded-lg glass-pill text-[#475569] dark:text-[#94A3B8] flex items-center gap-2 pointer-events-none z-20">
         <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
         <span>Scroll / Pinch to <strong>Zoom</strong> • Drag to <strong>Rotate</strong> • Double-click to <strong>Reset</strong></span>
       </div>
