@@ -60,7 +60,7 @@ export const Header: React.FC = () => {
         <div className="hidden lg:flex items-center gap-1.5 shrink-0">
           <span className="text-[10px] font-mono text-[#94A3B8] mr-0.5">Quick:</span>
           {quickProfiles.map((p) => {
-            const isCurrent = profile.username.toLowerCase() === p.toLowerCase();
+            const isCurrent = profile?.username?.toLowerCase() === p.toLowerCase();
             return (
               <button
                 key={p}
@@ -151,21 +151,23 @@ export const Header: React.FC = () => {
         </button>
 
         {/* Active Developer Avatar */}
-        <div className="flex items-center gap-2 pl-2 border-l border-[#E2E8F0] dark:border-[#1E293B]">
-          <img
-            src={profile.avatar_url}
-            alt={profile.name}
-            className="w-8 h-8 rounded-full border border-indigo-500/30 object-cover shadow-2xs"
-          />
-          <div className="hidden xl:flex flex-col text-left">
-            <span className="text-xs font-semibold text-[#111827] dark:text-[#F8FAFC] leading-none">
-              {profile.name}
-            </span>
-            <span className="text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8]">
-              @{profile.username}
-            </span>
+        {profile && (
+          <div className="flex items-center gap-2 pl-2 border-l border-[#E2E8F0] dark:border-[#1E293B]">
+            <img
+              src={profile.avatar_url}
+              alt={profile.name}
+              className="w-8 h-8 rounded-full border border-indigo-500/30 object-cover shadow-2xs"
+            />
+            <div className="hidden xl:flex flex-col text-left">
+              <span className="text-xs font-semibold text-[#111827] dark:text-[#F8FAFC] leading-none">
+                {profile.name}
+              </span>
+              <span className="text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8]">
+                @{profile.username}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </header>
   );

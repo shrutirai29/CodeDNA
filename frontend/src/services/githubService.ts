@@ -847,7 +847,10 @@ export class GithubService {
         if (BENCHMARK_PROFILES[cleanUsername]) {
           return JSON.parse(JSON.stringify(BENCHMARK_PROFILES[cleanUsername]));
         }
-        throw new Error('User not found on GitHub');
+        if (userRes.status === 404) {
+          throw new Error('USER_NOT_FOUND');
+        }
+        throw new Error('User fetch error');
       }
       const user = await userRes.json();
 
@@ -1043,7 +1046,10 @@ export class GithubService {
         }),
         motivationNotes: AnalyticsService.getMotivationalNotes()
       };
-    } catch {
+    } catch (err: any) {
+      if (err?.message === 'USER_NOT_FOUND') {
+        throw err;
+      }
       // Graceful benchmark fallback
       if (BENCHMARK_PROFILES[cleanUsername]) {
         return JSON.parse(JSON.stringify(BENCHMARK_PROFILES[cleanUsername]));

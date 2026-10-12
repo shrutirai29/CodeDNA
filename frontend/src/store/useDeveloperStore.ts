@@ -119,15 +119,25 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
       await new Promise(r => setTimeout(r, 280));
       set({ loadingStep: 5, loadingMessage: 'CALCULATING DEVELOPER DNA...' });
 
-      const newProfile = await GithubService.fetchProfile(username);
+      try {
+        const newProfile = await GithubService.fetchProfile(username);
 
-      await new Promise(r => setTimeout(r, 220));
-      set({
-        profile: newProfile,
-        isSearching: false,
-        loadingStep: 6,
-        loadingMessage: 'ANALYSIS COMPLETE'
-      });
+        await new Promise(r => setTimeout(r, 220));
+        set({
+          profile: newProfile,
+          isSearching: false,
+          loadingStep: 6,
+          loadingMessage: 'ANALYSIS COMPLETE'
+        });
+      } catch {
+        set({
+          profile: null as unknown as DeveloperProfile,
+          isSearching: false,
+          loadingStep: 0,
+          loadingMessage: ''
+        });
+        return;
+      }
 
       setTimeout(() => {
         set({ loadingStep: 0, loadingMessage: '' });

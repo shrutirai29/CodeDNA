@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
-import { FolderGit2, Star, GitFork, ExternalLink } from 'lucide-react';
+import { FolderGit2, Star, GitFork, ExternalLink, RotateCcw } from 'lucide-react';
 import { TiltCard } from '../common/TiltCard';
+import { RetroTv404 } from '../common/RetroTv404';
 
 export const RepositoryPortfolio: React.FC = () => {
   const { profile } = useDeveloperStore();
@@ -63,8 +64,30 @@ export const RepositoryPortfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid of Repository Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Grid of Repository Cards or 404 TV Empty State */}
+      {repos.length === 0 ? (
+        <div className="py-8 flex flex-col items-center justify-center text-center space-y-3 relative overflow-hidden">
+          <div className="scale-75 -my-14">
+            <RetroTv404 displayText="NO REPOS" code="404" />
+          </div>
+          <div className="space-y-1 relative z-10 pt-4">
+            <h3 className="font-mono text-sm font-bold text-[#111827] dark:text-[#F8FAFC]">
+              No {filterStatus} repositories found
+            </h3>
+            <p className="text-xs text-[#64748B] dark:text-[#94A3B8]">
+              No repositories match the current filter selection.
+            </p>
+          </div>
+          <button
+            onClick={() => setFilterStatus('ALL')}
+            className="px-4 py-2 rounded-xl text-xs font-mono font-bold text-white bg-[#6366F1] hover:bg-[#4F46E5] flex items-center gap-1.5 cursor-pointer relative z-10 shadow-md shadow-indigo-500/20"
+          >
+            <RotateCcw size={13} />
+            SHOW ALL REPOSITORIES
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {repos.map((repo) => (
           <TiltCard
             key={repo.id}
@@ -138,7 +161,8 @@ export const RepositoryPortfolio: React.FC = () => {
             </div>
           </TiltCard>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
