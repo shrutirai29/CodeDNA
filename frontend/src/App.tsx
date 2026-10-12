@@ -21,6 +21,7 @@ import { DeveloperComparison } from './components/comparison/DeveloperComparison
 import { MotivationBanners } from './components/motivation/MotivationBanners';
 import { Achievements } from './components/motivation/Achievements';
 import { AICopilot } from './components/copilot/AICopilot';
+import { FloatingSocialDock } from './components/layout/FloatingSocialDock';
 import { AnalyticsExport } from './components/export/AnalyticsExport';
 import { EmptyState } from './components/common/EmptyState';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -240,6 +241,9 @@ export const App: React.FC = () => {
           </footer>
         </main>
       </div>
+
+      {/* Floating 3D Isometric Social Dock */}
+      <FloatingSocialDock />
 
       {/* Floating AI Copilot Assistant */}
       <AICopilot />

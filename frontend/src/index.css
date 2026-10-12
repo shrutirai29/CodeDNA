@@ -232,3 +232,224 @@
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
 }
+
+/* =====================================================================
+   ISOMETRIC 3D PROJECTION SOCIAL CARD (From Uiverse.io by MijailVillegas)
+   ===================================================================== */
+
+.card.iso-card,
+.iso-card,
+.card:has(.iso-pro) {
+  max-width: fit-content;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  gap: 1rem;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.192),
+    inset 0 0 5px rgba(255, 255, 255, 0.274), 0 5px 5px rgba(0, 0, 0, 0.164);
+  transition: 0.5s;
+}
+
+.card.iso-card:hover,
+.iso-card:hover,
+.card:has(.iso-pro):hover {
+  animation: ease-out 5s;
+  background: rgba(173, 173, 173, 0.05);
+}
+
+.card.iso-card ul,
+.iso-card ul,
+.card:has(.iso-pro) ul {
+  padding: 1rem;
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin: 0;
+}
+
+.card.iso-card.horizontal ul,
+.iso-card.horizontal ul,
+.card:has(.iso-pro).horizontal ul {
+  flex-direction: row;
+}
+
+.card.iso-card ul li,
+.iso-card ul li,
+.card:has(.iso-pro) ul li {
+  cursor: pointer;
+}
+
+.iso-pro {
+  transition: 0.5s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+}
+
+.iso-pro a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iso-pro .svg {
+  transition: all 0.3s;
+  padding: 1rem;
+  height: 60px;
+  width: 60px;
+  border-radius: 100%;
+  color: rgb(0, 157, 162);
+  fill: currentColor;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3),
+    inset 0 0 5px rgba(255, 255, 255, 0.5), 0 5px 5px rgba(0, 0, 0, 0.164);
+}
+
+.iso-pro .text {
+  opacity: 0;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  transition: all 0.3s;
+  color: rgb(0, 157, 162);
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(8px);
+  position: absolute;
+  left: 55px;
+  z-index: 9999;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: -5px 0 1px rgba(153, 153, 153, 0.2),
+    -10px 0 1px rgba(153, 153, 153, 0.2),
+    inset 0 0 20px rgba(255, 255, 255, 0.3),
+    inset 0 0 5px rgba(255, 255, 255, 0.5), 0 5px 5px rgba(0, 0, 0, 0.082);
+}
+
+.dark .iso-pro .text {
+  background-color: rgba(15, 23, 42, 0.85);
+  box-shadow: -5px 0 1px rgba(0, 0, 0, 0.4),
+    -10px 0 1px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.08),
+    inset 0 0 5px rgba(255, 255, 255, 0.15), 0 5px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* isometric projection */
+.iso-pro:hover a > .svg {
+  transform: translate(15px, -15px);
+  border-radius: 100%;
+}
+
+.iso-pro:hover .text {
+  opacity: 1;
+  transform: translate(25px, -2px) skew(-5deg);
+}
+
+.iso-pro:hover .svg {
+  transform: translate(5px, -5px);
+}
+
+.iso-pro span {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #1877f2;
+  border-color: #1877f2;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3),
+    inset 0 0 5px rgba(255, 255, 255, 0.5), 0 5px 5px rgba(0, 0, 0, 0.164);
+  border-radius: 50%;
+  transition: all 0.3s;
+  height: 60px;
+  width: 60px;
+  pointer-events: none;
+}
+
+.iso-pro:hover span {
+  opacity: 1;
+}
+
+.iso-pro:hover span:nth-child(1) {
+  opacity: 0.2;
+}
+
+.iso-pro:hover span:nth-child(2) {
+  opacity: 0.4;
+  transform: translate(5px, -5px);
+}
+
+.iso-pro:hover span:nth-child(3) {
+  opacity: 0.6;
+  transform: translate(10px, -10px);
+}
+
+/* Horizontal mode tooltip position adjustment */
+.card.iso-card.horizontal .iso-pro .text,
+.iso-card.horizontal .iso-pro .text {
+  left: auto;
+  bottom: 65px;
+}
+
+.card.iso-card.horizontal .iso-pro:hover .text,
+.iso-card.horizontal .iso-pro:hover .text {
+  opacity: 1;
+  transform: translate(0px, -15px) skew(-5deg);
+}
+
+/* Compact sizing (44px) */
+.iso-card.compact .iso-pro,
+.iso-pro.iso-compact {
+  width: 44px;
+  height: 44px;
+}
+.iso-card.compact .iso-pro .svg,
+.iso-pro.iso-compact .svg {
+  width: 44px;
+  height: 44px;
+  padding: 0.75rem;
+}
+.iso-card.compact .iso-pro span,
+.iso-pro.iso-compact span {
+  width: 44px;
+  height: 44px;
+}
+.iso-card.compact .iso-pro .text,
+.iso-pro.iso-compact .text {
+  left: 42px;
+  font-size: 10px;
+  padding: 3px 7px;
+}
+
+/* Platform color accents */
+.iso-pro.iso-github .svg { color: #818cf8; }
+.iso-pro.iso-github span { color: #6366f1; border-color: #6366f1; }
+.iso-pro.iso-github .text { color: #818cf8; }
+
+.iso-pro.iso-twitter .svg { color: #1da1f2; }
+.iso-pro.iso-twitter span { color: #1da1f2; border-color: #1da1f2; }
+.iso-pro.iso-twitter .text { color: #1da1f2; }
+
+.iso-pro.iso-instagram .svg { color: #e1306c; }
+.iso-pro.iso-instagram span { color: #e1306c; border-color: #e1306c; }
+.iso-pro.iso-instagram .text { color: #e1306c; }
+
+.iso-pro.iso-facebook .svg { color: #1877f2; }
+.iso-pro.iso-facebook span { color: #1877f2; border-color: #1877f2; }
+.iso-pro.iso-facebook .text { color: #1877f2; }
+
+.iso-pro.iso-linkedin .svg { color: #0a66c2; }
+.iso-pro.iso-linkedin span { color: #0a66c2; border-color: #0a66c2; }
+.iso-pro.iso-linkedin .text { color: #0a66c2; }
+

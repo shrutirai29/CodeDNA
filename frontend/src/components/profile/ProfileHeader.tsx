@@ -2,6 +2,7 @@ import React from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { CheckCircle2, GitCommit, Flame, Users, BookOpen, ExternalLink } from 'lucide-react';
 import { TiltCard } from '../common/TiltCard';
+import { IsometricSocialCard } from '../common/IsometricSocialCard';
 
 import { REAL_GITHUB_BENCHMARK_DATA } from '../../services/githubData';
 import { AnalyticsService } from '../../services/analyticsService';
@@ -107,6 +108,18 @@ export const ProfileHeader: React.FC = () => {
                 <Users size={13} className="text-indigo-400" />
                 <strong className="text-[#111827] dark:text-[#F8FAFC]">{profile.stats.followers}</strong> Followers
               </span>
+            </div>
+
+            {/* 3D Isometric Social Links */}
+            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <span className="text-[10px] font-mono text-[#94A3B8] uppercase tracking-wider font-semibold">
+                Social Orbit:
+              </span>
+              <IsometricSocialCard
+                orientation="horizontal"
+                compact={true}
+                className="!p-1 !gap-1 !bg-white/10 dark:!bg-white/5 border border-white/20 dark:border-white/10 shadow-sm"
+              />
             </div>
           </div>
         </div>
