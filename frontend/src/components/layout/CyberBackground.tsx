@@ -142,10 +142,27 @@ export const CyberBackground: React.FC = () => {
   }, [isDarkMode]);
 
   return (
-    <div
-      ref={mountRef}
-      className="fixed inset-0 pointer-events-none z-0 opacity-80 transition-opacity duration-500"
-      style={{ overflow: 'hidden' }}
-    />
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
+      {/* 1. Developer Workspace High-Res Atmospheric Wallpaper */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
+        style={{
+          backgroundImage: "url('/dev-workspace-bg.png')",
+          backgroundAttachment: 'fixed'
+        }}
+      />
+
+      {/* 2. Mood & Readability Ambient Glass Overlays */}
+      {/* In Light Mode: Soft luminous gradient to ensure crisp >14:1 contrast on dashboard cards */}
+      {/* In Dark Mode: Cyber atmospheric glass letting glowing screens and constellations shine through */}
+      <div className="absolute inset-0 bg-white/20 dark:bg-[#070A0F]/78 backdrop-blur-[0.5px] transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 via-transparent to-cyan-500/10 dark:from-indigo-950/30 dark:via-transparent dark:to-cyan-950/25 pointer-events-none" />
+
+      {/* 3. Three.js Floating Particle Constellation Canvas */}
+      <div
+        ref={mountRef}
+        className="absolute inset-0 opacity-70 dark:opacity-85 transition-opacity duration-500"
+      />
+    </div>
   );
 };

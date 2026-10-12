@@ -47,12 +47,12 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed top-0 left-0 bottom-0 z-40 bg-white/95 dark:bg-[#0D1117]/95 backdrop-blur-md border-r border-[#E2E8F0] dark:border-[#1E293B] transition-all duration-300 ease-in-out flex flex-col ${
+      className={`fixed top-0 left-0 bottom-0 z-40 bg-white/80 dark:bg-[#0D1117]/90 backdrop-blur-2xl border-r border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 transition-all duration-300 ease-in-out flex flex-col ${
         isSidebarCollapsed ? 'w-20' : 'w-[230px]'
       }`}
     >
       {/* Brand Header */}
-      <div className="p-4 border-b border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between">
+      <div className="p-4 border-b border-white/50 dark:border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-3 overflow-hidden">
           {/* Developer Logo: Code brackets + DNA connection motif */}
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#6366F1] to-[#06B6D4] flex items-center justify-center shrink-0 shadow-sm shadow-indigo-500/20">

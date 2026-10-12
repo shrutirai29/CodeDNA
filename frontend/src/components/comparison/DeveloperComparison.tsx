@@ -30,7 +30,7 @@ export const DeveloperComparison: React.FC = () => {
   const commonTech = devA.tech_dna.filter(t => setB.has(t.name.toLowerCase()));
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs space-y-6">
+    <div className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 space-y-6">
       {/* Top Header & Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export const DeveloperComparison: React.FC = () => {
       {/* Split-Screen Header Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Developer A (You) */}
-        <div className="p-5 rounded-2xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-indigo-500/30 flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white/80 dark:bg-[#161B22]/80 backdrop-blur-md border border-indigo-500/40 shadow-xs flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
               src={devA.avatar_url}
@@ -90,7 +90,7 @@ export const DeveloperComparison: React.FC = () => {
         </div>
 
         {/* Developer B */}
-        <div className="p-5 rounded-2xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white/80 dark:bg-[#161B22]/80 backdrop-blur-md border border-white/70 dark:border-white/10 shadow-xs flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
               src={devB.avatar_url}

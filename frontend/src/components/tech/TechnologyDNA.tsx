@@ -38,7 +38,7 @@ export const TechnologyDNA: React.FC = () => {
     <TiltCard
       maxTilt={4}
       scale={1.005}
-      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative group"
+      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative group"
     >
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
@@ -90,7 +90,7 @@ export const TechnologyDNA: React.FC = () => {
       </div>
 
       {/* Live Cyber Inspector Strip */}
-      <div className="h-14 p-3 px-4 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] text-xs font-mono flex items-center justify-between mb-3 shadow-2xs">
+      <div className="h-14 p-3 px-4 rounded-xl bg-white/80 dark:bg-[#070A0F]/80 backdrop-blur-md border border-white/70 dark:border-white/10 text-xs font-mono flex items-center justify-between mb-3 shadow-2xs">
         {hoveredNode ? (
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3">

@@ -59,7 +59,7 @@ export const SkillSimulator: React.FC = () => {
     <TiltCard
       maxTilt={5}
       scale={1.008}
-      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative group"
+      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative group"
     >
       {/* 3D Cyber Ambient Highlights */}
       <div className="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-gradient-to-br from-indigo-500/15 via-cyan-500/10 to-emerald-500/15 blur-3xl pointer-events-none" />
@@ -100,7 +100,7 @@ export const SkillSimulator: React.FC = () => {
 
       {/* Real-time Projection HUD */}
       <div
-        className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] mb-5 font-mono shadow-2xs"
+        className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 rounded-xl bg-white/80 dark:bg-[#070A0F]/80 backdrop-blur-md border border-white/70 dark:border-white/10 mb-5 font-mono shadow-2xs"
         style={{ transform: 'translateZ(20px)' }}
       >
         {/* Score Lift */}

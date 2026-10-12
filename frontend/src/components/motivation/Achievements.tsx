@@ -39,9 +39,9 @@ export const Achievements: React.FC = () => {
   });
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs space-y-5">
+    <div className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 space-y-5">
       {/* Header & Empirical Verification Badge */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#E2E8F0] dark:border-[#1E293B]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-white/50 dark:border-white/10">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-[#6366F1] dark:text-[#818CF8]">

@@ -25,7 +25,7 @@ export const ProfileHeader: React.FC = () => {
     <TiltCard
       maxTilt={3}
       scale={1.003}
-      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs relative overflow-hidden group"
+      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 relative overflow-hidden group"
     >
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-center">
         {/* Left: Avatar, Bio, Badges, Stats */}
@@ -103,7 +103,7 @@ export const ProfileHeader: React.FC = () => {
         </div>
 
         {/* Right: GitHub Contribution Activity Heatmap */}
-        <div className="xl:col-span-5 p-4 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] space-y-2">
+        <div className="xl:col-span-5 p-4 rounded-xl bg-white/80 dark:bg-[#050811]/80 backdrop-blur-md border border-white/70 dark:border-white/10 shadow-2xs space-y-2">
           <div className="flex items-center justify-between text-[11px] font-mono text-[#64748B] dark:text-[#94A3B8]">
             <span className="font-semibold uppercase tracking-wider">GitHub Contribution Rhythm</span>
             <span className="text-emerald-600 dark:text-emerald-400 font-bold">{profile.stats.contributions} Year Commits</span>

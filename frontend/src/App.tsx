@@ -40,7 +40,7 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] dark:bg-[#070A0F] text-[#111827] dark:text-[#F8FAFC] flex transition-colors duration-200 relative selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-transparent text-[#111827] dark:text-[#F8FAFC] flex transition-colors duration-200 relative selection:bg-indigo-500 selection:text-white">
       {/* 3D Subtle Three.js Constellation Background */}
       <CyberBackground />
 

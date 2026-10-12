@@ -11,7 +11,7 @@ export const ArchetypeCard: React.FC = () => {
     <TiltCard
       maxTilt={7}
       scale={1.01}
-      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative group cursor-pointer"
+      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative group cursor-pointer"
     >
       {/* 3D Iridescent Foil Sheen */}
       <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/5 via-cyan-500/5 to-purple-500/5 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity" />

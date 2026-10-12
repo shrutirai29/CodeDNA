@@ -23,7 +23,7 @@ export const CodingRhythm: React.FC = () => {
     <TiltCard
       maxTilt={5}
       scale={1.01}
-      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs relative overflow-hidden group"
+      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 relative overflow-hidden group"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -95,7 +95,7 @@ export const CodingRhythm: React.FC = () => {
         </div>
 
         {/* Right: Accompanying Metrics Column */}
-        <div className="lg:col-span-4 p-4 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] space-y-3 font-mono">
+        <div className="lg:col-span-4 p-4 rounded-xl bg-white/80 dark:bg-[#050811]/80 backdrop-blur-md border border-white/70 dark:border-white/10 space-y-3 font-mono shadow-2xs">
           <div>
             <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider">
               <Clock size={12} className="text-[#6366F1]" />

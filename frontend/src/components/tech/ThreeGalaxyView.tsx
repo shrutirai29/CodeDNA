@@ -505,7 +505,7 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
   return (
     <div
       ref={mountRef}
-      className="w-full h-[460px] md:h-[480px] relative cursor-grab active:cursor-grabbing select-none overflow-hidden rounded-xl bg-gradient-to-b from-indigo-950/5 via-transparent to-cyan-950/5 dark:from-[#070A0F] dark:to-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B]"
+      className="w-full h-[460px] md:h-[480px] relative cursor-grab active:cursor-grabbing select-none overflow-hidden rounded-xl bg-white/60 dark:bg-[#070A0F]/70 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-inner"
     >
       {/* Floating 3D Navigation & Zoom Controls Overlay */}
       <div className="absolute top-3 right-3 flex items-center gap-1 p-1 rounded-xl bg-white/90 dark:bg-[#161B22]/90 backdrop-blur-md border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs z-30 font-mono">

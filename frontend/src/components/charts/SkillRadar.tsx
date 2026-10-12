@@ -49,7 +49,7 @@ export const SkillRadar: React.FC = () => {
     <TiltCard
       maxTilt={6}
       scale={1.01}
-      className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between relative overflow-hidden group"
+      className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 flex flex-col justify-between relative overflow-hidden group"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-2">

@@ -65,10 +65,10 @@ export const AICopilot: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 z-50 w-96 sm:w-[420px] h-[540px] rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-6 right-6 z-50 w-96 sm:w-[420px] h-[540px] rounded-2xl bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-4 bg-[#F7F9FC] dark:bg-[#070A0F] border-b border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between">
+            <div className="p-4 bg-white/80 dark:bg-[#070A0F]/80 backdrop-blur-md border-b border-white/50 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6366F1] to-[#06B6D4] text-white flex items-center justify-center shrink-0">
                   <Bot size={16} />

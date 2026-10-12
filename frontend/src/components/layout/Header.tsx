@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 right-0 z-30 h-16 bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-md border-b border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between px-6 transition-all duration-300 ${
+      className={`fixed top-0 right-0 z-30 h-16 bg-white/80 dark:bg-[#0D1117]/85 backdrop-blur-xl border-b border-white/60 dark:border-white/10 shadow-xs flex items-center justify-between px-6 transition-all duration-300 ${
         isSidebarCollapsed ? 'left-20' : 'left-[230px]'
       }`}
     >

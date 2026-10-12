@@ -26,7 +26,7 @@ export const DimensionsGrid: React.FC = () => {
             key={metric.id}
             maxTilt={7}
             scale={1.015}
-            className="p-5 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col justify-between hover:border-indigo-500/40 dark:hover:border-indigo-500/40 transition-colors group"
+            className="p-5 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-md shadow-indigo-500/5 flex flex-col justify-between hover:border-indigo-500/50 dark:hover:border-indigo-500/50 transition-colors group"
           >
             {/* Header: Icon, Name, Trend */}
             <div style={{ transform: 'translateZ(10px)' }}>

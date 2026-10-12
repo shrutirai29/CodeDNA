@@ -76,7 +76,7 @@ export const AnalyticsExport: React.FC = () => {
   };
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-[#0D1117] border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs space-y-6">
+    <div className="p-6 rounded-2xl bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg shadow-indigo-500/5 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -99,7 +99,7 @@ export const AnalyticsExport: React.FC = () => {
       {/* Export Action Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* JSON Export */}
-        <div className="p-5 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] space-y-3">
+        <div className="p-5 rounded-xl bg-white/80 dark:bg-[#161B22]/80 backdrop-blur-md border border-white/70 dark:border-white/10 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-bold text-[#111827] dark:text-[#F8FAFC]">
               Developer JSON Dossier
@@ -119,7 +119,7 @@ export const AnalyticsExport: React.FC = () => {
         </div>
 
         {/* Markdown Dossier */}
-        <div className="p-5 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] space-y-3">
+        <div className="p-5 rounded-xl bg-white/80 dark:bg-[#161B22]/80 backdrop-blur-md border border-white/70 dark:border-white/10 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-bold text-[#111827] dark:text-[#F8FAFC]">
               GitHub README Summary
@@ -139,7 +139,7 @@ export const AnalyticsExport: React.FC = () => {
         </div>
 
         {/* PowerBI Data Mart */}
-        <div className="p-5 rounded-xl bg-[#F7F9FC] dark:bg-[#070A0F] border border-[#E2E8F0] dark:border-[#1E293B] space-y-3">
+        <div className="p-5 rounded-xl bg-white/80 dark:bg-[#161B22]/80 backdrop-blur-md border border-white/70 dark:border-white/10 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-bold text-[#111827] dark:text-[#F8FAFC]">
               PowerBI Mart Tables
