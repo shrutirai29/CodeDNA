@@ -6,7 +6,7 @@ export const FloatingSocialDock: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-24 right-6 z-40 flex flex-col items-end">
+    <div className="fixed bottom-38 md:bottom-20 right-4 md:right-6 z-40 flex flex-col items-end">
       {/* Expanded Isometric Card Modal / Flyout */}
       {isOpen && (
         <div className="mb-3 animate-in fade-in slide-in-from-bottom-3 duration-200">

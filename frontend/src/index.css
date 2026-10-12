@@ -673,6 +673,12 @@
   transform: translateX(-50%);
 }
 
+@media (min-width: 768px) {
+  .menu.floating-dock {
+    display: none !important;
+  }
+}
+
 .menu::after {
   content: "";
   position: absolute;

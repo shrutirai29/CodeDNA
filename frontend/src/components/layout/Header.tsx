@@ -28,8 +28,8 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`glass-nav fixed top-0 right-0 z-30 h-16 border-b flex items-center justify-between px-6 transition-all duration-300 ${
-        isSidebarCollapsed ? 'left-20' : 'left-[230px]'
+      className={`glass-nav fixed top-0 right-0 left-0 z-30 h-16 border-b flex items-center justify-between px-4 sm:px-6 transition-all duration-300 ${
+        isSidebarCollapsed ? 'md:left-20' : 'md:left-[230px]'
       }`}
     >
       {/* Left: Search Bar & Quick Profile Chips */}

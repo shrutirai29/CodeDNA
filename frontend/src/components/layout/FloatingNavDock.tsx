@@ -12,7 +12,7 @@ export const FloatingNavDock: React.FC = () => {
   };
 
   return (
-    <div className="menu floating-dock" role="navigation" aria-label="Bottom Quick Dock">
+    <div className="menu floating-dock md:hidden" role="navigation" aria-label="Bottom Quick Dock">
       {/* 1. Home -> Overview */}
       <a
         href="#overview"

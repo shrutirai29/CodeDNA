@@ -49,7 +49,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`glass-nav fixed top-0 left-0 bottom-0 z-40 border-r transition-all duration-300 ease-in-out flex flex-col ${
+      className={`glass-nav fixed top-0 left-0 bottom-0 z-40 border-r transition-all duration-300 ease-in-out hidden md:flex flex-col ${
         isSidebarCollapsed ? 'w-20' : 'w-[230px]'
       }`}
     >
