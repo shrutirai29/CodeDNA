@@ -453,3 +453,192 @@
 .iso-pro.iso-linkedin span { color: #0a66c2; border-color: #0a66c2; }
 .iso-pro.iso-linkedin .text { color: #0a66c2; }
 
+/* =====================================================================
+   TACTILE 3D PHYSICAL ROCKER SWITCH (From Uiverse.io by r7chardgh)
+   ===================================================================== */
+
+/* The switch - the box around the slider */
+.switch,
+.rocker-switch {
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 5em;
+  height: 2.5em;
+  user-select: none;
+  vertical-align: middle;
+}
+
+/* Sizing variants */
+.rocker-switch.rocker-xs {
+  font-size: 9px;
+}
+.rocker-switch.rocker-sm {
+  font-size: 11px;
+}
+.rocker-switch.rocker-md {
+  font-size: 14px;
+}
+.rocker-switch.rocker-lg {
+  font-size: 17px;
+}
+
+/* Hide default HTML checkbox */
+.switch .cb,
+.rocker-switch .cb {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* The slider */
+.switch .toggle,
+.rocker-switch .toggle {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #373737;
+  border-radius: 0.1em;
+  transition: 0.4s;
+  text-transform: uppercase;
+  font-weight: 700;
+  overflow: hidden;
+  box-shadow: -0.3em 0 0 0 #373737, -0.3em 0.3em 0 0 #373737,
+    0.3em 0 0 0 #373737, 0.3em 0.3em 0 0 #373737, 0 0.3em 0 0 #373737;
+}
+
+.switch .toggle > .left,
+.rocker-switch .toggle > .left {
+  position: absolute;
+  display: flex;
+  width: 50%;
+  height: 88%;
+  background-color: #f3f3f3;
+  color: #373737;
+  left: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  transform-origin: right;
+  transform: rotateX(10deg);
+  transform-style: preserve-3d;
+  transition: all 150ms;
+  font-size: 0.7em;
+  letter-spacing: 0.02em;
+}
+
+.switch .toggle > .left::before,
+.rocker-switch .toggle > .left::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgb(206, 206, 206);
+  transform-origin: center left;
+  transform: rotateY(90deg);
+}
+
+.switch .toggle > .left::after,
+.rocker-switch .toggle > .left::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgb(112, 112, 112);
+  transform-origin: center bottom;
+  transform: rotateX(90deg);
+}
+
+.switch .toggle > .right,
+.rocker-switch .toggle > .right {
+  position: absolute;
+  display: flex;
+  width: 50%;
+  height: 88%;
+  background-color: #f3f3f3;
+  color: rgb(206, 206, 206);
+  right: 1px;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  transform-origin: left;
+  transform: rotateX(10deg) rotateY(-45deg);
+  transform-style: preserve-3d;
+  transition: all 150ms;
+  font-size: 0.7em;
+  letter-spacing: 0.02em;
+}
+
+.switch .toggle > .right::before,
+.rocker-switch .toggle > .right::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgb(206, 206, 206);
+  transform-origin: center right;
+  transform: rotateY(-90deg);
+}
+
+.switch .toggle > .right::after,
+.rocker-switch .toggle > .right::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgb(112, 112, 112);
+  transform-origin: center bottom;
+  transform: rotateX(90deg);
+}
+
+.switch input:checked + .toggle > .left,
+.rocker-switch input:checked + .toggle > .left {
+  transform: rotateX(10deg) rotateY(45deg);
+  color: rgb(206, 206, 206);
+}
+
+.switch input:checked + .toggle > .right,
+.rocker-switch input:checked + .toggle > .right {
+  transform: rotateX(10deg) rotateY(0deg);
+  color: #487bdb;
+}
+
+/* Also support cyber / dark mode casing */
+.dark .switch .toggle,
+.dark .rocker-switch .toggle {
+  background-color: #1e293b;
+  box-shadow: -0.3em 0 0 0 #1e293b, -0.3em 0.3em 0 0 #1e293b,
+    0.3em 0 0 0 #1e293b, 0.3em 0.3em 0 0 #1e293b, 0 0.3em 0 0 #1e293b;
+}
+
+.dark .switch .toggle > .left,
+.dark .rocker-switch .toggle > .left,
+.dark .switch .toggle > .right,
+.dark .rocker-switch .toggle > .right {
+  background-color: #334155;
+  color: #94a3b8;
+}
+
+.dark .switch input:checked + .toggle > .right,
+.dark .rocker-switch input:checked + .toggle > .right {
+  color: #818cf8;
+}
+
+.dark .switch .toggle > .left::before,
+.dark .rocker-switch .toggle > .left::before,
+.dark .switch .toggle > .right::before,
+.dark .rocker-switch .toggle > .right::before {
+  background-color: #475569;
+}
+
+.dark .switch .toggle > .left::after,
+.dark .rocker-switch .toggle > .left::after,
+.dark .switch .toggle > .right::after,
+.dark .rocker-switch .toggle > .right::after {
+  background-color: #1e293b;
+}
+
+

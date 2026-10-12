@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import type { NavTab } from '../../store/useDeveloperStore';
+import { RockerSwitch } from '../common/RockerSwitch';
 
 interface NavItem {
   id: NavTab;
@@ -155,15 +156,29 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
+        <div
+          onClick={isSidebarCollapsed ? toggleTheme : undefined}
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors ${
+            isSidebarCollapsed ? 'cursor-pointer justify-center' : ''
+          }`}
         >
-          {isDarkMode ? <Sun size={18} className="text-amber-400 shrink-0" /> : <Moon size={18} className="text-indigo-500 shrink-0" />}
+          <div className="flex items-center gap-3">
+            {isDarkMode ? <Sun size={18} className="text-amber-400 shrink-0" /> : <Moon size={18} className="text-indigo-500 shrink-0" />}
+            {!isSidebarCollapsed && (
+              <span className="truncate">{isDarkMode ? 'Cyber Dark' : 'Light Mode'}</span>
+            )}
+          </div>
           {!isSidebarCollapsed && (
-            <span className="truncate">{isDarkMode ? 'Light Mode' : 'Cyber Dark'}</span>
+            <RockerSwitch
+              checked={isDarkMode}
+              onChange={() => toggleTheme()}
+              leftLabel="off"
+              rightLabel="on"
+              size="xs"
+              title="Toggle Dark Mode"
+            />
           )}
-        </button>
+        </div>
 
         {/* Settings */}
         <button

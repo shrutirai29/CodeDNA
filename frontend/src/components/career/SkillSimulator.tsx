@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { Sparkles, Zap, RotateCcw, Rocket } from 'lucide-react';
 import { TiltCard } from '../common/TiltCard';
+import { RockerSwitch } from '../common/RockerSwitch';
 
 interface SimSkill {
   id: string;
@@ -176,9 +177,17 @@ export const SkillSimulator: React.FC = () => {
           {AVAILABLE_SIM_SKILLS.map((skill) => {
             const isEquipped = selectedSkills.includes(skill.id);
             return (
-              <button
+              <div
                 key={skill.id}
+                role="button"
+                tabIndex={0}
                 onClick={() => toggleSkill(skill.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleSkill(skill.id);
+                  }
+                }}
                 className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden group flex flex-col justify-between cursor-pointer ${
                   isEquipped
                     ? 'glass-panel border-indigo-500/50 dark:border-indigo-500/60 shadow-xs'
@@ -196,15 +205,14 @@ export const SkillSimulator: React.FC = () => {
                     </span>
                   </div>
 
-                  <span
-                    className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-[10px] transition-colors ${
-                      isEquipped
-                        ? 'bg-indigo-600 text-white'
-                        : 'border border-[#CBD5E1] dark:border-[#475569] text-transparent'
-                    }`}
-                  >
-                    ✓
-                  </span>
+                  <RockerSwitch
+                    checked={isEquipped}
+                    onChange={() => toggleSkill(skill.id)}
+                    leftLabel="off"
+                    rightLabel="on"
+                    size="xs"
+                    title={`Toggle ${skill.name}`}
+                  />
                 </div>
 
                 <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8] w-full pt-1 border-t border-[#E2E8F0]/60 dark:border-[#1E293B]/60">
@@ -213,7 +221,7 @@ export const SkillSimulator: React.FC = () => {
                     +{skill.fitBonus}% fit
                   </span>
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>

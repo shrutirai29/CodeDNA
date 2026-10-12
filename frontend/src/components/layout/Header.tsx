@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Bell, Sun, Moon, Settings } from 'lucide-react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
+import { RockerSwitch } from '../common/RockerSwitch';
 
 export const Header: React.FC = () => {
   const {
@@ -117,10 +118,24 @@ export const Header: React.FC = () => {
           )}
         </div>
 
-        {/* Theme Toggle Button */}
+        {/* 3D Tactile Theme Rocker Switch */}
+        <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-xl glass-panel">
+          <Sun size={13} className={!isDarkMode ? 'text-amber-500' : 'text-[#64748B]'} />
+          <RockerSwitch
+            checked={isDarkMode}
+            onChange={() => toggleTheme()}
+            leftLabel="off"
+            rightLabel="on"
+            size="xs"
+            title={isDarkMode ? 'Dark Mode ON (Switch to Light)' : 'Dark Mode OFF (Switch to Dark)'}
+          />
+          <Moon size={13} className={isDarkMode ? 'text-indigo-400' : 'text-[#64748B]'} />
+        </div>
+
+        {/* Mobile Theme Toggle Button */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-xl text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B] transition-colors"
+          className="sm:hidden p-2 rounded-xl text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B] transition-colors"
           title="Toggle Theme"
         >
           {isDarkMode ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-indigo-500" />}

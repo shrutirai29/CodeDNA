@@ -4,6 +4,7 @@ import { Dna, Box, CircleDot } from 'lucide-react';
 import type { TechnologyNode } from '../../types/developer';
 import { ThreeGalaxyView } from './ThreeGalaxyView';
 import { TiltCard } from '../common/TiltCard';
+import { RockerSwitch } from '../common/RockerSwitch';
 
 export const TechnologyDNA: React.FC = () => {
   const { profile } = useDeveloperStore();
@@ -57,29 +58,37 @@ export const TechnologyDNA: React.FC = () => {
         </div>
 
         {/* View Mode Toggle & Audited Count */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 p-1 rounded-xl glass-panel">
-            <button
-              onClick={() => setViewMode('3d')}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                viewMode === '3d'
-                  ? 'glass-pill text-[#6366F1] dark:text-[#818CF8] shadow-xs'
-                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
-              }`}
-            >
-              <Box size={12} />
-              3D NEURAL GALAXY
-            </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 p-1.5 px-2.5 rounded-xl glass-panel">
             <button
               onClick={() => setViewMode('2d')}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
                 viewMode === '2d'
                   ? 'glass-pill text-[#6366F1] dark:text-[#818CF8] shadow-xs'
                   : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
               }`}
             >
               <CircleDot size={12} />
-              2D ORBIT MAP
+              2D ORBIT
+            </button>
+            <RockerSwitch
+              checked={viewMode === '3d'}
+              onChange={(chk) => setViewMode(chk ? '3d' : '2d')}
+              leftLabel="2D"
+              rightLabel="3D"
+              size="xs"
+              title="Toggle 2D Orbit Map vs 3D Neural Galaxy"
+            />
+            <button
+              onClick={() => setViewMode('3d')}
+              className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                viewMode === '3d'
+                  ? 'glass-pill text-[#6366F1] dark:text-[#818CF8] shadow-xs'
+                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
+              }`}
+            >
+              <Box size={12} />
+              3D GALAXY
             </button>
           </div>
 
