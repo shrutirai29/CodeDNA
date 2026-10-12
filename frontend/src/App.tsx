@@ -22,6 +22,7 @@ import { MotivationBanners } from './components/motivation/MotivationBanners';
 import { Achievements } from './components/motivation/Achievements';
 import { AICopilot } from './components/copilot/AICopilot';
 import { FloatingSocialDock } from './components/layout/FloatingSocialDock';
+import { FloatingNavDock } from './components/layout/FloatingNavDock';
 import { AnalyticsExport } from './components/export/AnalyticsExport';
 import { EmptyState } from './components/common/EmptyState';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -61,7 +62,7 @@ export const App: React.FC = () => {
         <LoadingSequence />
 
         {/* Content Area with Narrative Layout */}
-        <main className="flex-1 mt-16 p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+        <main className="flex-1 mt-16 p-6 lg:p-8 pb-24 lg:pb-24 max-w-7xl w-full mx-auto space-y-6">
           {!profile ? (
             <EmptyState />
           ) : (
@@ -241,6 +242,9 @@ export const App: React.FC = () => {
           </footer>
         </main>
       </div>
+
+      {/* Liquid Glass Floating Navigation Dock */}
+      <FloatingNavDock />
 
       {/* Floating 3D Isometric Social Dock */}
       <FloatingSocialDock />
