@@ -18,6 +18,7 @@ import {
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import type { NavTab } from '../../store/useDeveloperStore';
 import { RockerSwitch } from '../common/RockerSwitch';
+import { PixelGhost } from '../common/PixelGhost';
 
 interface NavItem {
   id: NavTab;
@@ -199,12 +200,17 @@ export const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      {/* Footer Tagline */}
-      {!isSidebarCollapsed && (
-        <div className="p-3 border-t border-white/40 dark:border-white/10 text-[10px] text-[#94A3B8] font-mono text-center">
-          Build. Learn. Improve. Repeat.
+      {/* Footer Mascot & Tagline */}
+      <div className="p-2 border-t border-white/40 dark:border-white/10 flex flex-col items-center justify-center">
+        <div className="-my-11">
+          <PixelGhost scale={isSidebarCollapsed ? 0.25 : 0.32} />
         </div>
-      )}
+        {!isSidebarCollapsed && (
+          <div className="pt-1 text-[10px] text-[#94A3B8] font-mono text-center">
+            Build. Learn. Improve. Repeat.
+          </div>
+        )}
+      </div>
     </aside>
   );
 };

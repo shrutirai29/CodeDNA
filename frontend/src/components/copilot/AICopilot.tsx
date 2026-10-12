@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { Sparkles, X, Send, Bot, User, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PixelGhost } from '../common/PixelGhost';
 
 export const AICopilot: React.FC = () => {
   const {
@@ -79,7 +80,7 @@ export const AICopilot: React.FC = () => {
                     <span className="text-[10px] text-emerald-500 font-normal">● Online</span>
                   </h3>
                   <div className="flex items-center gap-2 text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8]">
-                    <span>Profile: <strong>@{profile.username}</strong></span>
+                    <span>Profile: <strong>@{profile?.username || 'shrutirai29'}</strong></span>
                     <span>•</span>
                     <span className="text-[#6366F1] dark:text-[#818CF8]">✨ Gemini 1.5 Flash</span>
                   </div>
@@ -137,8 +138,11 @@ export const AICopilot: React.FC = () => {
 
               {isChatLoading && (
                 <div className="flex items-center gap-2 text-xs font-mono text-[#6366F1] dark:text-[#818CF8] p-2">
+                  <div className="-my-14 -mx-11 shrink-0">
+                    <PixelGhost scale={0.22} />
+                  </div>
                   <Loader2 size={14} className="animate-spin" />
-                  CodeDNA analyzing profile context…
+                  <span>CodeDNA analyzing profile context…</span>
                 </div>
               )}
 

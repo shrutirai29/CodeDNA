@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { Check, Loader2 } from 'lucide-react';
+import { PixelGhost } from '../common/PixelGhost';
 
 const steps = [
   'CONNECTING TO GITHUB',
@@ -29,8 +30,13 @@ export const LoadingSequence: React.FC = () => {
           initial={{ scale: 0.95, y: 10 }}
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.95, y: 10 }}
-          className="w-full max-w-md p-6 rounded-2xl glass-card shadow-2xl space-y-5"
+          className="w-full max-w-md p-6 rounded-2xl glass-card shadow-2xl space-y-4"
         >
+          {/* Animated Pixel Ghost Scanner Mascot */}
+          <div className="flex flex-col items-center justify-center -my-6 pb-2">
+            <PixelGhost scale={0.55} />
+          </div>
+
           <div className="flex items-center justify-between pb-3 border-b border-white/50 dark:border-white/10">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#6366F1] animate-ping" />
