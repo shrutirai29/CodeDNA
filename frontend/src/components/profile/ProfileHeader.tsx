@@ -19,17 +19,50 @@ export const ProfileHeader: React.FC = () => {
 
   const contributionWeeks = hasActiveCells
     ? rawWeeks
-    : (REAL_GITHUB_BENCHMARK_DATA[profile.username]?.weeks?.slice(-30) || AnalyticsService.generateContributionWeeks(profile.stats?.contributions || 588, 30));
+    : (REAL_GITHUB_BENCHMARK_DATA[profile.username]?.weeks?.slice(-30) || AnalyticsService.generateContributionWeeks(profile.stats?.contributions || 637, 30));
 
+  // Authentic GitHub contribution palette (matching Image 1)
   const getHeatmapColor = (intensity: number) => {
     switch (intensity) {
-      case 4: return 'bg-[#312E81] dark:bg-[#E0E7FF] shadow-xs';
-      case 3: return 'bg-[#6366F1] dark:bg-[#A855F7]';
-      case 2: return 'bg-[#818CF8] dark:bg-[#6366F1]';
-      case 1: return 'bg-[#38BDF8] dark:bg-[#0284C7] ring-1 ring-sky-300/40 dark:ring-sky-500/30';
-      default: return 'bg-[#E2E8F0] dark:bg-[#1E293B]/80';
+      case 4: return 'bg-[#216E39] dark:bg-[#39D353] shadow-xs shadow-emerald-500/30';
+      case 3: return 'bg-[#30A14E] dark:bg-[#26A641]';
+      case 2: return 'bg-[#40C463] dark:bg-[#006D32]';
+      case 1: return 'bg-[#9BE9A8] dark:bg-[#0E4429]';
+      default: return 'bg-[#EBEDF0] dark:bg-[#161B22]';
     }
   };
+
+  // Extract month labels for columns matching GitHub calendar (Mar, Apr, May, Jun, Jul, Aug, Sep, Oct)
+  const monthLabels: { [key: number]: string } = {};
+  if (profile.weekDates && profile.weekDates.length > 0) {
+    const dates = profile.weekDates.slice(-contributionWeeks.length);
+    let prevMonth = '';
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    dates.forEach((d, idx) => {
+      const parts = d.split('-');
+      if (parts.length === 3) {
+        const monthNum = parseInt(parts[1], 10);
+        const m = monthNames[monthNum - 1];
+        if (m !== prevMonth) {
+          monthLabels[idx] = m;
+          prevMonth = m;
+        }
+      }
+    });
+  } else {
+    // 30-week standard month alignment
+    const defaultMap: { [key: number]: string } = {
+      0: 'Mar',
+      2: 'Apr',
+      6: 'May',
+      11: 'Jun',
+      15: 'Jul',
+      19: 'Aug',
+      24: 'Sep',
+      28: 'Oct'
+    };
+    Object.assign(monthLabels, defaultMap);
+  }
 
   return (
     <TiltCard
@@ -124,38 +157,63 @@ export const ProfileHeader: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: GitHub Contribution Activity Heatmap */}
-        <div className="xl:col-span-5 p-4 rounded-xl glass-panel space-y-2">
+        {/* Right: Authentic GitHub Contribution Activity Heatmap */}
+        <div className="xl:col-span-5 p-4 rounded-xl glass-panel space-y-2.5">
           <div className="flex items-center justify-between text-[11px] font-mono text-[#64748B] dark:text-[#94A3B8]">
-            <span className="font-semibold uppercase tracking-wider">GitHub Contribution Rhythm</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-bold">{profile.stats.contributions} Year Commits</span>
+            <span className="font-semibold uppercase tracking-wider flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              GitHub Contribution Heatmap
+            </span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-bold font-mono">
+              {profile.stats.contributions} Commits in 2026
+            </span>
           </div>
 
-          {/* Heatmap Grid */}
-          <div className="overflow-x-auto pb-1">
-            <div className="inline-grid grid-flow-col grid-rows-7 gap-1">
+          {/* Month Labels & Heatmap Grid */}
+          <div className="overflow-x-auto pb-1 scrollbar-none">
+            {/* Month Labels Row */}
+            <div className="flex gap-1 mb-1 text-[9px] font-mono text-[#64748B] dark:text-[#94A3B8] h-3.5 select-none min-w-[340px]">
+              {contributionWeeks.map((_, wi) => (
+                <div key={`m-${wi}`} className="w-2.5 text-left shrink-0">
+                  {monthLabels[wi] && (
+                    <span className="font-bold text-[#111827] dark:text-[#F8FAFC]">
+                      {monthLabels[wi]}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Heatmap 7-Day Grid (Sunday to Saturday) */}
+            <div className="inline-grid grid-flow-col grid-rows-7 gap-1 min-w-[340px]">
               {contributionWeeks.map((week, wi) =>
-                week.map((val, di) => (
-                  <div
-                    key={`${wi}-${di}`}
-                    className={`w-2.5 h-2.5 rounded-xs ${getHeatmapColor(val)} transition-all hover:scale-125`}
-                    title={val > 0 ? `Activity level: ${val}/4 (${val === 1 ? '1-2' : val === 2 ? '3-5' : val === 3 ? '6-9' : '10+'} commits)` : 'No commits recorded'}
-                  />
-                ))
+                week.map((val, di) => {
+                  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                  const dayName = dayNames[di];
+                  const levelDesc = val === 4 ? '10+ commits (Peak)' : val === 3 ? '6-9 commits' : val === 2 ? '3-5 commits' : val === 1 ? '1-2 commits' : 'No commits';
+                  return (
+                    <div
+                      key={`${wi}-${di}`}
+                      className={`w-2.5 h-2.5 rounded-xs ${getHeatmapColor(val)} transition-all hover:scale-125 cursor-pointer`}
+                      title={`${dayName} • ${levelDesc}`}
+                    />
+                  );
+                })
               )}
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8] pt-0.5">
-            <span>Less Active</span>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-xs bg-[#E2E8F0] dark:bg-[#1E293B]/80" title="0 Commits" />
-              <span className="w-2.5 h-2.5 rounded-xs bg-[#38BDF8] dark:bg-[#0284C7]" title="1-2 Commits (Low)" />
-              <span className="w-2.5 h-2.5 rounded-xs bg-[#818CF8] dark:bg-[#6366F1]" title="3-5 Commits (Medium)" />
-              <span className="w-2.5 h-2.5 rounded-xs bg-[#6366F1] dark:bg-[#A855F7]" title="6-9 Commits (High)" />
-              <span className="w-2.5 h-2.5 rounded-xs bg-[#312E81] dark:bg-[#E0E7FF]" title="10+ Commits (Peak)" />
+          {/* Authentic GitHub Legend */}
+          <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8] pt-1 border-t border-white/20 dark:border-white/5">
+            <span>Less</span>
+            <div className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#EBEDF0] dark:bg-[#161B22]" title="No contributions" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#9BE9A8] dark:bg-[#0E4429]" title="1-2 contributions" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#40C463] dark:bg-[#006D32]" title="3-5 contributions" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#30A14E] dark:bg-[#26A641]" title="6-9 contributions" />
+              <span className="w-2.5 h-2.5 rounded-xs bg-[#216E39] dark:bg-[#39D353]" title="10+ contributions" />
             </div>
-            <span>Peak Velocity</span>
+            <span>More</span>
           </div>
         </div>
       </div>

@@ -20,8 +20,8 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
     ],
     stats: {
       repositories: 18,
-      contributions: 588,
-      week_streak: 28,
+      contributions: 637,
+      week_streak: 14,
       followers: 17,
       following: 14
     },
@@ -1021,6 +1021,7 @@ export class GithubService {
 
       // 4. Fetch authentic contributions & 7x24 events rhythm
       let contribWeeks: number[][] = [];
+      let weekDates: string[] = [];
       let rhythmMatrix: number[][] = [];
       let peakTime = '09:00 - 11:00';
       let mostActiveDay = 'Sunday';
@@ -1033,6 +1034,7 @@ export class GithubService {
         if (contribRes.ok) {
           const cd = await contribRes.json();
           if (cd.weeks && cd.weeks.length > 0) contribWeeks = cd.weeks;
+          if (cd.week_dates && cd.week_dates.length > 0) weekDates = cd.week_dates;
           if (cd.matrix && cd.matrix.length > 0) rhythmMatrix = cd.matrix;
           if (cd.total_contributions > 0) totalContributions = cd.total_contributions;
           if (cd.peak_time) peakTime = cd.peak_time;
@@ -1167,6 +1169,7 @@ export class GithubService {
           matrix: rhythmMatrix.length > 0 ? rhythmMatrix : AnalyticsService.generateRhythmMatrix(user.login)
         },
         contributionWeeks: contribWeeks.length > 0 ? contribWeeks : (REAL_GITHUB_BENCHMARK_DATA[cleanUsername]?.weeks || AnalyticsService.generateContributionWeeks(totalContributions, 30)),
+        weekDates: weekDates.length > 0 ? weekDates : undefined,
         achievements: AnalyticsService.calculateAchievements({
           weekStreak: streakWeeks,
           technologies: techNodes,

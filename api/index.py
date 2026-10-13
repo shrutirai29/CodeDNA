@@ -1205,21 +1205,42 @@ def get_contributions(username: str = Query("shrutirai29")):
     try:
         res = requests.get(f"https://github.com/users/{clean_u}/contributions", headers=headers, timeout=8)
         if res.status_code == 200:
-            total_match = re.search(r'([0-9,]+)\s+contributions\s+in\s+the\s+last\s+year', res.text, re.IGNORECASE)
+            total_match = re.search(r'([0-9,]+)\s+contributions', res.text, re.IGNORECASE)
             if total_match:
                 total_commits = int(total_match.group(1).replace(",", ""))
             
-            matches = re.findall(r'<td[^>]*data-date="([^"]+)"[^>]*data-level="([^"]+)"', res.text)
-            current_week = []
-            for d, lvl in matches:
-                current_week.append(int(lvl))
-                if len(current_week) == 7:
+            matches = re.findall(r'data-date="([^"]+)"[^>]*data-level="([^"]+)"', res.text)
+            if not matches:
+                matches = [(d, lvl) for lvl, d in re.findall(r'data-level="([^"]+)"[^>]*data-date="([^"]+)"', res.text)]
+            
+            if matches:
+                by_date = {d: int(lvl) for d, lvl in matches}
+                sorted_dates = sorted(by_date.keys())
+                
+                week_dates = []
+                current_week = []
+                current_start = None
+                
+                for d in sorted_dates:
+                    dt = datetime.datetime.strptime(d, "%Y-%m-%d")
+                    # GitHub contribution columns align to Sunday (weekday 6 in Python)
+                    if dt.weekday() == 6 and current_week:
+                        while len(current_week) < 7:
+                            current_week.append(0)
+                        weeks.append(current_week)
+                        week_dates.append(current_start)
+                        current_week = []
+                        current_start = None
+                    
+                    if current_start is None:
+                        current_start = d
+                    current_week.append(by_date[d])
+                
+                if current_week:
+                    while len(current_week) < 7:
+                        current_week.append(0)
                     weeks.append(current_week)
-                    current_week = []
-            if current_week:
-                while len(current_week) < 7:
-                    current_week.append(0)
-                weeks.append(current_week)
+                    week_dates.append(current_start)
     except Exception:
         pass
 
@@ -1253,18 +1274,28 @@ def get_contributions(username: str = Query("shrutirai29")):
     peak_h = hour_totals.index(max(hour_totals)) if sum(hour_totals) > 0 else 18
     peak_time_str = f"{peak_h:02d}:00 – {(peak_h+2)%24:02d}:00"
     
-    active_weeks_count = sum(1 for w in weeks if sum(w) > 0) or 14
+    streak_count = 0
+    for w in reversed(weeks):
+        if sum(w) > 0:
+            streak_count += 1
+        else:
+            break
+
+    active_weeks_count = streak_count or sum(1 for w in weeks if sum(w) > 0) or 14
 
     return {
         "username": clean_u,
         "total_contributions": total_commits,
         "weeks": weeks[-30:] if len(weeks) >= 30 else weeks,
+        "all_weeks": weeks,
+        "week_dates": week_dates[-30:] if len(week_dates) >= 30 else week_dates if 'week_dates' in locals() else [],
         "matrix": scaled_matrix,
         "peak_time": peak_time_str,
         "most_active_day": peak_day,
         "current_streak_weeks": active_weeks_count,
         "consistency_score": min(98, max(65, int(active_weeks_count * 2.2)))
     }
+
 
 @app.get("/api/simulate")
 def simulate_career_path(role: str = Query("Data Scientist"), skills: str = Query("SQL,Docker")):

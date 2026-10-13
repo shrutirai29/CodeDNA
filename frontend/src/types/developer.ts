@@ -129,6 +129,7 @@ export interface DeveloperProfile {
     matrix: number[][]; // 7 days x 24 hours
   };
   contributionWeeks?: number[][]; // 30+ weeks x 7 days real contribution matrix
+  weekDates?: string[]; // Date of Sunday for each week
   achievements: AchievementBadge[];
   motivationNotes: string[];
 }
