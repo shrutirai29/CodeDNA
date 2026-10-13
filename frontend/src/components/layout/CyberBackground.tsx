@@ -5,6 +5,22 @@ import { useDeveloperStore } from '../../store/useDeveloperStore';
 export const CyberBackground: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
   const { isDarkMode } = useDeveloperStore();
+  const particleMaterialRef = useRef<THREE.PointsMaterial | null>(null);
+  const lineMaterialRef = useRef<THREE.LineBasicMaterial | null>(null);
+
+  // Instant in-place color update on theme toggle (0ms execution, zero teardown)
+  useEffect(() => {
+    if (particleMaterialRef.current) {
+      particleMaterialRef.current.color.setHex(isDarkMode ? 0x00F0FF : 0x6366F1);
+      particleMaterialRef.current.opacity = isDarkMode ? 0.45 : 0.25;
+      particleMaterialRef.current.needsUpdate = true;
+    }
+    if (lineMaterialRef.current) {
+      lineMaterialRef.current.color.setHex(isDarkMode ? 0x8B5CF6 : 0x06B6D4);
+      lineMaterialRef.current.opacity = isDarkMode ? 0.12 : 0.06;
+      lineMaterialRef.current.needsUpdate = true;
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     const currentMount = mountRef.current;
@@ -52,6 +68,7 @@ export const CyberBackground: React.FC = () => {
       opacity: isDark ? 0.45 : 0.25,
       blending: THREE.AdditiveBlending
     });
+    particleMaterialRef.current = particleMaterial;
 
     const particles = new THREE.Points(geometry, particleMaterial);
     scene.add(particles);
@@ -62,6 +79,7 @@ export const CyberBackground: React.FC = () => {
       transparent: true,
       opacity: isDark ? 0.12 : 0.06
     });
+    lineMaterialRef.current = lineMaterial;
 
     const linesMesh = new THREE.LineSegments(new THREE.BufferGeometry(), lineMaterial);
     scene.add(linesMesh);
@@ -139,7 +157,7 @@ export const CyberBackground: React.FC = () => {
       }
       renderer.dispose();
     };
-  }, [isDarkMode]);
+  }, []);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">

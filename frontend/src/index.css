@@ -602,7 +602,7 @@ html.dark .dark\:fill-\[\#94A3B8\] {
   height: 100%;
   background-color: #373737;
   border-radius: 0.1em;
-  transition: 0.4s;
+  transition: background-color 110ms cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
   font-weight: 700;
   overflow: hidden;
@@ -625,7 +625,7 @@ html.dark .dark\:fill-\[\#94A3B8\] {
   transform-origin: right;
   transform: rotateX(10deg);
   transform-style: preserve-3d;
-  transition: all 150ms;
+  transition: transform 110ms cubic-bezier(0.4, 0, 0.2, 1), color 110ms ease;
   font-size: 0.7em;
   letter-spacing: 0.02em;
   pointer-events: none;
@@ -670,7 +670,7 @@ html.dark .dark\:fill-\[\#94A3B8\] {
   transform-origin: left;
   transform: rotateX(10deg) rotateY(-45deg);
   transform-style: preserve-3d;
-  transition: all 150ms;
+  transition: transform 110ms cubic-bezier(0.4, 0, 0.2, 1), color 110ms ease;
   font-size: 0.7em;
   letter-spacing: 0.02em;
   pointer-events: none;

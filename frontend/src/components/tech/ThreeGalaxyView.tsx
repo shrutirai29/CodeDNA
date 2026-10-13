@@ -64,6 +64,54 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
     onSelectNodeRef.current = onSelectNode;
   }, [onSelectNode]);
 
+  const themeObjectsRef = useRef<{
+    ambientLight: THREE.AmbientLight;
+    dirLight1: THREE.DirectionalLight;
+    dirLight2: THREE.DirectionalLight;
+    coreMat: THREE.MeshStandardMaterial;
+    ringMat1: THREE.MeshBasicMaterial;
+    ringMat2: THREE.MeshBasicMaterial;
+    nodeMaterials: {
+      mat: THREE.MeshStandardMaterial;
+      haloMat: THREE.MeshBasicMaterial;
+      lineMat: THREE.LineBasicMaterial;
+      nodeColor: string;
+    }[];
+    parentChildMaterials: THREE.LineBasicMaterial[];
+  } | null>(null);
+
+  // Instant in-place color/lighting updates on theme switch without WebGL teardown (< 0.1ms)
+  useEffect(() => {
+    const objs = themeObjectsRef.current;
+    if (!objs) return;
+
+    objs.ambientLight.intensity = isDarkMode ? 1.8 : 2.3;
+    objs.dirLight1.intensity = isDarkMode ? 1.6 : 1.9;
+    objs.dirLight2.intensity = isDarkMode ? 1.0 : 0.8;
+
+    objs.coreMat.color.setHex(isDarkMode ? 0x6366f1 : 0x4f46e5);
+    objs.coreMat.emissive.setHex(isDarkMode ? 0x4f46e5 : 0x3730a3);
+    objs.coreMat.emissiveIntensity = isDarkMode ? 0.55 : 0.35;
+
+    objs.ringMat1.color.setHex(isDarkMode ? 0x818cf8 : 0x4f46e5);
+    objs.ringMat1.opacity = isDarkMode ? 0.55 : 0.45;
+
+    objs.ringMat2.color.setHex(isDarkMode ? 0x06b6d4 : 0x0284c7);
+    objs.ringMat2.opacity = isDarkMode ? 0.45 : 0.38;
+
+    objs.nodeMaterials.forEach(({ mat, haloMat, lineMat, nodeColor }) => {
+      mat.emissiveIntensity = isDarkMode ? 0.42 : 0.28;
+      haloMat.opacity = isDarkMode ? 0.18 : 0.14;
+      lineMat.color.setHex(getVisibleLineColor(nodeColor, isDarkMode));
+      lineMat.opacity = isDarkMode ? 0.55 : 0.72;
+    });
+
+    objs.parentChildMaterials.forEach((mat) => {
+      mat.color.setHex(isDarkMode ? 0x22d3ee : 0x0284c7);
+      mat.opacity = isDarkMode ? 0.8 : 0.85;
+    });
+  }, [isDarkMode]);
+
   const controlsRef = useRef<{
     zoomIn: () => void;
     zoomOut: () => void;
@@ -159,6 +207,13 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
 
     const nodeEntries: NodeEntry[] = [];
     const total = Math.max(1, nodes.length);
+    const themeNodeMats: {
+      mat: THREE.MeshStandardMaterial;
+      haloMat: THREE.MeshBasicMaterial;
+      lineMat: THREE.LineBasicMaterial;
+      nodeColor: string;
+    }[] = [];
+    const themeParentChildMats: THREE.LineBasicMaterial[] = [];
 
     nodes.forEach((n, idx) => {
       // Golden-ratio spiral + well-spaced angular distribution inside frustum
@@ -210,6 +265,13 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
       const coreLine = new THREE.Line(lineGeo, lineMat);
       galaxyGroup.add(coreLine);
 
+      themeNodeMats.push({
+        mat: material,
+        haloMat,
+        lineMat,
+        nodeColor: n.color || '#6366f1'
+      });
+
       nodeEntries.push({
         mesh,
         halo,
@@ -247,10 +309,22 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
           ]);
           const interLine = new THREE.Line(interGeo, interMat);
           galaxyGroup.add(interLine);
+          themeParentChildMats.push(interMat);
           parentChildLinks.push({ child, parent: parentMatch, line: interLine });
         }
       }
     });
+
+    themeObjectsRef.current = {
+      ambientLight,
+      dirLight1,
+      dirLight2,
+      coreMat,
+      ringMat1,
+      ringMat2,
+      nodeMaterials: themeNodeMats,
+      parentChildMaterials: themeParentChildMats
+    };
 
     // Helper to update dynamic line geometries when a node is dragged
     const updateAllLines = () => {
@@ -634,6 +708,7 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
     animate();
 
     return () => {
+      themeObjectsRef.current = null;
       cancelAnimationFrame(animId);
       mount.removeEventListener('mousedown', onMouseDown);
       mount.removeEventListener('wheel', onWheel);
@@ -650,7 +725,7 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
       }
       renderer.dispose();
     };
-  }, [nodes, isDarkMode]);
+  }, [nodes]);
 
   const handleZoomIn = useCallback(() => controlsRef.current.zoomIn(), []);
   const handleZoomOut = useCallback(() => controlsRef.current.zoomOut(), []);
