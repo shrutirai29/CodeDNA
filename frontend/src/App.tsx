@@ -43,7 +43,7 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-transparent text-[#111827] dark:text-[#F8FAFC] flex transition-colors duration-200 relative selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen w-full max-w-full bg-transparent text-[#111827] dark:text-[#F8FAFC] transition-colors duration-200 relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
       {/* 3D Subtle Three.js Constellation Background */}
       <CyberBackground />
 
@@ -52,8 +52,8 @@ export const App: React.FC = () => {
 
       {/* Main App Container */}
       <div
-        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 relative z-10 ml-0 ${
-          isSidebarCollapsed ? 'md:ml-20' : 'md:ml-[230px]'
+        className={`w-full max-w-full min-h-screen flex flex-col transition-all duration-300 relative z-10 min-w-0 ${
+          isSidebarCollapsed ? 'md:pl-20' : 'md:pl-[230px]'
         }`}
       >
         {/* Top Header */}
@@ -63,7 +63,7 @@ export const App: React.FC = () => {
         <LoadingSequence />
 
         {/* Content Area with Narrative Layout */}
-        <main className="flex-1 mt-16 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 max-w-7xl w-full mx-auto space-y-6">
+        <main className="flex-1 mt-16 p-3 sm:p-6 lg:p-8 pb-24 md:pb-8 max-w-7xl w-full mx-auto space-y-6 min-w-0">
           {!profile ? (
             <EmptyState />
           ) : (
