@@ -36,16 +36,105 @@
     --glass-border: rgba(255, 255, 255, 0.2);
   }
 
+  html {
+    font-size: 16.5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      font-size: 17.5px;
+    }
+  }
+
   body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.55;
     overflow-x: hidden;
   }
 
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
+}
+
+/* =====================================================================
+   GLOBAL TYPOGRAPHY & READABILITY BOOST (High-Visibility Scaling)
+   ===================================================================== */
+
+.text-\[9px\] {
+  font-size: 0.76rem !important; /* ~13.3px */
+  line-height: 1.4 !important;
+}
+
+.text-\[10px\] {
+  font-size: 0.8rem !important; /* ~14px */
+  line-height: 1.45 !important;
+}
+
+.text-\[11px\] {
+  font-size: 0.85rem !important; /* ~14.9px */
+  line-height: 1.48 !important;
+}
+
+.text-xs {
+  font-size: 0.9rem !important; /* ~15.8px */
+  line-height: 1.5 !important;
+}
+
+.text-sm {
+  font-size: 1rem !important; /* ~17.5px */
+  line-height: 1.55 !important;
+}
+
+.text-base {
+  font-size: 1.1rem !important; /* ~19.2px */
+  line-height: 1.6 !important;
+}
+
+.text-lg {
+  font-size: 1.22rem !important;
+  line-height: 1.5 !important;
+}
+
+.text-xl {
+  font-size: 1.38rem !important;
+  line-height: 1.4 !important;
+}
+
+.text-2xl {
+  font-size: 1.65rem !important;
+  line-height: 1.35 !important;
+}
+
+/* Boost secondary text & SVG label contrast so all labels are clearly legible on glass */
+html:not(.dark) .text-\[\#64748B\],
+html:not(.dark) .text-\[\#94A3B8\],
+html:not(.dark) .text-\[\#475569\] {
+  color: #1E293B !important;
+  font-weight: 500;
+}
+
+html.dark .text-\[\#64748B\],
+html.dark .text-\[\#94A3B8\],
+html.dark .dark\:text-\[\#94A3B8\] {
+  color: #E2E8F0 !important;
+}
+
+html:not(.dark) .fill-\[\#64748B\],
+html:not(.dark) .fill-\[\#94A3B8\] {
+  fill: #1E293B !important;
+  font-weight: 600;
+}
+
+html.dark .fill-\[\#64748B\],
+html.dark .fill-\[\#94A3B8\],
+html.dark .dark\:fill-\[\#94A3B8\] {
+  fill: #E2E8F0 !important;
+  font-weight: 600;
 }
 
 /* Custom Scrollbar for sleek developer feel */

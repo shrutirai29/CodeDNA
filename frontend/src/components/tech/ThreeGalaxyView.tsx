@@ -570,8 +570,8 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
 
         const sx = (tempVec.x * 0.5 + 0.5) * curW;
         const sy = (-(tempVec.y * 0.5) + 0.5) * curH;
-        const pillW = Math.max(122, entry.node.name.length * 7.5 + 64);
-        const pillH = 30;
+        const pillW = Math.max(145, entry.node.name.length * 9 + 76);
+        const pillH = 36;
 
         projected.push({
           id: entry.node.id,
