@@ -119,7 +119,11 @@ export const Header: React.FC = () => {
         </div>
 
         {/* 3D Tactile Theme Rocker Switch */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-xl glass-panel">
+        <div
+          onClick={toggleTheme}
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl glass-panel cursor-pointer select-none"
+          title={isDarkMode ? 'Dark Mode ON (Click to switch to Light)' : 'Dark Mode OFF (Click to switch to Dark)'}
+        >
           <Sun size={13} className={!isDarkMode ? 'text-amber-500' : 'text-[#64748B]'} />
           <RockerSwitch
             checked={isDarkMode}

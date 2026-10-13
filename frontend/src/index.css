@@ -468,8 +468,10 @@
   display: inline-block;
   width: 5em;
   height: 2.5em;
+  margin: 0 0.3em 0.3em 0.3em;
   user-select: none;
   vertical-align: middle;
+  cursor: pointer;
 }
 
 /* Sizing variants */
@@ -493,6 +495,7 @@
   width: 0;
   height: 0;
   position: absolute;
+  pointer-events: none;
 }
 
 /* The slider */
@@ -500,6 +503,7 @@
 .rocker-switch .toggle {
   position: absolute;
   cursor: pointer;
+  pointer-events: none;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -531,6 +535,7 @@
   transition: all 150ms;
   font-size: 0.7em;
   letter-spacing: 0.02em;
+  pointer-events: none;
 }
 
 .switch .toggle > .left::before,
@@ -542,6 +547,7 @@
   background-color: rgb(206, 206, 206);
   transform-origin: center left;
   transform: rotateY(90deg);
+  pointer-events: none;
 }
 
 .switch .toggle > .left::after,
@@ -553,6 +559,7 @@
   background-color: rgb(112, 112, 112);
   transform-origin: center bottom;
   transform: rotateX(90deg);
+  pointer-events: none;
 }
 
 .switch .toggle > .right,
@@ -573,6 +580,7 @@
   transition: all 150ms;
   font-size: 0.7em;
   letter-spacing: 0.02em;
+  pointer-events: none;
 }
 
 .switch .toggle > .right::before,
@@ -584,6 +592,7 @@
   background-color: rgb(206, 206, 206);
   transform-origin: center right;
   transform: rotateY(-90deg);
+  pointer-events: none;
 }
 
 .switch .toggle > .right::after,
@@ -595,53 +604,23 @@
   background-color: rgb(112, 112, 112);
   transform-origin: center bottom;
   transform: rotateX(90deg);
+  pointer-events: none;
 }
 
 .switch input:checked + .toggle > .left,
-.rocker-switch input:checked + .toggle > .left {
+.rocker-switch input:checked + .toggle > .left,
+.switch.is-checked .toggle > .left,
+.rocker-switch.is-checked .toggle > .left {
   transform: rotateX(10deg) rotateY(45deg);
   color: rgb(206, 206, 206);
 }
 
 .switch input:checked + .toggle > .right,
-.rocker-switch input:checked + .toggle > .right {
+.rocker-switch input:checked + .toggle > .right,
+.switch.is-checked .toggle > .right,
+.rocker-switch.is-checked .toggle > .right {
   transform: rotateX(10deg) rotateY(0deg);
   color: #487bdb;
-}
-
-/* Also support cyber / dark mode casing */
-.dark .switch .toggle,
-.dark .rocker-switch .toggle {
-  background-color: #1e293b;
-  box-shadow: -0.3em 0 0 0 #1e293b, -0.3em 0.3em 0 0 #1e293b,
-    0.3em 0 0 0 #1e293b, 0.3em 0.3em 0 0 #1e293b, 0 0.3em 0 0 #1e293b;
-}
-
-.dark .switch .toggle > .left,
-.dark .rocker-switch .toggle > .left,
-.dark .switch .toggle > .right,
-.dark .rocker-switch .toggle > .right {
-  background-color: #334155;
-  color: #94a3b8;
-}
-
-.dark .switch input:checked + .toggle > .right,
-.dark .rocker-switch input:checked + .toggle > .right {
-  color: #818cf8;
-}
-
-.dark .switch .toggle > .left::before,
-.dark .rocker-switch .toggle > .left::before,
-.dark .switch .toggle > .right::before,
-.dark .rocker-switch .toggle > .right::before {
-  background-color: #475569;
-}
-
-.dark .switch .toggle > .left::after,
-.dark .rocker-switch .toggle > .left::after,
-.dark .switch .toggle > .right::after,
-.dark .rocker-switch .toggle > .right::after {
-  background-color: #1e293b;
 }
 
 /* =====================================================================
