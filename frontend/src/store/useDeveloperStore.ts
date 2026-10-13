@@ -23,6 +23,7 @@ interface DeveloperStore {
   loadingStep: number;
   loadingMessage: string;
   isCopilotOpen: boolean;
+  isSettingsOpen: boolean;
   chatMessages: ChatMessage[];
   isChatLoading: boolean;
 
@@ -31,6 +32,7 @@ interface DeveloperStore {
   toggleSidebar: () => void;
   toggleTheme: () => void;
   toggleCopilot: () => void;
+  toggleSettings: () => void;
   setSearchQuery: (query: string) => void;
   searchDeveloper: (username: string) => Promise<void>;
   setComparisonDeveloper: (username: string) => Promise<void>;
@@ -66,6 +68,7 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
     loadingStep: 0,
     loadingMessage: '',
     isCopilotOpen: false,
+    isSettingsOpen: false,
     chatMessages: [
       {
         id: '1',
@@ -100,6 +103,8 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
     },
 
     toggleCopilot: () => set(state => ({ isCopilotOpen: !state.isCopilotOpen })),
+
+    toggleSettings: () => set(state => ({ isSettingsOpen: !state.isSettingsOpen })),
 
     setSearchQuery: () => {},
 

@@ -23,6 +23,7 @@ import { Achievements } from './components/motivation/Achievements';
 import { AICopilot } from './components/copilot/AICopilot';
 import { FloatingSocialDock } from './components/layout/FloatingSocialDock';
 import { FloatingNavDock } from './components/layout/FloatingNavDock';
+import { SettingsModal } from './components/layout/SettingsModal';
 import { AnalyticsExport } from './components/export/AnalyticsExport';
 import { EmptyState } from './components/common/EmptyState';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -251,6 +252,9 @@ export const App: React.FC = () => {
 
       {/* Floating AI Copilot Assistant */}
       <AICopilot />
+
+      {/* Platform Settings Modal */}
+      <SettingsModal />
     </div>
   );
 };

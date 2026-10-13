@@ -3,7 +3,7 @@ import { useDeveloperStore } from '../../store/useDeveloperStore';
 import type { NavTab } from '../../store/useDeveloperStore';
 
 export const FloatingNavDock: React.FC = () => {
-  const { activeTab, setActiveTab } = useDeveloperStore();
+  const { activeTab, setActiveTab, toggleSettings, isSettingsOpen } = useDeveloperStore();
 
   const handleNav = (e: React.MouseEvent, tab: NavTab) => {
     e.preventDefault();
@@ -104,12 +104,15 @@ export const FloatingNavDock: React.FC = () => {
         <span>Plans</span>
       </a>
 
-      {/* 5. Settings -> Analytics & Export */}
+      {/* 5. Settings Modal */}
       <a
-        href="#export"
-        onClick={(e) => handleNav(e, 'export')}
-        className={activeTab === 'export' ? 'active' : ''}
-        title="Analytics Export & Settings"
+        href="#settings"
+        onClick={(e) => {
+          e.preventDefault();
+          toggleSettings();
+        }}
+        className={isSettingsOpen ? 'active' : ''}
+        title="Platform Settings & Live Status"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
