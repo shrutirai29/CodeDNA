@@ -1,16 +1,52 @@
 import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { BENCHMARK_PROFILES } from '../../services/githubService';
-import { GitCompare, Sparkles, ShieldCheck } from 'lucide-react';
+import { GitCompare, Sparkles, ShieldCheck, Search, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const DeveloperComparison: React.FC = () => {
   const { profile, comparisonProfile, setComparisonDeveloper } = useDeveloperStore();
-  const [selectedCompUser, setSelectedCompUser] = useState(comparisonProfile.username);
+  const [customInput, setCustomInput] = useState('');
+  const [isLoadingComp, setIsLoadingComp] = useState(false);
+  const [compError, setCompError] = useState<string | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState(
+    Object.keys(BENCHMARK_PROFILES).includes(comparisonProfile.username)
+      ? comparisonProfile.username
+      : ''
+  );
 
-  const handleSelectDevB = (uname: string) => {
-    setSelectedCompUser(uname);
-    setComparisonDeveloper(uname);
+  const handleCustomCompareSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const clean = customInput.trim().replace(/^@/, '');
+    if (!clean) return;
+    setIsLoadingComp(true);
+    setCompError(null);
+    try {
+      await setComparisonDeveloper(clean);
+      if (Object.keys(BENCHMARK_PROFILES).includes(clean.toLowerCase())) {
+        setSelectedPreset(clean.toLowerCase());
+      } else {
+        setSelectedPreset('');
+      }
+      setCustomInput('');
+    } catch {
+      setCompError(`GitHub user @${clean} not found`);
+    } finally {
+      setIsLoadingComp(false);
+    }
+  };
+
+  const handlePresetSelect = async (uname: string) => {
+    setSelectedPreset(uname);
+    setCompError(null);
+    setIsLoadingComp(true);
+    try {
+      await setComparisonDeveloper(uname);
+    } catch {
+      setCompError(`Could not load @${uname}`);
+    } finally {
+      setIsLoadingComp(false);
+    }
   };
 
   const devA = profile;
@@ -32,7 +68,7 @@ export const DeveloperComparison: React.FC = () => {
   return (
     <div className="glass-card p-6 rounded-2xl space-y-6">
       {/* Top Header & Selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <GitCompare size={18} className="text-[#6366F1] dark:text-[#818CF8]" />
           <div>
@@ -45,20 +81,69 @@ export const DeveloperComparison: React.FC = () => {
           </div>
         </div>
 
-        {/* Developer B Selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-[#94A3B8]">Compare against:</span>
-          <select
-            value={selectedCompUser}
-            onChange={(e) => handleSelectDevB(e.target.value)}
-            className="px-3 py-1.5 rounded-xl glass-input text-xs font-mono font-semibold text-[#111827] dark:text-[#F8FAFC] focus:outline-none focus:ring-1 focus:ring-[#6366F1] cursor-pointer"
-          >
-            {Object.keys(BENCHMARK_PROFILES).map((u) => (
-              <option key={u} value={u} className="bg-white dark:bg-[#0D1117] text-[#111827] dark:text-[#F8FAFC]">
-                @{u} ({BENCHMARK_PROFILES[u].name})
-              </option>
-            ))}
-          </select>
+        {/* Developer B Custom Username Input + Presets */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5">
+          <span className="text-xs font-mono text-[#64748B] dark:text-[#94A3B8] font-medium whitespace-nowrap">
+            Compare against:
+          </span>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Custom GitHub Username Search Input */}
+            <form onSubmit={handleCustomCompareSubmit} className="flex items-center gap-1.5">
+              <div className="flex items-center h-8 px-2.5 rounded-xl glass-input gap-1.5 focus-within:ring-2 focus-within:ring-[#6366F1]/40 transition-all">
+                <span className="text-xs font-mono text-[#94A3B8] select-none">@</span>
+                <input
+                  type="text"
+                  value={customInput}
+                  onChange={(e) => {
+                    setCustomInput(e.target.value);
+                    if (compError) setCompError(null);
+                  }}
+                  placeholder="Enter any username…"
+                  className="w-36 sm:w-44 bg-transparent border-0 outline-none text-xs font-mono font-semibold text-[#111827] dark:text-[#F8FAFC] placeholder-[#94A3B8]"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isLoadingComp || !customInput.trim()}
+                className="h-8 px-3 rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] hover:from-[#4F46E5] hover:to-[#7C3AED] disabled:opacity-40 text-white text-xs font-mono font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-xs disabled:cursor-not-allowed shrink-0"
+                title="Fetch & compare with this GitHub user"
+              >
+                {isLoadingComp ? (
+                  <Loader2 size={13} className="animate-spin" />
+                ) : (
+                  <Search size={13} />
+                )}
+                <span>Compare</span>
+              </button>
+            </form>
+
+            {/* Quick Benchmark Presets Dropdown */}
+            <div className="relative">
+              <select
+                value={selectedPreset}
+                onChange={(e) => handlePresetSelect(e.target.value)}
+                className="h-8 px-2.5 rounded-xl glass-input text-xs font-mono font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] focus:outline-none cursor-pointer"
+                title="Or pick a benchmark preset"
+              >
+                <option value="" disabled className="bg-white dark:bg-[#0D1117] text-[#94A3B8]">
+                  Presets…
+                </option>
+                {Object.keys(BENCHMARK_PROFILES).map((u) => (
+                  <option key={u} value={u} className="bg-white dark:bg-[#0D1117] text-[#111827] dark:text-[#F8FAFC]">
+                    @{u} ({BENCHMARK_PROFILES[u].name})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Feedback error badge if username not found */}
+          {compError && (
+            <span className="text-[11px] font-mono text-rose-500 font-semibold animate-in fade-in">
+              {compError}
+            </span>
+          )}
         </div>
       </div>
 
