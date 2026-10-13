@@ -44,13 +44,14 @@ export const Sidebar: React.FC = () => {
     toggleSidebar,
     isDarkMode,
     toggleTheme,
-    toggleCopilot
+    toggleCopilot,
+    toggleSettings
   } = useDeveloperStore();
 
   return (
     <aside
-      className={`glass-nav fixed top-0 left-0 bottom-0 z-40 border-r transition-all duration-300 ease-in-out hidden md:flex flex-col ${
-        isSidebarCollapsed ? 'w-20' : 'w-[230px]'
+      className={`glass-nav fixed top-0 left-0 bottom-0 z-40 border-r transition-all duration-300 ease-in-out flex flex-col ${
+        isSidebarCollapsed ? 'w-16 sm:w-20' : 'w-[230px]'
       }`}
     >
       {/* Brand Header */}
@@ -102,6 +103,7 @@ export const Sidebar: React.FC = () => {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
+              title={item.label}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all relative group cursor-pointer ${
                 isActive
                   ? 'glass-pill text-[#6366F1] dark:text-[#818CF8] font-bold shadow-xs'
@@ -183,16 +185,18 @@ export const Sidebar: React.FC = () => {
 
         {/* Settings */}
         <button
-          onClick={toggleCopilot}
+          onClick={toggleSettings}
+          title="Platform Settings"
           className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
         >
           <Settings size={18} className="shrink-0" />
-          {!isSidebarCollapsed && <span className="truncate">Settings & Copilot</span>}
+          {!isSidebarCollapsed && <span className="truncate">Platform Settings</span>}
         </button>
 
         {/* Help & Support */}
         <button
           onClick={toggleCopilot}
+          title="CodeDNA Architecture & Docs"
           className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
         >
           <HelpCircle size={18} className="shrink-0" />

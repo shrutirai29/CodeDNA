@@ -22,7 +22,6 @@ import { MotivationBanners } from './components/motivation/MotivationBanners';
 import { Achievements } from './components/motivation/Achievements';
 import { AICopilot } from './components/copilot/AICopilot';
 import { FloatingSocialDock } from './components/layout/FloatingSocialDock';
-import { FloatingNavDock } from './components/layout/FloatingNavDock';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { AnalyticsExport } from './components/export/AnalyticsExport';
 import { EmptyState } from './components/common/EmptyState';
@@ -53,7 +52,7 @@ export const App: React.FC = () => {
       {/* Main App Container */}
       <div
         className={`w-full max-w-full min-h-screen flex flex-col transition-all duration-300 relative z-10 min-w-0 ${
-          isSidebarCollapsed ? 'md:pl-20' : 'md:pl-[230px]'
+          isSidebarCollapsed ? 'pl-16 sm:pl-20' : 'pl-[230px]'
         }`}
       >
         {/* Top Header */}
@@ -243,9 +242,6 @@ export const App: React.FC = () => {
           </footer>
         </main>
       </div>
-
-      {/* Liquid Glass Floating Navigation Dock */}
-      <FloatingNavDock />
 
       {/* Floating 3D Isometric Social Dock */}
       <FloatingSocialDock />
