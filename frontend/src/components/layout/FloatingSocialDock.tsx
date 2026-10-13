@@ -9,13 +9,13 @@ export const FloatingSocialDock: React.FC = () => {
     <div className="fixed bottom-38 md:bottom-20 right-4 md:right-6 z-40 flex flex-col items-end">
       {/* Expanded Isometric Card Modal / Flyout */}
       {isOpen && (
-        <div className="mb-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
+        <div className="mb-3 p-3.5 rounded-2xl bg-white/95 dark:bg-[#0D1117]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-800 shadow-2xl animate-in fade-in slide-in-from-bottom-3 duration-200">
           <div className="relative group">
             {/* Close Button Header */}
             <div className="flex items-center justify-between pb-2 px-1">
               <span className="flex items-center gap-1 font-mono text-[11px] font-bold text-[#111827] dark:text-[#F8FAFC]">
                 <Sparkles size={12} className="text-[#6366F1] animate-pulse" />
-                3D Isometric Orbit
+                3D Social Orbit
               </span>
               <button
                 onClick={() => setIsOpen(false)}
@@ -26,11 +26,11 @@ export const FloatingSocialDock: React.FC = () => {
               </button>
             </div>
 
-            {/* Exact Uiverse 3D Isometric Card */}
+            {/* Exact Uiverse 3D Isometric Card with Left-pointing Tooltips */}
             <IsometricSocialCard
               orientation="vertical"
               compact={false}
-              className="shadow-2xl border border-white/40 dark:border-white/10"
+              className="tooltip-left !border-none !shadow-none !bg-transparent"
             />
           </div>
         </div>
