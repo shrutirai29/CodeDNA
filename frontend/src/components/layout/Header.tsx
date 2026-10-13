@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Search, Bell, Sun, Moon, Settings } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Search, Bell, Sun, Moon, Settings, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { RockerSwitch } from '../common/RockerSwitch';
 
@@ -16,6 +17,29 @@ export const Header: React.FC = () => {
 
   const [inputVal, setInputVal] = useState('');
   const [showNotification, setShowNotification] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (notificationRef.current && !notificationRef.current.contains(e.target as Node)) {
+        setShowNotification(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowNotification(false);
+      }
+    };
+
+    if (showNotification) {
+      document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showNotification]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,34 +114,79 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Notification Bell */}
-        <div className="relative shrink-0">
+        <div className="relative shrink-0" ref={notificationRef}>
           <button
             onClick={() => setShowNotification(!showNotification)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B] transition-colors relative cursor-pointer"
+            className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all relative cursor-pointer ${
+              showNotification
+                ? 'bg-indigo-50 dark:bg-indigo-950/60 text-[#6366F1] dark:text-[#818CF8] ring-2 ring-[#6366F1]/40'
+                : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-[#EEF2F7] dark:hover:bg-[#1E293B]'
+            }`}
             title="Notifications"
+            aria-label="Notifications"
+            aria-expanded={showNotification}
           >
             <Bell size={18} />
-            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#6366F1]" />
+            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#6366F1] ring-2 ring-white dark:ring-[#0D1117]" />
           </button>
 
-          {showNotification && (
-            <div className="absolute right-0 mt-2 w-72 p-3.5 glass-card !bg-white/95 dark:!bg-[#0D1117]/95 !backdrop-blur-xl border border-white/80 dark:border-white/10 rounded-2xl shadow-2xl text-xs z-50">
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200/80 dark:border-slate-800 font-mono font-bold">
-                <span className="text-[#111827] dark:text-[#F8FAFC]">Developer Notifications</span>
-                <span className="text-[10px] text-emerald-500 font-bold">Live</span>
-              </div>
-              <div className="space-y-2">
-                <div className="p-2 rounded-xl glass-panel">
-                  <p className="font-semibold text-[#111827] dark:text-[#F8FAFC]">Consistency Peak</p>
-                  <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8]">Streak passed 12 consecutive active weeks!</p>
+          <AnimatePresence>
+            {showNotification && (
+              <motion.div
+                initial={{ opacity: 0, y: -6, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.96 }}
+                transition={{ duration: 0.15 }}
+                className="!absolute top-full mt-2 -right-16 sm:right-0 w-[calc(100vw-2rem)] max-w-xs sm:w-80 p-3.5 glass-card !bg-white/95 dark:!bg-[#0D1117]/95 !backdrop-blur-2xl border border-slate-200/90 dark:border-white/10 rounded-2xl shadow-2xl text-xs z-50 overflow-hidden"
+              >
+                <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-200/80 dark:border-slate-800 font-mono font-bold">
+                  <div className="flex items-center gap-2">
+                    <Bell size={13} className="text-[#6366F1]" />
+                    <span className="text-[#111827] dark:text-[#F8FAFC]">Developer Notifications</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] text-emerald-500 font-semibold px-1.5 py-0.5 rounded-full bg-emerald-500/10">Live</span>
+                    <button
+                      onClick={() => setShowNotification(false)}
+                      className="p-1 rounded-lg text-[#64748B] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                      title="Close"
+                      aria-label="Close notifications"
+                    >
+                      <X size={13} />
+                    </button>
+                  </div>
                 </div>
-                <div className="p-2 rounded-xl glass-panel">
-                  <p className="font-semibold text-[#111827] dark:text-[#F8FAFC]">Next Skill Match</p>
-                  <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8]">Docker containerization unlocks +8.5% career fit.</p>
+
+                <div className="space-y-2">
+                  <div className="p-2.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/60 border border-slate-200/70 dark:border-white/5 hover:border-indigo-400/40 transition-colors">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-[#111827] dark:text-[#F8FAFC] flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+                        Consistency Peak
+                      </span>
+                      <span className="text-[9px] font-mono text-[#94A3B8]">Just now</span>
+                    </div>
+                    <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8] pl-3 leading-relaxed">
+                      Streak passed 12 consecutive active weeks!
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/60 border border-slate-200/70 dark:border-white/5 hover:border-indigo-400/40 transition-colors">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-[#111827] dark:text-[#F8FAFC] flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0" />
+                        Next Skill Match
+                      </span>
+                      <span className="text-[9px] font-mono text-[#94A3B8]">2h ago</span>
+                    </div>
+                    <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8] pl-3 leading-relaxed">
+                      Docker containerization unlocks +8.5% career fit.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* 3D Tactile Theme Rocker Switch */}
