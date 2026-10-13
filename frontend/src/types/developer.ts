@@ -84,12 +84,19 @@ export interface AchievementBadge {
   category: 'habit' | 'skill' | 'open-source' | 'architecture';
 }
 
+export interface SocialLink {
+  platform: 'github' | 'linkedin' | 'instagram' | 'twitter' | 'facebook' | 'youtube' | 'bluesky' | 'mastodon' | 'website';
+  name: string;
+  url: string;
+}
+
 export interface DeveloperProfile {
   username: string;
   name: string;
   avatar_url: string;
   bio: string;
   tags: string[];
+  social_links?: SocialLink[];
   stats: {
     repositories: number;
     contributions: number;

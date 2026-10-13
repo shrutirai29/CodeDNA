@@ -1,4 +1,4 @@
-import type { DeveloperProfile } from '../types/developer';
+import type { DeveloperProfile, SocialLink } from '../types/developer';
 import { ScoringService } from './scoringService';
 import { TechnologyService } from './technologyService';
 import { CareerService } from './careerService';
@@ -13,6 +13,11 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
     avatar_url: 'https://avatars.githubusercontent.com/u/167513467?v=4',
     bio: 'Btech CSE student at Rashtriya Raksha University',
     tags: ['Full-Stack Developer', 'Cybersecurity', 'Open Source Contributor', 'Problem Solver'],
+    social_links: [
+      { platform: 'github', name: 'GitHub', url: 'https://github.com/shrutirai29' },
+      { platform: 'linkedin', name: 'LinkedIn', url: 'https://www.linkedin.com/in/shruti-rai-3b5055304' },
+      { platform: 'instagram', name: 'Instagram', url: 'https://www.instagram.com/shruti.r8524/' }
+    ],
     stats: {
       repositories: 18,
       contributions: 588,
@@ -318,6 +323,9 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
     avatar_url: 'https://avatars.githubusercontent.com/u/1024025?v=4',
     bio: 'Creator of Linux and Git',
     tags: ['Kernel Architect', 'C Systems', 'Git Inventor', 'Open Source Icon'],
+    social_links: [
+      { platform: 'github', name: 'GitHub', url: 'https://github.com/torvalds' }
+    ],
     stats: {
       repositories: 7,
       contributions: 3420,
@@ -444,6 +452,11 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
     avatar_url: 'https://avatars.githubusercontent.com/u/810438?v=4',
     bio: 'Working on React at Meta. Created Redux and Create React App.',
     tags: ['React Core', 'Redux Creator', 'Frontend Architect', 'Educator'],
+    social_links: [
+      { platform: 'github', name: 'GitHub', url: 'https://github.com/gaearon' },
+      { platform: 'website', name: 'Website', url: 'https://danabra.mov' },
+      { platform: 'bluesky', name: 'Bluesky', url: 'https://bsky.app/profile/danabra.mov' }
+    ],
     stats: {
       repositories: 250,
       contributions: 1420,
@@ -556,6 +569,10 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
     avatar_url: 'https://avatars.githubusercontent.com/u/241138?v=4',
     bio: 'I like to train Deep Neural Nets. ex-Tesla AI Director, ex-OpenAI.',
     tags: ['Deep Learning', 'PyTorch Guru', 'LLM Architect', 'AI Educator'],
+    social_links: [
+      { platform: 'github', name: 'GitHub', url: 'https://github.com/karpathy' },
+      { platform: 'twitter', name: 'Twitter', url: 'https://twitter.com/karpathy' }
+    ],
     stats: {
       repositories: 58,
       contributions: 1980,
@@ -667,6 +684,14 @@ export const BENCHMARK_PROFILES: { [username: string]: DeveloperProfile } = {
     avatar_url: 'https://avatars.githubusercontent.com/u/170270?v=4',
     bio: 'Full-time open-sourceror. Maker of 1,000+ npm packages and Swift apps.',
     tags: ['Open Source Icon', 'Polyglot', 'Swift Maker', 'TypeScript'],
+    social_links: [
+      { platform: 'github', name: 'GitHub', url: 'https://github.com/sindresorhus' },
+      { platform: 'website', name: 'Website', url: 'https://sindresorhus.com/apps' },
+      { platform: 'twitter', name: 'Twitter', url: 'https://twitter.com/sindresorhus' },
+      { platform: 'instagram', name: 'Instagram', url: 'https://instagram.com/sindresorhus' },
+      { platform: 'bluesky', name: 'Bluesky', url: 'https://bsky.app/profile/sindresorhus.com' },
+      { platform: 'mastodon', name: 'Mastodon', url: 'https://mastodon.social/@sindresorhus' }
+    ],
     stats: {
       repositories: 1100,
       contributions: 5200,
@@ -835,6 +860,94 @@ const KNOWN_PROJECT_DESCRIPTIONS: Record<string, string> = {
 };
 
 export class GithubService {
+  private static classifySocialUrl(rawUrl: string, providerHint?: string): SocialLink | null {
+    if (!rawUrl || !rawUrl.trim()) return null;
+    let url = rawUrl.trim();
+    if (!/^https?:\/\//i.test(url)) {
+      url = `https://${url}`;
+    }
+
+    const lower = url.toLowerCase();
+    const prov = (providerHint || '').toLowerCase();
+
+    if (prov === 'linkedin' || lower.includes('linkedin.com')) {
+      // Strip mobile share tracking params if present
+      const cleanUrl = url.split('?')[0];
+      return { platform: 'linkedin', name: 'LinkedIn', url: cleanUrl };
+    }
+    if (prov === 'instagram' || lower.includes('instagram.com')) {
+      const cleanUrl = url.split('?')[0];
+      return { platform: 'instagram', name: 'Instagram', url: cleanUrl };
+    }
+    if (prov === 'twitter' || lower.includes('twitter.com') || lower.includes('x.com')) {
+      return { platform: 'twitter', name: 'Twitter', url };
+    }
+    if (prov === 'facebook' || lower.includes('facebook.com')) {
+      return { platform: 'facebook', name: 'Facebook', url };
+    }
+    if (prov === 'youtube' || lower.includes('youtube.com') || lower.includes('youtu.be')) {
+      return { platform: 'youtube', name: 'YouTube', url };
+    }
+    if (prov === 'bluesky' || lower.includes('bsky.app')) {
+      return { platform: 'bluesky', name: 'Bluesky', url };
+    }
+    if (prov === 'mastodon' || lower.includes('mastodon')) {
+      return { platform: 'mastodon', name: 'Mastodon', url };
+    }
+    if (lower.includes('github.com')) {
+      return { platform: 'github', name: 'GitHub', url };
+    }
+
+    return { platform: 'website', name: 'Website', url };
+  }
+
+  private static extractSocialLinks(
+    user: any,
+    socialAccounts: any[],
+    fallbackLinks?: SocialLink[]
+  ): SocialLink[] {
+    const links: SocialLink[] = [
+      {
+        platform: 'github',
+        name: 'GitHub',
+        url: user.html_url || `https://github.com/${user.login}`
+      }
+    ];
+
+    const addUnique = (item: SocialLink | null) => {
+      if (!item) return;
+      if (!links.some(existing => existing.platform === item.platform || existing.url === item.url)) {
+        links.push(item);
+      }
+    };
+
+    if (user.blog && typeof user.blog === 'string' && user.blog.trim()) {
+      addUnique(this.classifySocialUrl(user.blog));
+    }
+
+    if (user.twitter_username && typeof user.twitter_username === 'string' && user.twitter_username.trim()) {
+      addUnique({
+        platform: 'twitter',
+        name: 'Twitter',
+        url: `https://twitter.com/${user.twitter_username.trim()}`
+      });
+    }
+
+    if (Array.isArray(socialAccounts)) {
+      socialAccounts.forEach((acc: any) => {
+        if (acc && typeof acc.url === 'string') {
+          addUnique(this.classifySocialUrl(acc.url, acc.provider));
+        }
+      });
+    }
+
+    if (links.length === 1 && fallbackLinks && fallbackLinks.length > 1) {
+      return fallbackLinks;
+    }
+
+    return links;
+  }
+
   public static async fetchProfile(username: string): Promise<DeveloperProfile> {
     const cleanUsername = username.trim().replace(/^@/, '').toLowerCase();
 
@@ -853,6 +966,23 @@ export class GithubService {
         throw new Error('User fetch error');
       }
       const user = await userRes.json();
+
+      // 1b. Fetch GitHub-connected social accounts
+      let socialAccounts: any[] = [];
+      try {
+        const socialRes = await fetch(`https://api.github.com/users/${cleanUsername}/social_accounts`);
+        if (socialRes.ok) {
+          socialAccounts = await socialRes.json();
+        }
+      } catch {
+        // Fallback to user fields / benchmark social links
+      }
+
+      const socialLinks = this.extractSocialLinks(
+        user,
+        socialAccounts,
+        BENCHMARK_PROFILES[cleanUsername]?.social_links
+      );
 
       // 2. Fetch live public repositories (up to 100)
       const reposRes = await fetch(`https://api.github.com/users/${cleanUsername}/repos?per_page=100&sort=updated`);
@@ -1009,6 +1139,7 @@ export class GithubService {
         avatar_url: user.avatar_url,
         bio: user.bio ? user.bio.trim() : (cleanUsername === 'shrutirai29' ? 'Btech CSE student at Rashtriya Raksha University' : 'Passionate software developer building open source technology.'),
         tags: cleanUsername === 'shrutirai29' ? ['Full-Stack Developer', 'Cybersecurity', 'Open Source Contributor', 'Problem Solver'] : ['Software Developer', 'GitHub Contributor', 'Problem Solver'],
+        social_links: socialLinks,
         stats: {
           repositories: repoCount,
           contributions: totalContributions,
