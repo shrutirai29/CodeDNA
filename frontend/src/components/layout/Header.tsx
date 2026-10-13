@@ -20,7 +20,7 @@ export const Header: React.FC = () => {
   const notificationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       if (notificationRef.current && !notificationRef.current.contains(e.target as Node)) {
         setShowNotification(false);
       }
@@ -32,12 +32,16 @@ export const Header: React.FC = () => {
     };
 
     if (showNotification) {
-      document.addEventListener('mousedown', handleOutsideClick);
-      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('mousedown', handleOutsideClick, true);
+      document.addEventListener('touchstart', handleOutsideClick, true);
+      document.addEventListener('click', handleOutsideClick, true);
+      document.addEventListener('keydown', handleKeyDown, true);
     }
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleOutsideClick, true);
+      document.removeEventListener('touchstart', handleOutsideClick, true);
+      document.removeEventListener('click', handleOutsideClick, true);
+      document.removeEventListener('keydown', handleKeyDown, true);
     };
   }, [showNotification]);
 
@@ -116,7 +120,10 @@ export const Header: React.FC = () => {
         {/* Notification Bell */}
         <div className="relative shrink-0" ref={notificationRef}>
           <button
-            onClick={() => setShowNotification(!showNotification)}
+            onClick={() => {
+              if (isSettingsOpen) toggleSettings();
+              setShowNotification(!showNotification);
+            }}
             className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all relative cursor-pointer ${
               showNotification
                 ? 'bg-indigo-50 dark:bg-indigo-950/60 text-[#6366F1] dark:text-[#818CF8] ring-2 ring-[#6366F1]/40'
@@ -218,7 +225,10 @@ export const Header: React.FC = () => {
 
         {/* Settings button */}
         <button
-          onClick={toggleSettings}
+          onClick={() => {
+            setShowNotification(false);
+            toggleSettings();
+          }}
           className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all cursor-pointer shrink-0 ${
             isSettingsOpen
               ? 'bg-indigo-50 dark:bg-indigo-950/60 text-[#6366F1] dark:text-[#818CF8] ring-2 ring-[#6366F1]/40'

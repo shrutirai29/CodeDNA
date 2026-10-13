@@ -1,12 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Share2, X, Sparkles } from 'lucide-react';
 import { IsometricSocialCard } from '../common/IsometricSocialCard';
 
 export const FloatingSocialDock: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const dockRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
+      if (dockRef.current && !dockRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick, true);
+    document.addEventListener('touchstart', handleOutsideClick, true);
+    document.addEventListener('keydown', handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick, true);
+      document.removeEventListener('touchstart', handleOutsideClick, true);
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [isOpen]);
 
   return (
-    <div className="fixed bottom-38 md:bottom-20 right-4 md:right-6 z-40 flex flex-col items-end">
+    <div ref={dockRef} className="fixed bottom-38 md:bottom-20 right-4 md:right-6 z-40 flex flex-col items-end">
       {/* Expanded Isometric Card Modal / Flyout */}
       {isOpen && (
         <div className="mb-3 p-3.5 rounded-2xl bg-white/95 dark:bg-[#0D1117]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-800 shadow-2xl animate-in fade-in slide-in-from-bottom-3 duration-200">

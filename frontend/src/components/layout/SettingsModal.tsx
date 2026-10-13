@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -31,7 +31,37 @@ export const SettingsModal: React.FC = () => {
     toggleCopilot
   } = useDeveloperStore();
 
-  if (!isSettingsOpen) return null;
+  const modalCardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isSettingsOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        toggleSettings();
+      }
+    };
+
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
+      if (modalCardRef.current && !modalCardRef.current.contains(e.target as Node)) {
+        const target = e.target as HTMLElement;
+        if (target.closest('[title*="Settings"]') || target.closest('[aria-label*="Settings"]')) {
+          return;
+        }
+        toggleSettings();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    window.addEventListener('mousedown', handleOutsideClick, true);
+    window.addEventListener('touchstart', handleOutsideClick, true);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown, true);
+      window.removeEventListener('mousedown', handleOutsideClick, true);
+      window.removeEventListener('touchstart', handleOutsideClick, true);
+    };
+  }, [isSettingsOpen, toggleSettings]);
 
   const handleRefreshProfile = () => {
     toggleSettings();
@@ -61,21 +91,30 @@ export const SettingsModal: React.FC = () => {
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={toggleSettings}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 dark:bg-black/75 backdrop-blur-md p-4"
-      >
+      {isSettingsOpen && (
         <motion.div
-          initial={{ scale: 0.95, y: 12, opacity: 0 }}
-          animate={{ scale: 1, y: 0, opacity: 1 }}
-          exit={{ scale: 0.95, y: 12, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-lg rounded-2xl glass-card !bg-white/95 dark:!bg-[#0D1117]/95 !backdrop-blur-xl border border-white/90 dark:border-white/20 shadow-2xl overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) toggleSettings();
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) toggleSettings();
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 dark:bg-black/75 backdrop-blur-md p-4"
         >
+          <motion.div
+            ref={modalCardRef}
+            initial={{ scale: 0.95, y: 12, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.95, y: 12, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg rounded-2xl glass-card !bg-white/95 dark:!bg-[#0D1117]/95 !backdrop-blur-xl border border-white/90 dark:border-white/20 shadow-2xl overflow-hidden"
+          >
           {/* Header */}
           <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -253,6 +292,7 @@ export const SettingsModal: React.FC = () => {
           </div>
         </motion.div>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 };
