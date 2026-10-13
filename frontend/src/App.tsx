@@ -62,7 +62,7 @@ export const App: React.FC = () => {
         <LoadingSequence />
 
         {/* Content Area with Narrative Layout */}
-        <main className="flex-1 mt-16 p-3 sm:p-6 lg:p-8 pb-24 md:pb-8 max-w-7xl w-full mx-auto space-y-6 min-w-0">
+        <main className="flex-1 mt-16 p-3 sm:p-6 lg:p-8 pb-36 sm:pb-40 md:pb-44 max-w-7xl w-full mx-auto space-y-6 min-w-0">
           {!profile ? (
             <EmptyState />
           ) : (
@@ -236,9 +236,23 @@ export const App: React.FC = () => {
             </AnimatePresence>
           )}
 
-          {/* Footer note */}
-          <footer className="pt-8 pb-4 text-center font-mono text-[11px] text-[#94A3B8] border-t border-[#E2E8F0] dark:border-[#1E293B]">
-            CodeDNA Developer Intelligence & GitHub Analytics Platform • “Understand the developer behind the code.”
+          {/* High-Contrast Clear Footer */}
+          <footer className="mt-12 p-4 sm:p-5 rounded-2xl glass-card border border-white/60 dark:border-white/10 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-[#6366F1] to-[#06B6D4] flex items-center justify-center text-white text-[10px] font-bold shadow-xs">
+                DNA
+              </div>
+              <span className="font-semibold text-[#111827] dark:text-[#F8FAFC]">
+                CodeDNA Developer Intelligence
+              </span>
+              <span className="hidden sm:inline text-[#64748B] dark:text-[#94A3B8]">•</span>
+              <span className="hidden sm:inline text-[#475569] dark:text-[#CBD5E1]">
+                GitHub Analytics Platform
+              </span>
+            </div>
+            <div className="text-[#475569] dark:text-[#CBD5E1] text-center md:text-right text-[11px] font-medium">
+              “Understand the developer behind the code.”
+            </div>
           </footer>
         </main>
       </div>
