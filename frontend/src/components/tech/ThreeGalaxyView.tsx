@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import type { TechnologyNode } from '../../types/developer';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
-import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Move, Orbit, Pause, Play } from 'lucide-react';
 
 interface ThreeGalaxyViewProps {
   nodes: TechnologyNode[];
@@ -10,43 +10,23 @@ interface ThreeGalaxyViewProps {
   onSelectNode: (node: TechnologyNode | null) => void;
 }
 
-// Universal rounded rectangle drawer for HTML5 Canvas
-const drawRoundRect = (
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  r: number
-) => {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-};
-
-// Compute high-contrast line color for Light Mode
+// Compute high-contrast line color for Light & Dark Modes
 const getVisibleLineColor = (hex: string, isDark: boolean): number => {
-  if (isDark) {
-    return parseInt(hex.replace('#', '0x'), 16);
-  }
   const clean = hex.replace('#', '');
-  const r = parseInt(clean.slice(0, 2), 16) || 0;
-  const g = parseInt(clean.slice(2, 4), 16) || 0;
-  const b = parseInt(clean.slice(4, 6), 16) || 0;
+  const r = parseInt(clean.slice(0, 2), 16) || 99;
+  const g = parseInt(clean.slice(2, 4), 16) || 102;
+  const b = parseInt(clean.slice(4, 6), 16) || 241;
+  if (isDark) {
+    return (r << 16) + (g << 8) + b;
+  }
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  // Darken bright colors (yellow, light cyan, lime) so lines pop boldly on light backgrounds
-  if (brightness > 150) {
-    const darkR = Math.round(r * 0.52);
-    const darkG = Math.round(g * 0.52);
-    const darkB = Math.round(b * 0.52);
+  if (brightness > 145) {
+    const darkR = Math.round(r * 0.55);
+    const darkG = Math.round(g * 0.55);
+    const darkB = Math.round(b * 0.55);
     return (darkR << 16) + (darkG << 8) + darkB;
   }
-  return parseInt(hex.replace('#', '0x'), 16);
+  return (r << 16) + (g << 8) + b;
 };
 
 export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
@@ -55,35 +35,67 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
   onSelectNode
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const labelRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const coreLabelRef = useRef<HTMLDivElement | null>(null);
+
   const { isDarkMode } = useDeveloperStore();
   const [zoomLevelPercent, setZoomLevelPercent] = useState<number>(100);
+  const [interactionMode, setInteractionMode] = useState<'rotate' | 'pan'>('rotate');
+  const [autoRotate, setAutoRotate] = useState<boolean>(true);
 
-  // Zoom control refs accessible by external button clicks
-  const zoomControlsRef = useRef<{
+  const interactionModeRef = useRef<'rotate' | 'pan'>('rotate');
+  const autoRotateRef = useRef<boolean>(true);
+  const selectedNodeRef = useRef<TechnologyNode | null>(selectedNode);
+  const onSelectNodeRef = useRef(onSelectNode);
+
+  useEffect(() => {
+    interactionModeRef.current = interactionMode;
+  }, [interactionMode]);
+
+  useEffect(() => {
+    autoRotateRef.current = autoRotate;
+  }, [autoRotate]);
+
+  useEffect(() => {
+    selectedNodeRef.current = selectedNode;
+  }, [selectedNode]);
+
+  useEffect(() => {
+    onSelectNodeRef.current = onSelectNode;
+  }, [onSelectNode]);
+
+  const controlsRef = useRef<{
     zoomIn: () => void;
     zoomOut: () => void;
     resetView: () => void;
+    startLabelDrag: (nodeId: string, clientX: number, clientY: number) => void;
   }>({
     zoomIn: () => {},
     zoomOut: () => {},
-    resetView: () => {}
+    resetView: () => {},
+    startLabelDrag: () => {}
   });
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    const width = mount.clientWidth || 600;
-    const height = mount.clientHeight || 460;
+    const width = mount.clientWidth || 700;
+    const height = mount.clientHeight || 480;
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-    const DEFAULT_ZOOM = 82;
-    const MIN_ZOOM = 26;
-    const MAX_ZOOM = 160;
+    const galaxyGroup = new THREE.Group();
+    scene.add(galaxyGroup);
+
+    const camera = new THREE.PerspectiveCamera(46, width / height, 0.1, 1000);
+    const DEFAULT_ZOOM = 86;
+    const MIN_ZOOM = 34;
+    const MAX_ZOOM = 165;
 
     let targetZoom = DEFAULT_ZOOM;
+    let targetPanX = 0;
+    let targetPanY = 0;
     camera.position.set(0, 0, DEFAULT_ZOOM);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -91,335 +103,383 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
 
-    // 2. High-Fidelity 3D Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, isDarkMode ? 1.4 : 1.9);
+    // 2. Crisp 3D Lighting (Low metalness so spheres are bright and vibrant in Light & Dark Mode)
+    const ambientLight = new THREE.AmbientLight(0xffffff, isDarkMode ? 1.8 : 2.3);
     scene.add(ambientLight);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, isDarkMode ? 1.1 : 1.5);
-    dirLight.position.set(30, 50, 45);
-    scene.add(dirLight);
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, isDarkMode ? 1.6 : 1.9);
+    dirLight1.position.set(35, 55, 60);
+    scene.add(dirLight1);
 
-    const pointLight = new THREE.PointLight(0x6366f1, isDarkMode ? 2.6 : 2.0, 140);
-    pointLight.position.set(0, 0, 45);
-    scene.add(pointLight);
+    const dirLight2 = new THREE.DirectionalLight(0x818cf8, isDarkMode ? 1.0 : 0.8);
+    dirLight2.position.set(-40, -30, 40);
+    scene.add(dirLight2);
 
     // 3. Central Core Node (Developer Identity Core)
-    const coreGeo = new THREE.SphereGeometry(3.8, 24, 24);
+    const coreGeo = new THREE.SphereGeometry(3.8, 32, 32);
     const coreMat = new THREE.MeshStandardMaterial({
       color: isDarkMode ? 0x6366f1 : 0x4f46e5,
-      emissive: isDarkMode ? 0x6366f1 : 0x4338ca,
-      emissiveIntensity: isDarkMode ? 0.6 : 0.35,
+      emissive: isDarkMode ? 0x4f46e5 : 0x3730a3,
+      emissiveIntensity: isDarkMode ? 0.55 : 0.35,
       roughness: 0.25,
-      metalness: 0.85
+      metalness: 0.15
     });
     const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    scene.add(coreMesh);
+    galaxyGroup.add(coreMesh);
 
     // Glowing Central Orbital Rings
     const ringMat1 = new THREE.MeshBasicMaterial({
       color: isDarkMode ? 0x818cf8 : 0x4f46e5,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: isDarkMode ? 0.45 : 0.4
+      opacity: isDarkMode ? 0.55 : 0.45
     });
-    const ring1 = new THREE.Mesh(new THREE.RingGeometry(5.4, 5.9, 36), ringMat1);
-    scene.add(ring1);
+    const ring1 = new THREE.Mesh(new THREE.RingGeometry(5.5, 6.0, 48), ringMat1);
+    galaxyGroup.add(ring1);
 
     const ringMat2 = new THREE.MeshBasicMaterial({
       color: isDarkMode ? 0x06b6d4 : 0x0284c7,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: isDarkMode ? 0.35 : 0.3
+      opacity: isDarkMode ? 0.45 : 0.38
     });
-    const ring2 = new THREE.Mesh(new THREE.RingGeometry(7.4, 7.8, 36), ringMat2);
+    const ring2 = new THREE.Mesh(new THREE.RingGeometry(7.3, 7.7, 48), ringMat2);
     ring2.rotation.x = Math.PI / 3;
-    scene.add(ring2);
+    galaxyGroup.add(ring2);
 
-    // Core Identity Label Sprite ("CORE DNA")
-    const createCoreLabelSprite = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 256;
-      canvas.height = 64;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        drawRoundRect(ctx, 8, 8, 240, 48, 24);
-        ctx.fillStyle = isDarkMode ? 'rgba(99, 102, 241, 0.25)' : 'rgba(79, 70, 229, 0.15)';
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = isDarkMode ? '#818CF8' : '#6366F1';
-        ctx.stroke();
+    // 4. Distribute Nodes Evenly Without Collisions or Frustum Clipping
+    interface NodeEntry {
+      mesh: THREE.Mesh;
+      halo: THREE.Mesh;
+      node: TechnologyNode;
+      sphereSize: number;
+      initialPos: THREE.Vector3;
+      coreLine: THREE.Line;
+    }
 
-        ctx.font = 'bold 20px "JetBrains Mono", monospace';
-        ctx.fillStyle = isDarkMode ? '#A5B4FC' : '#4338CA';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('CORE DNA', 128, 32);
-      }
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.minFilter = THREE.LinearFilter;
-      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
-      const sprite = new THREE.Sprite(spriteMat);
-      sprite.scale.set(10, 2.5, 1);
-      return sprite;
-    };
-    const coreLabel = createCoreLabelSprite();
-    coreLabel.position.set(0, 5.8, 0);
-    scene.add(coreLabel);
+    const nodeEntries: NodeEntry[] = [];
+    const total = Math.max(1, nodes.length);
 
-    // 4. Distribute Nodes Across 3 Spatial Tiers
-    const nodeMeshes: { mesh: THREE.Mesh; node: TechnologyNode; sprite: THREE.Sprite }[] = [];
+    nodes.forEach((n, idx) => {
+      // Golden-ratio spiral + well-spaced angular distribution inside frustum
+      const angle = (idx / total) * Math.PI * 2 - Math.PI / 2;
+      const radiusBand = idx % 3 === 0 ? 25 : idx % 3 === 1 ? 33 : 40;
+      const x = Math.cos(angle) * radiusBand * 1.18;
+      const y = Math.sin(angle) * radiusBand * 0.72;
+      const z = ((idx % 3) - 1) * 11;
 
-    // Helper: Create High-Contrast Glass Capsule Pill Text Sprite
-    const createTextSprite = (text: string, usage: number, colorHex?: string) => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 440;
-      canvas.height = 96;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        const padX = 12;
-        const padY = 12;
-        const pillW = canvas.width - padX * 2; // 416
-        const pillH = canvas.height - padY * 2; // 72
-        const pillR = pillH / 2; // 36
-        const x = padX;
-        const y = padY;
+      const sphereSize = Math.max(2.3, Math.min(4.2, (n.usage / 100) * 6.5 + 2.1));
+      const geometry = new THREE.SphereGeometry(sphereSize, 28, 28);
 
-        // Outer subtle drop shadow for 3D depth
-        ctx.save();
-        ctx.shadowColor = isDarkMode ? 'rgba(0, 0, 0, 0.75)' : 'rgba(15, 23, 42, 0.18)';
-        ctx.shadowBlur = 12;
-        ctx.shadowOffsetY = 4;
+      const colorVal = n.color ? parseInt(n.color.replace('#', '0x'), 16) : 0x6366f1;
+      const material = new THREE.MeshStandardMaterial({
+        color: colorVal,
+        emissive: colorVal,
+        emissiveIntensity: isDarkMode ? 0.42 : 0.28,
+        roughness: 0.28,
+        metalness: 0.12
+      });
 
-        // Pill background fill - solid high-opacity for guaranteed readability
-        drawRoundRect(ctx, x, y, pillW, pillH, pillR);
-        ctx.fillStyle = isDarkMode ? 'rgba(13, 17, 23, 0.94)' : 'rgba(255, 255, 255, 0.97)';
-        ctx.fill();
-        ctx.restore();
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(x, y, z);
+      galaxyGroup.add(mesh);
 
-        // Border around pill - brand colored with sharp definition
-        drawRoundRect(ctx, x, y, pillW, pillH, pillR);
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = colorHex || (isDarkMode ? '#818CF8' : '#4F46E5');
-        ctx.stroke();
-
-        // Brand indicator dot on the left
-        const dotX = x + 24;
-        const dotY = y + pillH / 2;
-        const dotR = 8;
-        ctx.beginPath();
-        ctx.arc(dotX, dotY, dotR, 0, Math.PI * 2);
-        ctx.fillStyle = colorHex || '#6366F1';
-        ctx.fill();
-
-        // Subtle ring around dot
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = isDarkMode ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.12)';
-        ctx.stroke();
-
-        // Technology Name: 100% Guaranteed High Contrast
-        // Light Mode: #0F172A (Deep Charcoal Slate)
-        // Dark Mode: #FFFFFF (Crisp Pure White)
-        const nameX = dotX + dotR + 14;
-        const fontSize = text.length > 16 ? 22 : (text.length > 11 ? 24 : 26);
-        ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-        ctx.fillStyle = isDarkMode ? '#FFFFFF' : '#0F172A';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(text, nameX, dotY);
-
-        // Usage badge on right (e.g. "28%")
-        ctx.font = 'bold 22px "JetBrains Mono", monospace';
-        ctx.fillStyle = isDarkMode ? '#94A3B8' : '#475569';
-        ctx.textAlign = 'right';
-        ctx.fillText(`${usage}%`, x + pillW - 18, dotY);
-      }
-
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.minFilter = THREE.LinearFilter;
-      const spriteMat = new THREE.SpriteMaterial({
-        map: texture,
+      // Subtle outer glow halo around each sphere
+      const haloGeo = new THREE.SphereGeometry(sphereSize * 1.28, 20, 20);
+      const haloMat = new THREE.MeshBasicMaterial({
+        color: colorVal,
         transparent: true,
-        depthTest: false,
+        opacity: isDarkMode ? 0.18 : 0.14,
         depthWrite: false
       });
-      const sprite = new THREE.Sprite(spriteMat);
-      sprite.scale.set(17.5, 3.8, 1);
-      return sprite;
-    };
+      const halo = new THREE.Mesh(haloGeo, haloMat);
+      halo.position.copy(mesh.position);
+      galaxyGroup.add(halo);
 
-    // Stratify nodes into 3 clean orbital tiers
-    const tier1: TechnologyNode[] = []; // Core Languages (Python, JS, C++, HTML)
-    const tier2: TechnologyNode[] = []; // Frameworks & Stacks (React, TS, FastAPI, DSA)
-    const tier3: TechnologyNode[] = []; // Platforms & Tools (Tailwind, Git)
+      // Laser line from Core (0,0,0) to Node
+      const lineColor = getVisibleLineColor(n.color || '#6366f1', isDarkMode);
+      const lineMat = new THREE.LineBasicMaterial({
+        color: lineColor,
+        transparent: true,
+        opacity: isDarkMode ? 0.55 : 0.72
+      });
+      const lineGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, 0),
+        mesh.position.clone()
+      ]);
+      const coreLine = new THREE.Line(lineGeo, lineMat);
+      galaxyGroup.add(coreLine);
 
-    nodes.forEach(n => {
-      if (n.type === 'primary' && !n.parent) {
-        tier1.push(n);
-      } else if (n.type === 'framework' || n.parent) {
-        tier2.push(n);
-      } else {
-        tier3.push(n);
-      }
-    });
-
-    if (tier1.length === 0) tier1.push(...nodes.slice(0, 3));
-    if (tier2.length === 0) tier2.push(...nodes.slice(3, 7));
-    if (tier3.length === 0) tier3.push(...nodes.slice(7));
-
-    const tiers = [
-      { list: tier1, radius: 36, offset: 0 },
-      { list: tier2, radius: 50, offset: Math.PI / 4 },
-      { list: tier3, radius: 64, offset: Math.PI / 2 }
-    ];
-
-    tiers.forEach((tier, tierIdx) => {
-      const count = tier.list.length;
-      tier.list.forEach((n, j) => {
-        const angle = (j / Math.max(1, count)) * Math.PI * 2 + tier.offset;
-        const x = Math.cos(angle) * tier.radius;
-        const z = Math.sin(angle) * (tier.radius * 0.88);
-        // Stagger elevation so labels never vertically collide
-        const y = (j % 2 === 0 ? 1 : -1) * (10 + tierIdx * 2.5);
-
-        const sphereSize = Math.max(2.0, Math.min(3.8, (n.usage / 100) * 7.0 + 2.0));
-        const geometry = new THREE.SphereGeometry(sphereSize, 24, 24);
-
-        const colorVal = n.color ? parseInt(n.color.replace('#', '0x'), 16) : 0x6366f1;
-        const material = new THREE.MeshStandardMaterial({
-          color: colorVal,
-          emissive: colorVal,
-          emissiveIntensity: isDarkMode ? 0.45 : 0.25,
-          roughness: 0.25,
-          metalness: 0.75
-        });
-
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(x, y, z);
-        scene.add(mesh);
-
-        // High-contrast text pill sprite floating right above node
-        const sprite = createTextSprite(n.name, n.usage, n.color || '#6366f1');
-        sprite.position.set(x, y + sphereSize + 3.2, z);
-        scene.add(sprite);
-
-        nodeMeshes.push({ mesh, node: n, sprite });
-
-        // Laser energy thread connecting to Central Core with high visibility
-        const lineColor = getVisibleLineColor(n.color || '#6366f1', isDarkMode);
-        const lineMat = new THREE.LineBasicMaterial({
-          color: lineColor,
-          transparent: true,
-          opacity: isDarkMode ? 0.45 : 0.65
-        });
-        const lineGeo = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(0, 0, 0),
-          new THREE.Vector3(x, y, z)
-        ]);
-        const line = new THREE.Line(lineGeo, lineMat);
-        scene.add(line);
+      nodeEntries.push({
+        mesh,
+        halo,
+        node: n,
+        sphereSize,
+        initialPos: new THREE.Vector3(x, y, z),
+        coreLine
       });
     });
 
     // 5. Connect Parent-Child Stacks (e.g. React -> JavaScript, FastAPI -> Python)
-    nodeMeshes.forEach(child => {
+    interface ParentChildLink {
+      child: NodeEntry;
+      parent: NodeEntry;
+      line: THREE.Line;
+    }
+    const parentChildLinks: ParentChildLink[] = [];
+
+    nodeEntries.forEach(child => {
       if (child.node.parent) {
-        const parentMatch = nodeMeshes.find(p =>
-          p.node.id.toLowerCase() === child.node.parent?.toLowerCase() ||
-          p.node.name.toLowerCase() === child.node.parent?.toLowerCase()
+        const parentMatch = nodeEntries.find(
+          p =>
+            p.node.id.toLowerCase() === child.node.parent?.toLowerCase() ||
+            p.node.name.toLowerCase() === child.node.parent?.toLowerCase()
         );
         if (parentMatch) {
           const interMat = new THREE.LineBasicMaterial({
-            color: isDarkMode ? 0x06b6d4 : 0x0284c7,
+            color: isDarkMode ? 0x22d3ee : 0x0284c7,
             transparent: true,
-            opacity: isDarkMode ? 0.75 : 0.85
+            opacity: isDarkMode ? 0.8 : 0.85
           });
           const interGeo = new THREE.BufferGeometry().setFromPoints([
-            child.mesh.position,
-            parentMatch.mesh.position
+            child.mesh.position.clone(),
+            parentMatch.mesh.position.clone()
           ]);
           const interLine = new THREE.Line(interGeo, interMat);
-          scene.add(interLine);
+          galaxyGroup.add(interLine);
+          parentChildLinks.push({ child, parent: parentMatch, line: interLine });
         }
       }
     });
 
-    // 6. Interactive Drag & Mouse Orbit
-    let isDragging = false;
+    // Helper to update dynamic line geometries when a node is dragged
+    const updateAllLines = () => {
+      nodeEntries.forEach(entry => {
+        entry.halo.position.copy(entry.mesh.position);
+        const posAttr = entry.coreLine.geometry.getAttribute('position') as THREE.BufferAttribute;
+        if (posAttr) {
+          posAttr.setXYZ(1, entry.mesh.position.x, entry.mesh.position.y, entry.mesh.position.z);
+          posAttr.needsUpdate = true;
+        }
+      });
+      parentChildLinks.forEach(link => {
+        const posAttr = link.line.geometry.getAttribute('position') as THREE.BufferAttribute;
+        if (posAttr) {
+          posAttr.setXYZ(0, link.child.mesh.position.x, link.child.mesh.position.y, link.child.mesh.position.z);
+          posAttr.setXYZ(1, link.parent.mesh.position.x, link.parent.mesh.position.y, link.parent.mesh.position.z);
+          posAttr.needsUpdate = true;
+        }
+      });
+    };
+
+    // 6. Interactive Node Dragging, Scene Orbiting, and Scene Panning
+    let isDraggingScene = false;
+    let isPanningScene = false;
+    let draggedNodeEntry: NodeEntry | null = null;
     let prevMouseX = 0;
     let prevMouseY = 0;
-    let targetRotationX = 0;
+    let targetRotationX = 0.12;
     let targetRotationY = 0;
 
+    const raycaster = new THREE.Raycaster();
+    const dragPlane = new THREE.Plane();
+    const dragIntersectPoint = new THREE.Vector3();
+
+    const getNormalizedMouse = (clientX: number, clientY: number) => {
+      const rect = mount.getBoundingClientRect();
+      return new THREE.Vector2(
+        ((clientX - rect.left) / (rect.width || width)) * 2 - 1,
+        -((clientY - rect.top) / (rect.height || height)) * 2 + 1
+      );
+    };
+
+    const beginNodeDrag = (entry: NodeEntry, clientX: number, clientY: number) => {
+      draggedNodeEntry = entry;
+      isDraggingScene = false;
+      isPanningScene = false;
+      prevMouseX = clientX;
+      prevMouseY = clientY;
+      onSelectNodeRef.current(entry.node);
+
+      // Set drag plane perpendicular to camera passing through the node's world position
+      const worldPos = new THREE.Vector3();
+      entry.mesh.getWorldPosition(worldPos);
+      const camDir = new THREE.Vector3();
+      camera.getWorldDirection(camDir);
+      dragPlane.setFromNormalAndCoplanarPoint(camDir, worldPos);
+      mount.style.cursor = 'grabbing';
+    };
+
     const onMouseDown = (e: MouseEvent) => {
-      isDragging = true;
+      const mouse = getNormalizedMouse(e.clientX, e.clientY);
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(nodeEntries.map(ne => ne.mesh));
+
+      if (intersects.length > 0) {
+        const hitEntry = nodeEntries.find(ne => ne.mesh === intersects[0].object);
+        if (hitEntry) {
+          beginNodeDrag(hitEntry, e.clientX, e.clientY);
+          return;
+        }
+      }
+
       prevMouseX = e.clientX;
       prevMouseY = e.clientY;
+      if (e.button === 2 || e.shiftKey || interactionModeRef.current === 'pan') {
+        isPanningScene = true;
+      } else {
+        isDraggingScene = true;
+      }
       mount.style.cursor = 'grabbing';
     };
 
     const onMouseMove = (e: MouseEvent) => {
-      const rect = mount.getBoundingClientRect();
-      const mouse = new THREE.Vector2(
-        ((e.clientX - rect.left) / width) * 2 - 1,
-        -((e.clientY - rect.top) / height) * 2 + 1
-      );
-
-      // Raycasting for node & sprite hover
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(mouse, camera);
-      const hitTargets = nodeMeshes.flatMap(nm => [nm.mesh, nm.sprite]);
-      const intersects = raycaster.intersectObjects(hitTargets);
-
-      if (intersects.length > 0) {
-        mount.style.cursor = 'pointer';
-        const hit = nodeMeshes.find(nm => nm.mesh === intersects[0].object || nm.sprite === intersects[0].object);
-        if (hit) {
-          onSelectNode(hit.node);
+      if (draggedNodeEntry) {
+        const mouse = getNormalizedMouse(e.clientX, e.clientY);
+        raycaster.setFromCamera(mouse, camera);
+        if (raycaster.ray.intersectPlane(dragPlane, dragIntersectPoint)) {
+          const localPos = galaxyGroup.worldToLocal(dragIntersectPoint.clone());
+          draggedNodeEntry.mesh.position.copy(localPos);
+          updateAllLines();
         }
-      } else {
-        mount.style.cursor = isDragging ? 'grabbing' : 'grab';
+        return;
       }
 
-      if (isDragging) {
+      if (isPanningScene) {
         const deltaX = e.clientX - prevMouseX;
         const deltaY = e.clientY - prevMouseY;
-        targetRotationY += deltaX * 0.008;
-        targetRotationX += deltaY * 0.008;
+        const panScale = targetZoom * 0.0012;
+        targetPanX += deltaX * panScale;
+        targetPanY -= deltaY * panScale;
         prevMouseX = e.clientX;
         prevMouseY = e.clientY;
+        return;
+      }
+
+      if (isDraggingScene) {
+        const deltaX = e.clientX - prevMouseX;
+        const deltaY = e.clientY - prevMouseY;
+        targetRotationY += deltaX * 0.0085;
+        targetRotationX = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, targetRotationX + deltaY * 0.0085));
+        prevMouseX = e.clientX;
+        prevMouseY = e.clientY;
+        return;
+      }
+
+      // Hover detection when not dragging
+      const rect = mount.getBoundingClientRect();
+      if (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      ) {
+        const mouse = getNormalizedMouse(e.clientX, e.clientY);
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(nodeEntries.map(ne => ne.mesh));
+        if (intersects.length > 0) {
+          mount.style.cursor = 'pointer';
+          const hit = nodeEntries.find(ne => ne.mesh === intersects[0].object);
+          if (hit) {
+            onSelectNodeRef.current(hit.node);
+          }
+        } else {
+          mount.style.cursor = 'grab';
+        }
       }
     };
 
     const onMouseUp = () => {
-      isDragging = false;
+      draggedNodeEntry = null;
+      isDraggingScene = false;
+      isPanningScene = false;
       mount.style.cursor = 'grab';
     };
 
-    // 7. Mouse Wheel Zoom & Touch Pinch-to-Zoom
+    // Touch support for mobile dragging
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        const mouse = getNormalizedMouse(t.clientX, t.clientY);
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(nodeEntries.map(ne => ne.mesh));
+        if (intersects.length > 0) {
+          const hitEntry = nodeEntries.find(ne => ne.mesh === intersects[0].object);
+          if (hitEntry) {
+            beginNodeDrag(hitEntry, t.clientX, t.clientY);
+            return;
+          }
+        }
+        isDraggingScene = true;
+        prevMouseX = t.clientX;
+        prevMouseY = t.clientY;
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        if (draggedNodeEntry) {
+          e.preventDefault();
+          const mouse = getNormalizedMouse(t.clientX, t.clientY);
+          raycaster.setFromCamera(mouse, camera);
+          if (raycaster.ray.intersectPlane(dragPlane, dragIntersectPoint)) {
+            const localPos = galaxyGroup.worldToLocal(dragIntersectPoint.clone());
+            draggedNodeEntry.mesh.position.copy(localPos);
+            updateAllLines();
+          }
+        } else if (isDraggingScene) {
+          const deltaX = t.clientX - prevMouseX;
+          const deltaY = t.clientY - prevMouseY;
+          targetRotationY += deltaX * 0.0085;
+          targetRotationX = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, targetRotationX + deltaY * 0.0085));
+          prevMouseX = t.clientX;
+          prevMouseY = t.clientY;
+        }
+      }
+    };
+
+    const onTouchEnd = () => {
+      draggedNodeEntry = null;
+      isDraggingScene = false;
+      isPanningScene = false;
+    };
+
+    // 7. Mouse Wheel Zoom
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      const zoomStep = e.deltaY * 0.08;
+      const zoomStep = e.deltaY * 0.07;
       targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, targetZoom + zoomStep));
       setZoomLevelPercent(Math.round((DEFAULT_ZOOM / targetZoom) * 100));
     };
 
-    // Double-click to Reset
-    const onDoubleClick = () => {
+    const resetAllPositions = () => {
       targetZoom = DEFAULT_ZOOM;
-      targetRotationX = 0;
+      targetPanX = 0;
+      targetPanY = 0;
+      targetRotationX = 0.12;
       targetRotationY = 0;
+      nodeEntries.forEach(entry => {
+        entry.mesh.position.copy(entry.initialPos);
+      });
+      updateAllLines();
       setZoomLevelPercent(100);
-      onSelectNode(null);
+      onSelectNodeRef.current(null);
     };
+
+    const onContextMenu = (e: MouseEvent) => e.preventDefault();
 
     mount.addEventListener('mousedown', onMouseDown);
     mount.addEventListener('wheel', onWheel, { passive: false });
-    mount.addEventListener('dblclick', onDoubleClick);
+    mount.addEventListener('dblclick', resetAllPositions);
+    mount.addEventListener('contextmenu', onContextMenu);
+    mount.addEventListener('touchstart', onTouchStart, { passive: true });
+    mount.addEventListener('touchmove', onTouchMove, { passive: false });
+    mount.addEventListener('touchend', onTouchEnd);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
 
-    // Zoom Button Helpers
-    zoomControlsRef.current = {
+    controlsRef.current = {
       zoomIn: () => {
         targetZoom = Math.max(MIN_ZOOM, targetZoom - 12);
         setZoomLevelPercent(Math.round((DEFAULT_ZOOM / targetZoom) * 100));
@@ -428,16 +488,15 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
         targetZoom = Math.min(MAX_ZOOM, targetZoom + 12);
         setZoomLevelPercent(Math.round((DEFAULT_ZOOM / targetZoom) * 100));
       },
-      resetView: () => {
-        targetZoom = DEFAULT_ZOOM;
-        targetRotationX = 0;
-        targetRotationY = 0;
-        setZoomLevelPercent(100);
-        onSelectNode(null);
+      resetView: resetAllPositions,
+      startLabelDrag: (nodeId: string, clientX: number, clientY: number) => {
+        const entry = nodeEntries.find(ne => ne.node.id === nodeId);
+        if (entry) {
+          beginNodeDrag(entry, clientX, clientY);
+        }
       }
     };
 
-    // Resize handler
     const onResize = () => {
       if (!mount) return;
       const w = mount.clientWidth;
@@ -448,37 +507,128 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
     };
     window.addEventListener('resize', onResize);
 
-    // 8. Animation Render Loop
+    // 8. Animation Loop + Real-Time 2D Screen-Space Anti-Overlap Label Projection
     let animId: number;
+    const tempVec = new THREE.Vector3();
+
     const animate = () => {
       animId = requestAnimationFrame(animate);
 
-      // Smooth camera zoom dampening
-      camera.position.z += (targetZoom - camera.position.z) * 0.12;
+      const curW = mount.clientWidth || width;
+      const curH = mount.clientHeight || height;
 
-      // Gentle auto-rotation when user is not dragging
-      if (!isDragging) {
-        targetRotationY += 0.002;
+      // Smooth camera zoom & pan
+      camera.position.z += (targetZoom - camera.position.z) * 0.14;
+      galaxyGroup.position.x += (targetPanX - galaxyGroup.position.x) * 0.14;
+      galaxyGroup.position.y += (targetPanY - galaxyGroup.position.y) * 0.14;
+
+      // Gentle auto-rotation when enabled and not dragging
+      if (autoRotateRef.current && !isDraggingScene && !isPanningScene && !draggedNodeEntry) {
+        targetRotationY += 0.0022;
       }
 
-      scene.rotation.y += (targetRotationY - scene.rotation.y) * 0.08;
-      scene.rotation.x += (targetRotationX - scene.rotation.x) * 0.08;
+      galaxyGroup.rotation.y += (targetRotationY - galaxyGroup.rotation.y) * 0.1;
+      galaxyGroup.rotation.x += (targetRotationX - galaxyGroup.rotation.x) * 0.1;
 
-      ring1.rotation.z += 0.01;
-      ring2.rotation.y += 0.012;
+      ring1.rotation.z += 0.008;
+      ring2.rotation.y += 0.01;
 
-      // Pulse selected node
-      nodeMeshes.forEach(nm => {
-        if (selectedNode && nm.node.id === selectedNode.id) {
-          nm.mesh.scale.set(1.35, 1.35, 1.35);
-          nm.sprite.scale.set(19.5, 4.2, 1);
-        } else {
-          nm.mesh.scale.set(1, 1, 1);
-          nm.sprite.scale.set(17.5, 3.8, 1);
-        }
+      const activeId = selectedNodeRef.current?.id;
+      nodeEntries.forEach(entry => {
+        const isSel = activeId === entry.node.id;
+        const s = isSel ? 1.28 : 1.0;
+        entry.mesh.scale.set(s, s, s);
+        entry.halo.scale.set(s, s, s);
       });
 
       renderer.render(scene, camera);
+
+      // Update Core DNA HTML Badge Position
+      if (coreLabelRef.current) {
+        coreMesh.getWorldPosition(tempVec);
+        tempVec.y -= 5.8;
+        tempVec.project(camera);
+        const cx = (tempVec.x * 0.5 + 0.5) * curW;
+        const cy = (-(tempVec.y * 0.5) + 0.5) * curH;
+        coreLabelRef.current.style.transform = `translate3d(${Math.round(cx)}px, ${Math.round(cy)}px, 0) translate(-50%, -50%)`;
+      }
+
+      // Compute projected 2D positions for all node labels and resolve any overlaps
+      const projected: {
+        id: string;
+        x: number;
+        y: number;
+        z: number;
+        w: number;
+        h: number;
+      }[] = [];
+
+      nodeEntries.forEach(entry => {
+        entry.mesh.getWorldPosition(tempVec);
+        tempVec.y += entry.sphereSize + 2.2;
+        tempVec.project(camera);
+
+        const sx = (tempVec.x * 0.5 + 0.5) * curW;
+        const sy = (-(tempVec.y * 0.5) + 0.5) * curH;
+        const pillW = Math.max(122, entry.node.name.length * 7.5 + 64);
+        const pillH = 30;
+
+        projected.push({
+          id: entry.node.id,
+          x: sx,
+          y: sy,
+          z: tempVec.z,
+          w: pillW,
+          h: pillH
+        });
+      });
+
+      // 3 passes of 2D screen-space collision repulsion + viewport clamping
+      for (let iter = 0; iter < 3; iter++) {
+        for (let i = 0; i < projected.length; i++) {
+          for (let j = i + 1; j < projected.length; j++) {
+            const a = projected[i];
+            const b = projected[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const minX = (a.w + b.w) * 0.5 + 6;
+            const minY = (a.h + b.h) * 0.5 + 6;
+
+            if (Math.abs(dx) < minX && Math.abs(dy) < minY) {
+              const overlapX = minX - Math.abs(dx);
+              const overlapY = minY - Math.abs(dy);
+              if (overlapY < overlapX) {
+                const pushY = (overlapY * 0.5) * (dy >= 0 ? 1 : -1);
+                a.y -= pushY;
+                b.y += pushY;
+              } else {
+                const pushX = (overlapX * 0.5) * (dx >= 0 ? 1 : -1);
+                a.x -= pushX;
+                b.x += pushX;
+              }
+            }
+          }
+        }
+
+        // Clamp within container bounds so no pill is ever clipped at the edges
+        projected.forEach(p => {
+          const halfW = p.w * 0.5 + 10;
+          const halfH = p.h * 0.5 + 10;
+          p.x = Math.max(halfW, Math.min(curW - halfW, p.x));
+          p.y = Math.max(halfH + 40, Math.min(curH - halfH - 38, p.y));
+        });
+      }
+
+      // Apply transforms to HTML pill elements
+      projected.forEach(p => {
+        const el = labelRefs.current[p.id];
+        if (el) {
+          const isSel = activeId === p.id;
+          const scale = isSel ? 1.08 : 1.0;
+          el.style.transform = `translate3d(${Math.round(p.x)}px, ${Math.round(p.y)}px, 0) translate(-50%, -50%) scale(${scale})`;
+          el.style.zIndex = isSel ? '35' : p.z < 0.991 ? '25' : '15';
+        }
+      });
     };
 
     animate();
@@ -487,7 +637,11 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
       cancelAnimationFrame(animId);
       mount.removeEventListener('mousedown', onMouseDown);
       mount.removeEventListener('wheel', onWheel);
-      mount.removeEventListener('dblclick', onDoubleClick);
+      mount.removeEventListener('dblclick', resetAllPositions);
+      mount.removeEventListener('contextmenu', onContextMenu);
+      mount.removeEventListener('touchstart', onTouchStart);
+      mount.removeEventListener('touchmove', onTouchMove);
+      mount.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
       window.removeEventListener('resize', onResize);
@@ -498,53 +652,152 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
     };
   }, [nodes, isDarkMode]);
 
-  const handleZoomIn = useCallback(() => zoomControlsRef.current.zoomIn(), []);
-  const handleZoomOut = useCallback(() => zoomControlsRef.current.zoomOut(), []);
-  const handleResetView = useCallback(() => zoomControlsRef.current.resetView(), []);
+  const handleZoomIn = useCallback(() => controlsRef.current.zoomIn(), []);
+  const handleZoomOut = useCallback(() => controlsRef.current.zoomOut(), []);
+  const handleResetView = useCallback(() => controlsRef.current.resetView(), []);
 
   return (
     <div
       ref={mountRef}
-      className="w-full h-[460px] md:h-[480px] relative cursor-grab active:cursor-grabbing select-none overflow-hidden rounded-xl glass-panel shadow-inner"
+      className="w-full h-[470px] md:h-[500px] relative cursor-grab active:cursor-grabbing select-none overflow-hidden rounded-xl glass-panel shadow-inner"
     >
-      {/* Floating 3D Navigation & Zoom Controls Overlay */}
-      <div className="absolute top-3 right-3 flex items-center gap-1 p-1 rounded-xl glass-pill shadow-xs z-30 font-mono">
+      {/* Crisp HTML Overlay Layer for 100% Legible, Draggable, Zero-Overlap Node Labels */}
+      <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden">
+        {/* Central Core DNA Badge */}
+        <div
+          ref={coreLabelRef}
+          className="absolute top-0 left-0 px-2.5 py-0.5 rounded-full bg-indigo-600/95 dark:bg-indigo-500/95 text-white font-mono text-[10px] font-extrabold tracking-wider uppercase shadow-md border border-indigo-300/60 pointer-events-none whitespace-nowrap"
+        >
+          CORE DNA
+        </div>
+
+        {/* Technology Node Pill Badges (Draggable & Clickable) */}
+        {nodes.map((node) => {
+          const isSelected = selectedNode?.id === node.id;
+          return (
+            <div
+              key={node.id}
+              ref={(el) => {
+                labelRefs.current[node.id] = el;
+              }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                controlsRef.current.startLabelDrag(node.id, e.clientX, e.clientY);
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+                if (e.touches.length === 1) {
+                  controlsRef.current.startLabelDrag(
+                    node.id,
+                    e.touches[0].clientX,
+                    e.touches[0].clientY
+                  );
+                }
+              }}
+              onMouseEnter={() => onSelectNode(node)}
+              className={`absolute top-0 left-0 pointer-events-auto cursor-grab active:cursor-grabbing px-3 py-1 rounded-full flex items-center gap-2 whitespace-nowrap transition-shadow duration-150 ${
+                isSelected
+                  ? 'bg-white dark:bg-[#0D1117] ring-2 ring-indigo-500 shadow-xl'
+                  : 'bg-white/95 dark:bg-[#0D1117]/95 hover:bg-white dark:hover:bg-[#161B22] shadow-md'
+              }`}
+              style={{
+                border: `2px solid ${node.color || '#6366F1'}`,
+                willChange: 'transform'
+              }}
+              title={`Drag to move ${node.name} (${node.usage}% code share)`}
+            >
+              <span
+                className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs"
+                style={{ backgroundColor: node.color || '#6366F1' }}
+              />
+              <span className="font-sans text-xs font-extrabold text-slate-900 dark:text-white tracking-tight">
+                {node.name}
+              </span>
+              <span className="font-mono text-[11px] font-bold text-indigo-600 dark:text-indigo-300 pl-1 border-l border-slate-200 dark:border-slate-700">
+                {node.usage}%
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Top-Left Mode & Auto-Spin Controls */}
+      <div className="absolute top-3 left-3 flex items-center gap-1.5 p-1 rounded-xl bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 shadow-sm z-30 font-mono text-[11px]">
+        <button
+          onClick={() => setInteractionMode('rotate')}
+          className={`px-2.5 py-1 rounded-lg flex items-center gap-1 font-bold transition-all cursor-pointer ${
+            interactionMode === 'rotate'
+              ? 'bg-indigo-600 text-white shadow-2xs'
+              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+          title="Drag background to rotate 3D galaxy"
+        >
+          <Orbit size={12} />
+          Rotate
+        </button>
+        <button
+          onClick={() => setInteractionMode('pan')}
+          className={`px-2.5 py-1 rounded-lg flex items-center gap-1 font-bold transition-all cursor-pointer ${
+            interactionMode === 'pan'
+              ? 'bg-indigo-600 text-white shadow-2xs'
+              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+          title="Drag background to move/pan entire galaxy"
+        >
+          <Move size={12} />
+          Move
+        </button>
+        <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+        <button
+          onClick={() => setAutoRotate(!autoRotate)}
+          className="px-2 py-1 rounded-lg flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          title={autoRotate ? 'Pause Auto-Spin' : 'Resume Auto-Spin'}
+        >
+          {autoRotate ? <Pause size={12} className="text-amber-500" /> : <Play size={12} className="text-emerald-500" />}
+          <span className="hidden sm:inline">{autoRotate ? 'Spinning' : 'Paused'}</span>
+        </button>
+      </div>
+
+      {/* Top-Right Zoom & Reset Controls */}
+      <div className="absolute top-3 right-3 flex items-center gap-1 p-1 rounded-xl bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 shadow-sm z-30 font-mono">
         <button
           onClick={handleZoomIn}
-          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
+          className="p-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           title="Zoom In (Scroll Up)"
         >
           <ZoomIn size={14} />
         </button>
 
-        <span className="px-1.5 text-[11px] font-bold text-[#64748B] dark:text-[#94A3B8] min-w-11 text-center">
+        <span className="px-1.5 text-[11px] font-extrabold text-slate-800 dark:text-slate-200 min-w-11 text-center">
           {zoomLevelPercent}%
         </span>
 
         <button
           onClick={handleZoomOut}
-          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
+          className="p-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           title="Zoom Out (Scroll Down)"
         >
           <ZoomOut size={14} />
         </button>
 
-        <div className="w-[1px] h-4 bg-white/40 dark:border-white/10 mx-0.5" />
+        <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-0.5" />
 
         <button
           onClick={handleResetView}
-          className="p-1.5 rounded-lg text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors flex items-center gap-1 text-[10px] font-semibold cursor-pointer"
-          title="Reset View / Center (Double Click)"
+          className="px-2 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 text-[10px] font-bold cursor-pointer"
+          title="Reset All Positions & Zoom (Double Click)"
         >
           <RotateCcw size={12} />
           Reset
         </button>
       </div>
 
-      {/* Bottom Hint Banner - Elevated frosted glass badge */}
-      <div className="absolute bottom-3 left-3 text-[11px] font-mono px-3 py-1.5 rounded-lg glass-pill text-[#475569] dark:text-[#94A3B8] flex items-center gap-2 pointer-events-none z-20">
-        <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
-        <span>Scroll / Pinch to <strong>Zoom</strong> • Drag to <strong>Rotate</strong> • Double-click to <strong>Reset</strong></span>
+      {/* Bottom Interactive Guide Banner */}
+      <div className="absolute bottom-3 left-3 right-3 sm:right-auto text-[11px] font-mono px-3 py-1.5 rounded-lg bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex flex-wrap items-center gap-2 pointer-events-none z-30 shadow-xs">
+        <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping shrink-0" />
+        <span>
+          <strong>Drag any Node / Label</strong> to move it • <strong>Drag Space</strong> to {interactionMode === 'pan' ? 'Pan' : 'Rotate'} • <strong>Scroll</strong> to Zoom
+        </span>
       </div>
     </div>
   );
