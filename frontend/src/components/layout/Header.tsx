@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
 
   return (
     <header
-      className={`glass-nav fixed top-0 left-0 right-0 z-30 h-16 border-b flex items-center justify-between pr-4 sm:pr-6 transition-all duration-300 ${
+      className={`glass-nav !fixed top-0 left-0 right-0 z-30 h-16 border-b flex items-center justify-between pr-4 sm:pr-6 transition-all duration-300 ${
         isSidebarCollapsed ? 'pl-20 sm:pl-24' : 'pl-[246px]'
       }`}
     >
