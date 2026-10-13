@@ -188,6 +188,22 @@ html.dark .dark\:fill-\[\#94A3B8\] {
   overflow: hidden;
 }
 
+/* Ensure utility positioning classes override default position: relative */
+.glass-card.fixed,
+.glass-card.\!fixed,
+.glass-panel.fixed,
+.glass-panel.\!fixed {
+  position: fixed !important;
+}
+
+.glass-card.absolute,
+.glass-card.\!absolute,
+.glass-panel.absolute,
+.glass-panel.\!absolute {
+  position: absolute !important;
+}
+
+
 /* Standalone fixed-size card variant (240x360) */
 .glass-card.card-fixed,
 .glass-card-sample {

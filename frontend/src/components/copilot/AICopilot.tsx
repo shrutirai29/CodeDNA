@@ -28,6 +28,16 @@ export const AICopilot: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isCopilotOpen) {
+        toggleCopilot();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isCopilotOpen, toggleCopilot]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputVal.trim() && !isChatLoading) {
@@ -51,7 +61,7 @@ export const AICopilot: React.FC = () => {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           whileHover={{ scale: 1.05 }}
-          className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-40 px-4 py-2.5 rounded-full bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white shadow-xl shadow-indigo-500/30 flex items-center gap-2 font-mono text-xs font-bold hover:shadow-indigo-500/50 transition-all cursor-pointer"
+          className="!fixed bottom-24 md:bottom-6 right-4 md:right-6 z-40 px-4 py-2.5 rounded-full bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white shadow-xl shadow-indigo-500/30 flex items-center gap-2 font-mono text-xs font-bold hover:shadow-indigo-500/50 transition-all cursor-pointer"
         >
           <Sparkles size={16} className="animate-spin" style={{ animationDuration: '4s' }} />
           ✨ CodeDNA Copilot
@@ -66,18 +76,21 @@ export const AICopilot: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[420px] h-[480px] sm:h-[540px] rounded-2xl glass-card shadow-2xl flex flex-col overflow-hidden"
+            className="!fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[420px] h-[520px] sm:h-[560px] max-h-[85vh] rounded-2xl glass-card !bg-white/95 dark:!bg-[#0D1117]/95 !backdrop-blur-2xl border border-slate-200/90 dark:border-white/10 shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-4 glass-panel border-b border-white/50 dark:border-white/10 flex items-center justify-between">
+            <div className="p-3.5 sm:p-4 bg-slate-50/80 dark:bg-white/[0.03] border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6366F1] to-[#06B6D4] text-white flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#6366F1] to-[#06B6D4] text-white flex items-center justify-center shrink-0 shadow-xs">
                   <Bot size={16} />
                 </div>
                 <div>
                   <h3 className="font-mono text-xs font-bold text-[#111827] dark:text-[#F8FAFC] flex items-center gap-1.5">
                     CodeDNA Copilot
-                    <span className="text-[10px] text-emerald-500 font-normal">● Online</span>
+                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-500 font-normal">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Online
+                    </span>
                   </h3>
                   <div className="flex items-center gap-2 text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8]">
                     <span>Profile: <strong>@{profile?.username || 'shrutirai29'}</strong></span>
@@ -89,21 +102,23 @@ export const AICopilot: React.FC = () => {
 
               <button
                 onClick={toggleCopilot}
-                className="p-1.5 rounded-lg text-[#64748B] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-white/40 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-1.5 rounded-lg text-[#64748B] hover:text-[#111827] dark:hover:text-[#F8FAFC] hover:bg-slate-200/60 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                aria-label="Close Copilot"
+                title="Close (Esc)"
               >
                 <X size={16} />
               </button>
             </div>
 
             {/* Messages Scroll Area */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs">
+            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs bg-transparent">
               {chatMessages.map((msg) => (
                 <div
                   key={msg.id}
                   className={`flex gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.sender === 'assistant' && (
-                    <div className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-[#6366F1] dark:text-[#818CF8] flex items-center justify-center shrink-0 mt-0.5">
+                    <div className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-[#6366F1] dark:text-[#818CF8] border border-indigo-100 dark:border-indigo-900/50 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                       <Bot size={13} />
                     </div>
                   )}
@@ -111,14 +126,14 @@ export const AICopilot: React.FC = () => {
                   <div
                     className={`p-3 rounded-2xl max-w-[85%] leading-relaxed ${
                       msg.sender === 'user'
-                        ? 'bg-[#6366F1] text-white rounded-tr-xs font-mono shadow-sm'
-                        : 'glass-panel text-[#111827] dark:text-[#F8FAFC] rounded-tl-xs'
+                        ? 'bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white rounded-tr-xs font-mono shadow-sm'
+                        : 'bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-white/5 text-[#111827] dark:text-[#F8FAFC] rounded-tl-xs shadow-xs'
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                     <div
-                      className={`text-[9px] mt-1 font-mono flex items-center justify-between gap-2 opacity-70 ${
-                        msg.sender === 'user' ? 'text-indigo-100' : 'text-[#94A3B8]'
+                      className={`text-[9px] mt-1 font-mono flex items-center justify-between gap-2 opacity-75 ${
+                        msg.sender === 'user' ? 'text-indigo-100' : 'text-[#64748B] dark:text-[#94A3B8]'
                       }`}
                     >
                       <span>{msg.timestamp}</span>
@@ -129,7 +144,7 @@ export const AICopilot: React.FC = () => {
                   </div>
 
                   {msg.sender === 'user' && (
-                    <div className="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+                    <div className="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                       <User size={13} />
                     </div>
                   )}
@@ -137,7 +152,7 @@ export const AICopilot: React.FC = () => {
               ))}
 
               {isChatLoading && (
-                <div className="flex items-center gap-2 text-xs font-mono text-[#6366F1] dark:text-[#818CF8] p-2">
+                <div className="flex items-center gap-2 text-xs font-mono text-[#6366F1] dark:text-[#818CF8] p-2 bg-indigo-50/50 dark:bg-indigo-950/30 rounded-xl border border-indigo-100 dark:border-indigo-900/30">
                   <div className="-my-14 -mx-11 shrink-0">
                     <PixelGhost scale={0.22} />
                   </div>
@@ -150,7 +165,7 @@ export const AICopilot: React.FC = () => {
             </div>
 
             {/* Quick Prompts Suggestions */}
-            <div className="p-2.5 bg-white/40 dark:bg-black/30 backdrop-blur-md border-t border-white/20 dark:border-white/10 overflow-x-auto whitespace-nowrap space-x-1.5 flex">
+            <div className="p-2.5 bg-slate-50/70 dark:bg-black/30 backdrop-blur-md border-t border-slate-200/60 dark:border-white/10 overflow-x-auto whitespace-nowrap space-x-1.5 flex scrollbar-none">
               {quickPrompts.map((qp) => (
                 <button
                   key={qp}
@@ -163,7 +178,7 @@ export const AICopilot: React.FC = () => {
             </div>
 
             {/* Input Bar */}
-            <form onSubmit={handleSubmit} className="p-3 bg-white/50 dark:bg-[#0D1117]/60 backdrop-blur-md border-t border-white/20 dark:border-white/10 flex items-center gap-2">
+            <form onSubmit={handleSubmit} className="p-3 bg-white/90 dark:bg-[#0D1117]/95 backdrop-blur-md border-t border-slate-200/80 dark:border-white/10 flex items-center gap-2">
               <input
                 type="text"
                 value={inputVal}
@@ -175,7 +190,7 @@ export const AICopilot: React.FC = () => {
               <button
                 type="submit"
                 disabled={!inputVal.trim() || isChatLoading}
-                className="p-2 rounded-xl bg-[#6366F1] text-white disabled:opacity-40 hover:bg-[#4F46E5] transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white disabled:opacity-40 hover:opacity-90 shadow-sm transition-all cursor-pointer"
               >
                 <Send size={15} />
               </button>
