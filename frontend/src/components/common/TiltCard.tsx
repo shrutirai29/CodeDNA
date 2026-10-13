@@ -16,12 +16,22 @@ export const TiltCard: React.FC<TiltCardProps> = ({
   glare = true
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
   const [transform, setTransform] = useState<string>('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)');
   const [glarePos, setGlarePos] = useState<{ x: number; y: number; opacity: number }>({ x: 50, y: 50, opacity: 0 });
 
+  const handleMouseEnter = useCallback(() => {
+    if (cardRef.current) {
+      rectRef.current = cardRef.current.getBoundingClientRect();
+    }
+  }, []);
+
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
+    if (!rectRef.current) {
+      rectRef.current = cardRef.current.getBoundingClientRect();
+    }
+    const rect = rectRef.current;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
@@ -43,6 +53,7 @@ export const TiltCard: React.FC<TiltCardProps> = ({
   }, [maxTilt, scale, glare]);
 
   const handleMouseLeave = useCallback(() => {
+    rectRef.current = null;
     setTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)');
     setGlarePos(prev => ({ ...prev, opacity: 0 }));
   }, []);
@@ -50,6 +61,7 @@ export const TiltCard: React.FC<TiltCardProps> = ({
   return (
     <div
       ref={cardRef}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{

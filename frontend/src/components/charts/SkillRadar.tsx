@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
 import { Radar, Sparkles } from 'lucide-react';
-import { TiltCard } from '../common/TiltCard';
 
 interface RadarVertex {
   key: string;
@@ -46,11 +45,7 @@ export const SkillRadar: React.FC = () => {
   const gridLevels = [0.25, 0.5, 0.75, 1.0];
 
   return (
-    <TiltCard
-      maxTilt={6}
-      scale={1.01}
-      className="p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden group"
-    >
+    <div className="glass-card p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -137,17 +132,39 @@ export const SkillRadar: React.FC = () => {
 
             return (
               <g key={v.key} className="cursor-pointer">
-                {/* Vertex Circle */}
+                {/* Generous Invisible Hover Hit Area (radius 22px) - guarantees zero jitter or vibration */}
                 <circle
                   cx={p.x}
                   cy={p.y}
-                  r={isHovered ? 7 : 4.5}
+                  r={22}
+                  fill="transparent"
+                  className="cursor-pointer"
+                  onMouseEnter={() => setHoveredIndex(i)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                />
+
+                {/* Visible Glow Halo on Hover */}
+                {isHovered && (
+                  <circle
+                    cx={p.x}
+                    cy={p.y}
+                    r={12}
+                    fill="#6366F1"
+                    opacity={0.35}
+                    pointerEvents="none"
+                  />
+                )}
+
+                {/* Visible Vertex Circle - pointerEvents="none" so size changes never interrupt hover */}
+                <circle
+                  cx={p.x}
+                  cy={p.y}
+                  r={isHovered ? 6.5 : 4.5}
                   fill={isHovered ? '#06B6D4' : '#6366F1'}
                   stroke="#FFFFFF"
                   strokeWidth="2"
-                  className="transition-all duration-200"
-                  onMouseEnter={() => setHoveredIndex(i)}
-                  onMouseLeave={() => setHoveredIndex(null)}
+                  pointerEvents="none"
+                  className="transition-all duration-150"
                 />
 
                 {/* Text Label */}
@@ -155,7 +172,7 @@ export const SkillRadar: React.FC = () => {
                   x={labelX}
                   y={labelY + 4}
                   textAnchor="middle"
-                  className={`text-[10px] font-mono select-none transition-colors ${
+                  className={`text-[10px] font-mono select-none transition-colors cursor-pointer ${
                     isHovered
                       ? 'fill-[#6366F1] dark:fill-[#818CF8] font-bold'
                       : 'fill-[#64748B] dark:fill-[#94A3B8] font-medium'
@@ -170,12 +187,16 @@ export const SkillRadar: React.FC = () => {
           })}
         </svg>
 
-        {/* Dynamic Tooltip on Hover */}
+        {/* Dynamic Tooltip on Hover - Smart side positioning so it never obscures the hovered vertex */}
         {hoveredIndex !== null && (
-          <div className="absolute top-2 right-2 p-3 rounded-xl glass-panel border border-indigo-500/40 shadow-xl text-xs font-mono z-20 pointer-events-none transition-all">
+          <div
+            className={`absolute top-2 p-3 rounded-xl glass-panel border border-indigo-500/40 shadow-xl text-xs font-mono z-20 pointer-events-none transition-all duration-150 ${
+              points[hoveredIndex].x >= center ? 'left-2' : 'right-2'
+            }`}
+          >
             <div className="font-bold text-[#111827] dark:text-[#F8FAFC] flex items-center justify-between gap-4">
               <span>{vertices[hoveredIndex].label}</span>
-              <span className="text-[#6366F1] dark:text-[#818CF8]">
+              <span className="text-[#6366F1] dark:text-[#818CF8] font-extrabold">
                 {vertices[hoveredIndex].score} / 100
               </span>
             </div>
@@ -199,6 +220,6 @@ export const SkillRadar: React.FC = () => {
           High Breadth & Depth
         </span>
       </div>
-    </TiltCard>
+    </div>
   );
 };
