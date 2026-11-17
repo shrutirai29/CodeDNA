@@ -54,12 +54,13 @@ export const DeveloperComparison: React.FC = () => {
 
   const metrics = [
     { label: 'Overall Developer Score', a: devA.developer_score, b: devB.developer_score },
-    { label: 'Code Depth', a: devA.dimensions.technical_depth, b: devB.dimensions.technical_depth },
-    { label: 'Code Quality', a: devA.dimensions.project_complexity, b: devB.dimensions.project_complexity },
-    { label: 'Tech Variety', a: devA.dimensions.technical_breadth, b: devB.dimensions.technical_breadth },
-    { label: 'Weekly Habit', a: devA.dimensions.consistency, b: devB.dimensions.consistency },
+    { label: 'Technical Depth', a: devA.dimensions.technical_depth, b: devB.dimensions.technical_depth },
+    { label: 'Technical Breadth', a: devA.dimensions.technical_breadth, b: devB.dimensions.technical_breadth },
+    { label: 'Consistency & Habit', a: devA.dimensions.consistency, b: devB.dimensions.consistency },
+    { label: 'Project Complexity', a: devA.dimensions.project_complexity, b: devB.dimensions.project_complexity },
+    { label: 'Collaboration & PRs', a: devA.dimensions.collaboration, b: devB.dimensions.collaboration },
+    { label: 'Technology Adaptability', a: devA.dimensions.adaptability, b: devB.dimensions.adaptability },
     { label: 'Project Impact', a: devA.dimensions.impact, b: devB.dimensions.impact },
-    { label: 'Teamwork & PRs', a: devA.dimensions.collaboration, b: devB.dimensions.collaboration },
   ];
 
   const setB = new Set(devB.tech_dna.map(t => t.name.toLowerCase()));

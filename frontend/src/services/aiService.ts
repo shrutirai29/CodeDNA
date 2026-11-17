@@ -30,16 +30,51 @@ export class AIService {
 
       if (res.ok) {
         const data = await res.json();
-        return {
-          response: data.reply || data.response,
-          engine: data.engine?.includes('gemini') ? 'gemini' : 'local_ml'
-        };
+        const replyText = (data.reply || data.response || '').trim();
+        if (replyText) {
+          return {
+            response: replyText,
+            engine: data.engine?.includes('gemini') ? 'gemini' : 'local_ml'
+          };
+        }
       }
     } catch {
       // Server offline / client-only mode, fall through to local mentor
     }
 
     const q = message.toLowerCase();
+
+    if (q.includes('review') && (q.includes('repository') || q.includes('repo'))) {
+      const targetRepo = profile.repositories.find(r => q.includes(r.name.toLowerCase())) || profile.repositories[0];
+      const repoName = targetRepo ? targetRepo.name : 'your primary repository';
+      const techStack = targetRepo ? targetRepo.technologies.join(', ') : 'Python, TypeScript';
+      const complexity = targetRepo ? targetRepo.complexity : 88;
+      const health = targetRepo?.healthScore || 80;
+      const healthStatus = targetRepo?.healthStatus || 'HEALTHY';
+      const hasCi = targetRepo?.hasCi;
+      const hasLicense = targetRepo?.hasLicense;
+      const licenseName = targetRepo?.licenseName;
+      const lastPushed = targetRepo?.lastUpdated || 'Recent';
+
+      return {
+        response: `### 🛡️ CodeDNA Evidence-Based Architectural Review: **${repoName}**\n\n` +
+          `**1. Verified Repository Evidence (Audited Signals):**\n` +
+          `- **Observed Tech Stack:** ${techStack}\n` +
+          `- **Architectural Complexity:** ${complexity}/100\n` +
+          `- **Health Audit Score:** ${health}/100 (${healthStatus})\n` +
+          `- **Activity Cadence:** Last pushed ${lastPushed}\n` +
+          `- **CI/CD Automation:** ${hasCi ? 'Automated CI/CD workflows detected.' : 'No automated CI/CD workflow manifest detected in public repository.'}\n` +
+          `- **Open-Source License:** ${hasLicense ? `SPDX license verified: ${licenseName || 'Open Source'}` : 'No SPDX license detected in repository root.'}\n\n` +
+          `**2. Security & Supply-Chain Hygiene:**\n` +
+          `- **Static Secrets Posture:** Public git commit history must maintain zero environment variable or API key leaks.\n` +
+          `- **Dependency Management:** Maintain lockfiles (package-lock.json / poetry.lock / Pipfile.lock) with Dependabot version security pinning.\n\n` +
+          `**3. Actionable Engineering Recommendations:**\n` +
+          `- **Test Automation:** ${hasCi ? 'Add coverage thresholds (>80%) to existing CI pipeline.' : 'Configure GitHub Actions with automated unit tests and linter (pytest/jest/eslint).'}\n` +
+          `- **Documentation:** Ensure README contains reproducible local installation steps and system architecture diagrams.\n\n` +
+          `> ⚠️ **Access Disclosure:** This evaluation is computed from public GitHub metadata, repository manifests, and language composition. In-depth static AST parsing, binary scans, and private repository inspection require authenticated repository token access.`,
+        engine: 'local_ml'
+      };
+    }
 
     if (q.includes('backend') || q.includes('score low')) {
       return {

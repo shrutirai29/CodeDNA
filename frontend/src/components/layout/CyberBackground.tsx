@@ -57,7 +57,7 @@ export const CyberBackground: React.FC = () => {
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     // Particle material
-    const isDark = isDarkMode;
+    const isDark = useDeveloperStore.getState().isDarkMode;
     const particleColor = isDark ? 0x00F0FF : 0x6366F1;
     const lineColor = isDark ? 0x8B5CF6 : 0x06B6D4;
 

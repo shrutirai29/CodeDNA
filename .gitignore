@@ -34,3 +34,7 @@ htmlcov/
 Thumbs.db
 
 .vercel
+
+# Temp Office & Lock files
+~$*
+*.tmp

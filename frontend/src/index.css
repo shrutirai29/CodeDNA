@@ -37,7 +37,7 @@
   }
 
   html {
-    font-size: 16.5px;
+    font-size: 14.5px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100%;
@@ -45,9 +45,15 @@
     overflow-x: hidden;
   }
 
+  @media (min-width: 640px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
   @media (min-width: 1024px) {
     html {
-      font-size: 17.5px;
+      font-size: 17px;
     }
   }
 
@@ -163,6 +169,11 @@ html.dark .dark\:fill-\[\#94A3B8\] {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.4);
+}
+
+.grid-cols-24 {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
 }
 
 /* =====================================================================
@@ -1690,3 +1701,36 @@ html.dark .dark\:fill-\[\#94A3B8\] {
 
 
 
+
+
+/* ==========================================================================
+   Feature G: Professional High-Fidelity Printable Dossier & PDF Styles
+   ========================================================================== */
+@media print {
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #codedna-printable-dossier,
+  #codedna-printable-dossier * {
+    visibility: visible;
+  }
+  #codedna-printable-dossier {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 24px;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: none !important;
+  }
+  .no-print, button, .modal-backdrop {
+    display: none !important;
+  }
+}

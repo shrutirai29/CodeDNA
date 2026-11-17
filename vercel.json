@@ -5,7 +5,13 @@
       "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
-        "includeFiles": ["ml/**"]
+        "includeFiles": [
+          "ml/**",
+          "analytics/**",
+          "database/**",
+          "data/**",
+          "frontend/dist/**"
+        ]
       }
     }
   ],

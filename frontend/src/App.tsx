@@ -21,25 +21,50 @@ import { DeveloperComparison } from './components/comparison/DeveloperComparison
 import { MotivationBanners } from './components/motivation/MotivationBanners';
 import { Achievements } from './components/motivation/Achievements';
 import { AICopilot } from './components/copilot/AICopilot';
-import { FloatingSocialDock } from './components/layout/FloatingSocialDock';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { AnalyticsExport } from './components/export/AnalyticsExport';
 import { EmptyState } from './components/common/EmptyState';
+import { LandingPage } from './components/landing/LandingPage';
+import { WorkspaceLauncher } from './components/launcher/WorkspaceLauncher';
+import { CareerAnalyzerView } from './components/career-analyzer/CareerAnalyzerView';
+import { PersonalizedHome } from './components/workspace/PersonalizedHome';
+import { OnboardingModal } from './components/workspace/OnboardingModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const App: React.FC = () => {
-  const { activeTab, isSidebarCollapsed, profile } = useDeveloperStore();
+  const { activeTab, isSidebarCollapsed, profile, currentView, searchError } = useDeveloperStore();
 
   useEffect(() => {
-    // Automatically fetch fresh live profile data from GitHub API
-    GithubService.fetchProfile(profile.username).then((live) => {
-      if (live && live.username.toLowerCase() === profile.username.toLowerCase()) {
+    // Automatically fetch fresh live profile data from GitHub API on initial mount
+    const initialUsername = useDeveloperStore.getState().profile.username;
+    GithubService.fetchProfile(initialUsername).then((live) => {
+      if (live && live.username.toLowerCase() === initialUsername.toLowerCase()) {
         useDeveloperStore.setState({ profile: live });
       }
     }).catch(() => {
       // Kept on authentic benchmark profile
     });
   }, []);
+
+  if (currentView === 'landing') {
+    return (
+      <div className="min-h-screen w-full max-w-full bg-transparent text-[#111827] dark:text-[#F8FAFC] transition-colors duration-200 relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+        <CyberBackground />
+        <LandingPage />
+        <OnboardingModal />
+      </div>
+    );
+  }
+
+  if (currentView === 'launcher') {
+    return (
+      <div className="min-h-screen w-full max-w-full bg-transparent text-[#111827] dark:text-[#F8FAFC] transition-colors duration-200 relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+        <CyberBackground />
+        <WorkspaceLauncher />
+        <OnboardingModal />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full max-w-full bg-transparent text-[#111827] dark:text-[#F8FAFC] transition-colors duration-200 relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
@@ -51,8 +76,8 @@ export const App: React.FC = () => {
 
       {/* Main App Container */}
       <div
-        className={`w-full max-w-full min-h-screen flex flex-col transition-all duration-300 relative z-10 min-w-0 ${
-          isSidebarCollapsed ? 'pl-16 sm:pl-20' : 'pl-[230px]'
+        className={`w-full max-w-full min-h-screen flex flex-col transition-all duration-300 relative z-10 min-w-0 pl-0 ${
+          isSidebarCollapsed ? 'md:pl-20' : 'md:pl-[230px]'
         }`}
       >
         {/* Top Header */}
@@ -62,8 +87,12 @@ export const App: React.FC = () => {
         <LoadingSequence />
 
         {/* Content Area with Narrative Layout */}
-        <main className="flex-1 mt-16 p-3 sm:p-6 lg:p-8 pb-36 sm:pb-40 md:pb-44 max-w-7xl w-full mx-auto space-y-6 min-w-0">
-          {!profile ? (
+        <main className="flex-1 mt-16 p-3 sm:p-5 lg:p-8 pb-24 sm:pb-32 max-w-7xl w-full mx-auto space-y-4 sm:space-y-6 min-w-0">
+          {currentView === 'analyzer' ? (
+            <CareerAnalyzerView />
+          ) : currentView === 'workspace' ? (
+            <PersonalizedHome />
+          ) : searchError || !profile ? (
             <EmptyState />
           ) : (
             <AnimatePresence mode="wait">
@@ -257,14 +286,14 @@ export const App: React.FC = () => {
         </main>
       </div>
 
-      {/* Floating 3D Isometric Social Dock */}
-      <FloatingSocialDock />
-
       {/* Floating AI Copilot Assistant */}
       <AICopilot />
 
       {/* Platform Settings Modal */}
       <SettingsModal />
+
+      {/* Onboarding & Goals Configuration Modal */}
+      <OnboardingModal />
     </div>
   );
 };

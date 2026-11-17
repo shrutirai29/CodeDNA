@@ -6,12 +6,41 @@ import datetime
 import hashlib
 import os
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query, Request, UploadFile, File, Form
 from fastapi.responses import HTMLResponse, JSONResponse
+from analytics.career_matcher import CareerMatcher
+from analytics.career_intelligence import CareerIntelligenceEngine
+from analytics.file_parser import extract_text_from_bytes
+from analytics.courses_db import get_courses_for_skills, COURSES_DB
+from database.database import DatabaseManager
+db_manager = DatabaseManager()
+
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 
 app = FastAPI(title="CodeDNA • Developer Career Intelligence & Analytics Platform")
+
+# Explicit trusted origins for production and development (Fetch / CORS spec compliance)
+DEFAULT_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+    "http://localhost:3000",
+    "https://code-dna-alpha.vercel.app",
+    "https://codedna.vercel.app",
+]
+env_origins = os.getenv("CORS_ORIGINS", "")
+allowed_origins = [o.strip() for o in env_origins.split(",") if o.strip()] if env_origins else DEFAULT_ALLOWED_ORIGINS
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 # Mount React Vite frontend dist assets if compiled
 FRONTEND_DIST = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "dist"))
@@ -863,31 +892,101 @@ RECOMMENDED_SKILLS = {
 }
 
 
-def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
-    """Fetches real public GitHub profile and calculates genuinely dynamic analytical metrics."""
-    headers = {"User-Agent": "CodeDNA-Intelligence-Engine/2.0"}
-    try:
-        user_res = requests.get(f"https://api.github.com/users/{username}", headers=headers, timeout=8)
-        if user_res.status_code != 200:
-            return None
-        u = user_res.json()
-        
-        repos_res = requests.get(f"https://api.github.com/users/{username}/repos?sort=pushed&per_page=30", headers=headers, timeout=8)
-        repos = repos_res.json() if repos_res.status_code == 200 and isinstance(repos_res.json(), list) else []
+# =====================================================================
+# SERVER-SIDE GITHUB PROXY, ISOLATED CACHING & IDENTITY INTEGRITY
+# =====================================================================
+PROFILE_CACHE: Dict[str, Dict[str, Any]] = {}
+CONTRIBUTIONS_CACHE: Dict[str, Dict[str, Any]] = {}
+CACHE_TTL_SECONDS = 900  # 15-minute isolated cache
 
-        total_repos = max(1, len(repos))
-        stars = sum(r.get("stargazers_count", 0) for r in repos)
-        forks = sum(r.get("forks_count", 0) for r in repos)
+
+def get_github_headers() -> Dict[str, str]:
+    headers = {"User-Agent": "CodeDNA-Intelligence-Engine/2.0"}
+    token = os.getenv("GITHUB_TOKEN", "").strip()
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
+def fetch_live_github(username: str, bypass_cache: bool = False) -> Dict[str, Any]:
+    """
+    Fetches real public GitHub profile, verifies canonical identity,
+    and returns verified profile dict or a structured error dict.
+    Strictly prohibits synthetic score jitter or silent identity substitution.
+    """
+    clean_u = username.strip().lstrip("@").lower()
+    if not clean_u:
+        return {"status": 400, "error": "INVALID_USERNAME", "message": "GitHub username cannot be empty."}
+
+    now = time.time()
+    if not bypass_cache and clean_u in PROFILE_CACHE:
+        cached_entry = PROFILE_CACHE[clean_u]
+        if now - cached_entry.get("cached_at", 0) < CACHE_TTL_SECONDS:
+            res_data = dict(cached_entry["data"])
+            res_data["data_source"] = "cached"
+            res_data["cache_hit"] = True
+            res_data["cached_at_iso"] = cached_entry.get("cached_at_iso")
+            return res_data
+
+    headers = get_github_headers()
+    try:
+        user_res = requests.get(f"https://api.github.com/users/{clean_u}", headers=headers, timeout=10)
+        if user_res.status_code == 404:
+            return {
+                "status": 404,
+                "error": "USER_NOT_FOUND",
+                "message": f"GitHub user '{username}' was not found on GitHub. Please verify the account name.",
+                "username": clean_u
+            }
+        elif user_res.status_code == 403:
+            reset_ts = user_res.headers.get("X-RateLimit-Reset")
+            return {
+                "status": 429,
+                "error": "RATE_LIMIT_EXCEEDED",
+                "message": "GitHub API rate limit exceeded for this IP. Provide a GITHUB_TOKEN or try again shortly.",
+                "reset_timestamp": reset_ts,
+                "username": clean_u
+            }
+        elif user_res.status_code != 200:
+            return {
+                "status": user_res.status_code,
+                "error": "GITHUB_API_ERROR",
+                "message": f"GitHub returned HTTP status {user_res.status_code} for user '{username}'.",
+                "username": clean_u
+            }
+
+        u = user_res.json()
+        canonical_id = u.get("id")
+        canonical_login = u.get("login")
+        
+        # Repositories fetch (paginated for accounts with > 100 repos, up to 300 max)
+        repos = []
+        page = 1
+        max_pages = min(3, (u.get("public_repos", 0) + 99) // 100) if isinstance(u.get("public_repos"), int) and u.get("public_repos", 0) > 0 else 1
+        while page <= max_pages:
+            repos_res = requests.get(
+                f"https://api.github.com/users/{clean_u}/repos?sort=pushed&per_page=100&page={page}",
+                headers=headers,
+                timeout=12
+            )
+            if repos_res.status_code == 200 and isinstance(repos_res.json(), list):
+                batch = repos_res.json()
+                if not batch:
+                    break
+                repos.extend(batch)
+                if len(batch) < 100:
+                    break
+                page += 1
+            else:
+                break
+
+        total_repos = len(repos)
+        stars = sum((r.get("stargazers_count") or 0) for r in repos)
+        forks = sum((r.get("forks_count") or 0) for r in repos)
         has_desc = sum(1 for r in repos if r.get("description"))
         has_license = sum(1 for r in repos if r.get("license"))
 
-        # Deterministic variance from username hash to ensure unique yet consistent profile signatures
-        u_hash = int(hashlib.md5(username.lower().encode()).hexdigest(), 16)
-        jitter = ((u_hash % 20) - 10) * 0.15
-
-        # -------------------------------------------------------------
-        # 1. Multi-Signal Technology & Framework Harvesting
-        # -------------------------------------------------------------
+        # Exact deterministic technology harvesting (no fake technologies injected)
         detected_tech = {}
         lang_counts = {}
 
@@ -899,7 +998,8 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
                     detected_tech[lang] = {"count": 0, "name": lang, "type": "primary", "parent": "core"}
                 detected_tech[lang]["count"] += 1
 
-            topics = [t.lower() for t in r.get("topics", [])]
+            topics_raw = r.get("topics") or []
+            topics = [t.lower() for t in topics_raw if isinstance(t, str)]
             text_blob = f"{r.get('name', '')} {r.get('description', '')}".lower()
 
             for key, meta in TECH_CATALOG.items():
@@ -915,7 +1015,6 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
                         }
                     detected_tech[tname]["count"] += 1
 
-        # Calculate language percentages
         lang_pct = {}
         if lang_counts:
             tot_lang = sum(lang_counts.values())
@@ -924,32 +1023,19 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
 
         primary_lang = list(lang_pct.keys())[0] if lang_pct else "General"
 
-        # Complementary ecosystem enrichment if sparse to ensure balanced, informative constellation
-        if len(detected_tech) < 5:
-            if "JavaScript" in detected_tech or "TypeScript" in detected_tech:
-                detected_tech["Modern Web Standards"] = {"count": max(1, total_repos // 2), "name": "Modern Web Standards", "type": "supporting", "parent": "Web"}
-                detected_tech["REST APIs"] = {"count": max(1, total_repos // 3), "name": "REST APIs", "type": "framework", "parent": "JavaScript"}
-            if "Python" in detected_tech:
-                detected_tech["Data Automation"] = {"count": max(1, total_repos // 2), "name": "Data Automation", "type": "supporting", "parent": "Python"}
-            if "C" in detected_tech or "C++" in detected_tech:
-                detected_tech["Low-Level Systems"] = {"count": max(1, total_repos // 2), "name": "Low-Level Systems", "type": "supporting", "parent": "C++"}
-            detected_tech["Git Workflows"] = {"count": total_repos, "name": "Git Workflows", "type": "supporting", "parent": "core"}
-
-        # -------------------------------------------------------------
-        # 2. Build 8 to 12 Rich DNA Nodes (Zero "Other" Nodes)
-        # -------------------------------------------------------------
+        # Build DNA nodes strictly from observed data
         sorted_tech = sorted(detected_tech.values(), key=lambda x: x["count"], reverse=True)
-        top_tech_list = sorted_tech[:10]
+        top_tech_list = sorted_tech[:12]
         sum_counts = sum(t["count"] for t in top_tech_list) or 1
 
         dna_nodes = []
         for idx, t in enumerate(top_tech_list):
             raw_usage = round((t["count"] / sum_counts) * 100, 1)
             usage = max(8.0, min(65.0, raw_usage))
-            momentum = "RISING" if idx in (0, 1, 3) else ("NEW" if idx in (2, 5) else "STABLE")
-            activity = "High" if idx < 3 else ("Medium" if idx < 6 else "Moderate")
+            momentum = "RISING" if idx in (0, 1) else ("NEW" if idx in (2, 4) else "STABLE")
+            activity = "High" if idx < 3 else "Moderate"
             parent_link = t["parent"] if t["parent"] != "core" else (primary_lang if t["name"] != primary_lang else "core")
-            
+
             dna_nodes.append({
                 "id": f"dna_{idx}_{re.sub(r'[^a-zA-Z0-9]', '_', t['name']).lower()}",
                 "name": t["name"],
@@ -961,9 +1047,7 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
                 "activity": activity
             })
 
-        # -------------------------------------------------------------
-        # 3. Dynamic Career Match & Fit Calculation (7 Industry Roles)
-        # -------------------------------------------------------------
+        # Dynamic Career Match & Fit Calculation
         known_skill_names = set(detected_tech.keys())
         if "JavaScript" in known_skill_names or "TypeScript" in known_skill_names:
             known_skill_names.add("Web Tech")
@@ -976,8 +1060,8 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
             matched = [s for s in reqs if s in known_skill_names]
             missing = [s for s in reqs if s not in known_skill_names]
 
-            match_ratio = len(matched) / len(reqs)
-            fit = round(min(95.5, role_cfg["base_fit"] + (match_ratio * role_cfg["max_boost"]) + min(10.0, len(matched) * 2.5) + jitter), 1)
+            match_ratio = len(matched) / max(1, len(reqs))
+            fit = round(min(95.5, role_cfg["base_fit"] + (match_ratio * role_cfg["max_boost"]) + min(10.0, len(matched) * 2.5)), 1)
             status = "Strong Match" if fit >= 82 else ("Good Match" if fit >= 70 else "Developing Match")
 
             evaluated_careers.append({
@@ -989,15 +1073,12 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
             })
 
         evaluated_careers.sort(key=lambda x: x["fit"], reverse=True)
-        top_career_item = evaluated_careers[0]
+        top_career_item = evaluated_careers[0] if evaluated_careers else {"role": "Software Developer", "fit": 60.0, "gaps": []}
         top_career = top_career_item["role"]
         top_fit = top_career_item["fit"]
-
-        # -------------------------------------------------------------
-        # 4. Tailored Next Best Skill & Categorized Gaps
-        # -------------------------------------------------------------
         primary_missing = top_career_item["gaps"]
-        
+
+        rec_key = "Docker & Containerization"
         if "Docker" in primary_missing or "Containerization" in primary_missing:
             rec_key = "Docker & Containerization"
         elif "TypeScript" in primary_missing:
@@ -1008,10 +1089,6 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
             rec_key = "Automated Testing & CI/CD"
         elif "PostgreSQL" in primary_missing or "SQL" in primary_missing:
             rec_key = "PostgreSQL & Database Architecture"
-        elif "C++" in primary_missing or "Rust" in primary_missing:
-            rec_key = "Modern Systems Engineering (Rust / C++)"
-        else:
-            rec_key = "Docker & Containerization"
 
         next_skill_data = RECOMMENDED_SKILLS.get(rec_key, RECOMMENDED_SKILLS["Docker & Containerization"])
         next_best_skill = {
@@ -1022,23 +1099,26 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
             "leverage": next_skill_data["leverage"]
         }
 
-        gaps_categorized = {
-            "critical": [f"Mastery in {primary_missing[0]}" if primary_missing else "Production Containerization",
-                         f"Architecture for {primary_missing[1]}" if len(primary_missing) > 1 else "Automated CI/CD Workflows"],
-            "important": ["Automated Unit Testing & Linting", "Comprehensive Open Source Documentation"],
-            "emerging": ["Cloud Infrastructure (AWS/GCP)", "High-Throughput Caching (Redis)"]
-        }
+        # 6-Dimension Scores: Truthful scaling with evidence, 10.0 unverified baseline for empty accounts
+        followers_count = u.get("followers", 0)
+        following_count = u.get("following", 0)
 
-        # -------------------------------------------------------------
-        # 5. Genuinely Dynamic 6-Dimension Scores & Percentiles
-        # -------------------------------------------------------------
-        portfolio_score = round(min(96.0, max(42.0, ((has_desc + has_license) / (total_repos * 2)) * 45.0 + min(45.0, len(repos) * 2.8) + jitter)), 1)
-        depth_score = round(min(97.0, max(45.0, 36.0 + min(38.0, (list(lang_pct.values())[0] if lang_pct else 45) * 0.45) + min(18.0, stars * 0.4) + jitter)), 1)
-        breadth_score = round(min(96.0, max(38.0, min(52.0, len(detected_tech) * 7.5) + min(38.0, len(repos) * 2.0) - jitter)), 1)
-        consistency_score = round(min(95.0, max(42.0, 44.0 + min(44.0, len(repos) * 2.6) + jitter)), 1)
-        complexity_score = round(min(96.0, max(40.0, 42.0 + min(32.0, stars * 0.6) + min(20.0, len(detected_tech) * 2.5) + jitter)), 1)
-        collab_score = round(min(95.0, max(35.0, 32.0 + min(38.0, forks * 2.5) + min(22.0, u.get("followers", 0) * 0.5) + (10 if has_license > 0 else 0))), 1)
-        adaptability_score = round(min(96.0, max(45.0, 42.0 + min(48.0, len(detected_tech) * 6.0) + jitter)), 1)
+        if total_repos == 0 and followers_count == 0:
+            portfolio_score = 10.0
+            depth_score = 10.0
+            breadth_score = 10.0
+            consistency_score = 10.0
+            complexity_score = 10.0
+            collab_score = 10.0
+            adaptability_score = 10.0
+        else:
+            portfolio_score = round(min(96.0, max(10.0, ((has_desc + has_license) / max(1, total_repos * 2)) * 45.0 + min(45.0, total_repos * 2.8))), 1)
+            depth_score = round(min(97.0, max(10.0, 15.0 + min(45.0, (list(lang_pct.values())[0] if lang_pct else 20) * 0.45) + min(18.0, stars * 0.4))), 1)
+            breadth_score = round(min(96.0, max(10.0, min(55.0, len(detected_tech) * 7.5) + min(35.0, total_repos * 2.0))), 1)
+            consistency_score = round(min(95.0, max(10.0, 20.0 + min(45.0, total_repos * 2.6))), 1)
+            complexity_score = round(min(96.0, max(10.0, 20.0 + min(32.0, stars * 0.6) + min(20.0, len(detected_tech) * 2.5))), 1)
+            collab_score = round(min(95.0, max(10.0, 10.0 + min(38.0, forks * 2.5) + min(22.0, followers_count * 0.5) + (10 if has_license > 0 else 0))), 1)
+            adaptability_score = round(min(96.0, max(10.0, 15.0 + min(48.0, len(detected_tech) * 6.0))), 1)
 
         overall_score = round(
             depth_score * 0.20 +
@@ -1049,8 +1129,8 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
             adaptability_score * 0.15,
             1
         )
+        overall_score = max(10.0, min(99.0, overall_score))
 
-        # Archetype logic
         if breadth_score >= 78 and len(detected_tech) >= 6:
             archetype = "The Technology Explorer"
             tagline = "Multi-Stack Agility & Fast Cross-Domain Learning"
@@ -1068,24 +1148,28 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
             tagline = "Active End-to-End Product Construction"
             badge = "BUILDER 🔨"
 
-        created_at_str = u.get("created_at", "")[:4]
+        created_at_str = str(u.get("created_at", ""))[:4]
         current_year = 2026
         acct_age = f"{current_year - int(created_at_str)} years" if created_at_str.isdigit() else "Active Member"
 
         top_projects = []
-        for r in sorted(repos, key=lambda x: x.get("stargazers_count", 0), reverse=True)[:3]:
+        for r in sorted(repos, key=lambda x: (x.get("stargazers_count") or 0), reverse=True)[:5]:
+            r_stars = r.get("stargazers_count") or 0
+            r_forks = r.get("forks_count") or 0
             top_projects.append({
                 "name": r.get("name", "repo"),
-                "complexity": "HIGH" if r.get("stargazers_count", 0) > 10 else ("MEDIUM" if r.get("description") else "NASCENT"),
+                "complexity": "HIGH" if r_stars > 10 else ("MEDIUM" if r.get("description") else "NASCENT"),
                 "activity": "ACTIVE",
-                "stars": r.get("stargazers_count", 0),
-                "forks": r.get("forks_count", 0),
+                "stars": r_stars,
+                "forks": r_forks,
                 "tech": r.get("language") or "Codebase",
                 "age": "Active",
-                "contributors": max(1, r.get("forks_count", 0)),
-                "rating": "★★★★★" if r.get("stargazers_count", 0) > 15 else ("★★★★☆" if r.get("stargazers_count", 0) > 2 else "★★★☆☆"),
+                "contributors": max(1, r_forks),
+                "rating": "★★★★★" if r_stars > 15 else ("★★★★☆" if r_stars > 2 else "★★★☆☆"),
                 "description": r.get("description") or f"Public GitHub codebase implementing {r.get('language') or 'core algorithms'}.",
-                "timeline": f"Created: {str(r.get('created_at', ''))[:10]} ● Last Push: {str(r.get('pushed_at', ''))[:10]}"
+                "timeline": f"Created: {str(r.get('created_at', ''))[:10]} ● Last Push: {str(r.get('pushed_at', ''))[:10]}",
+                "is_fork": bool(r.get("fork", False)),
+                "is_archived": bool(r.get("archived", False))
             })
 
         momentum_items = []
@@ -1100,18 +1184,100 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
                 "recent": f"Active across {t['count']} observed repositories"
             })
 
-        return {
-            "username": u.get("login"),
-            "name": u.get("name") or u.get("login"),
+        # Feature B: Longitudinal Growth Milestones
+        yearly_milestones = {}
+        for r in repos:
+            c_date = str(r.get("created_at", ""))
+            if len(c_date) >= 4 and c_date[:4].isdigit():
+                y = c_date[:4]
+                if y not in yearly_milestones:
+                    yearly_milestones[y] = {"count": 0, "langs": set(), "repos": []}
+                yearly_milestones[y]["count"] += 1
+                if r.get("language"):
+                    yearly_milestones[y]["langs"].add(r.get("language"))
+                yearly_milestones[y]["repos"].append(r.get("name", "repo"))
+
+        empirical_growth = []
+        current_year_str = str(datetime.datetime.now().year)
+
+        for y in sorted(yearly_milestones.keys()):
+            if y != current_year_str:
+                entry = {
+                    "year": y,
+                    "milestone": f"{yearly_milestones[y]['count']} Repositories Created",
+                    "technologies": list(yearly_milestones[y]["langs"])[:3],
+                    "description": f"Created {yearly_milestones[y]['count']} open-source repositories ({', '.join(yearly_milestones[y]['repos'][:2])}).",
+                    "has_score_measurement": False,
+                    "milestone_type": "repository_milestone"
+                }
+                empirical_growth.append(entry)
+
+        empirical_growth.append({
+            "year": current_year_str,
+            "milestone": f"Verified DIS Ingestion Baseline ({overall_score}/100)",
+            "technologies": list(lang_pct.keys())[:3] if lang_pct else ["General"],
+            "description": f"Verified scan baseline across {total_repos} repositories with primary focus in {primary_lang}.",
+            "score": overall_score,
+            "depth": depth_score,
+            "breadth": breadth_score,
+            "complexity": complexity_score,
+            "has_score_measurement": True,
+            "milestone_type": "score_snapshot",
+            "note": f"Initial scan baseline recorded across {total_repos} repositories."
+        })
+
+        # Data Quality & Provenance
+        verified_signals = [f"Authentic GitHub Identity Verified (@{canonical_login}, ID: {canonical_id})"]
+        if total_repos > 0:
+            verified_signals.append(f"{total_repos} Audited Public Repositories")
+        if len(detected_tech) > 0:
+            verified_signals.append(f"{len(detected_tech)} Distinct Technologies Ingested")
+        if stars > 0:
+            verified_signals.append(f"{stars} Community Stargazers Recorded")
+
+        unverified_signals = []
+        if total_repos == 0:
+            unverified_signals.append("No public repositories found on account")
+
+        coverage_score = 25
+        if total_repos >= 5: coverage_score += 25
+        elif total_repos >= 1: coverage_score += 15
+        if len(detected_tech) >= 4: coverage_score += 25
+        elif len(detected_tech) >= 1: coverage_score += 15
+        if stars > 0 or followers_count > 0: coverage_score += 25
+
+        tier_label = "High Confidence (4/4 Signals)" if coverage_score >= 85 else (
+            "Moderate Confidence (3/4 Signals)" if coverage_score >= 65 else (
+                "Preliminary Evidence (2/4 Signals)" if coverage_score >= 40 else "Insufficient Evidence (< 2 Signals)"
+            )
+        )
+
+        fetched_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        profile_result = {
+            "github_id": canonical_id,
+            "node_id": u.get("node_id"),
+            "html_url": u.get("html_url"),
+            "created_at_raw": u.get("created_at"),
+            "username": canonical_login,
+            "name": u.get("name") or canonical_login,
             "title": f"{top_career} & Builder",
             "company": u.get("company") or "Independent Contributor",
             "location": u.get("location") or "Global",
-            "bio": u.get("bio") or f"Public GitHub profile with {len(repos)} analyzed repositories across {len(detected_tech)} detected technologies.",
-            "followers": u.get("followers", 0),
-            "public_repos": u.get("public_repos", len(repos)),
+            "bio": u.get("bio") or f"Public GitHub profile with {total_repos} analyzed repositories across {len(detected_tech)} detected technologies.",
+            "followers": followers_count,
+            "following": following_count,
+            "public_repos": u.get("public_repos", total_repos),
+            "total_repos": total_repos,
+            "stars": stars,
+            "forks": forks,
+            "primary_language": primary_lang,
             "account_age": acct_age,
             "avatar_url": u.get("avatar_url") or "",
             "is_demo": False,
+            "verified_identity": True,
+            "data_source": "live",
+            "cache_hit": False,
+            "fetched_at": fetched_iso,
             "score": overall_score,
             "archetype": archetype,
             "archetype_tagline": tagline,
@@ -1130,32 +1296,38 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
                 "project_complexity": complexity_score,
                 "collaboration": collab_score,
                 "adaptability": adaptability_score,
-                "impact": min(95.0, round(30.0 + stars * 0.8 + u.get("followers", 0) * 0.4, 1))
+                "impact": min(95.0, round(10.0 + stars * 0.8 + followers_count * 0.4, 1))
             },
             "languages": lang_pct,
             "dna_nodes": dna_nodes,
             "momentum": momentum_items,
-            "growth_timeline": [
-                {"year": "2023", "score": round(max(30.0, overall_score - 24.0), 1), "depth": round(depth_score - 20, 1), "breadth": round(breadth_score - 15, 1), "complexity": round(complexity_score - 20, 1), "note": "Initial repository creation and core language fundamentals."},
-                {"year": "2024", "score": round(max(45.0, overall_score - 14.0), 1), "depth": round(depth_score - 12, 1), "breadth": round(breadth_score - 8, 1), "complexity": round(complexity_score - 10, 1), "note": "Framework adoption and multi-stack expansion."},
-                {"year": "2025", "score": round(max(55.0, overall_score - 5.0), 1), "depth": round(depth_score - 5, 1), "breadth": round(breadth_score - 3, 1), "complexity": round(complexity_score - 4, 1), "note": "Project scaling, community interest, and architecture maturation."},
-                {"year": "2026", "score": overall_score, "depth": depth_score, "breadth": breadth_score, "complexity": complexity_score, "note": f"Active development footprint in {primary_lang} and modern tooling."}
-            ],
+            "growth_timeline": empirical_growth,
+            "data_quality": {
+                "tier": tier_label,
+                "coverage_percent": coverage_score,
+                "is_live": True,
+                "source_reliability": "AUTHENTIC_GITHUB_API",
+                "scanned_repos": total_repos,
+                "total_stars": stars,
+                "total_forks": forks,
+                "rate_limit_status": "Live GitHub API Synchronized",
+                "verified_signals": verified_signals,
+                "unverified_signals": unverified_signals if unverified_signals else None
+            },
             "rhythm": {
                 "peak_day": "Midweek Focus",
                 "peak_time": "Evenings (17:00 - 21:00)",
-                "insight": f"Demonstrates steady, continuous development cadence with {len(repos)} observed codebases.",
+                "insight": f"Demonstrates development cadence with {total_repos} observed codebases.",
                 "weekend_pct": "24.0%",
                 "business_pct": "66.0%"
             },
             "projects": top_projects,
             "careers": evaluated_careers[:4],
-            "gaps_categorized": gaps_categorized,
             "next_best_skill": next_best_skill,
             "strengths": [
-                f"Multi-technology proficiency spanning {len(detected_tech)} detected frameworks and languages",
-                f"Active GitHub footprint across {len(repos)} repositories with primary focus in {primary_lang}",
-                f"Earned {stars} community stargazers and {forks} forks"
+                f"Proficiency across {len(detected_tech)} detected frameworks and languages",
+                f"Footprint across {total_repos} repositories with focus in {primary_lang}",
+                f"Recorded {stars} community stargazers and {forks} forks"
             ],
             "gaps": primary_missing[:3],
             "next_skills": [next_best_skill["skill"]] + primary_missing[:2],
@@ -1168,40 +1340,107 @@ def fetch_live_github(username: str) -> Optional[Dict[str, Any]]:
                 "adaptability": int(adaptability_score)
             },
             "analytical_insight": {
-                "headline": f"Your GitHub profile shows an authentic development focus in {primary_lang} with strong {top_career} alignment.",
-                "evidence": [f"{len(repos)} public repositories analyzed", f"{stars} stargazers across projects", f"{len(detected_tech)} distinct tools and languages detected"]
+                "headline": f"Your GitHub profile shows focus in {primary_lang} with {top_career} alignment.",
+                "evidence": [f"{total_repos} public repositories analyzed", f"{stars} stargazers across projects", f"{len(detected_tech)} distinct tools and languages detected"]
             }
         }
-    except Exception:
-        return None
+
+        # Cache valid profile
+        PROFILE_CACHE[clean_u] = {
+            "data": profile_result,
+            "cached_at": now,
+            "cached_at_iso": fetched_iso
+        }
+        return profile_result
+
+    except Exception as e:
+        return {
+            "status": 503,
+            "error": "GITHUB_UNREACHABLE",
+            "message": f"Unable to reach GitHub API for user '{username}': {str(e)}",
+            "username": clean_u
+        }
+
 
 # =====================================================================
 # REST API ENDPOINTS
 # =====================================================================
 @app.get("/api/profiles")
 def get_profiles():
-    """Returns list of curated benchmark profiles."""
-    return list(SAMPLE_PROFILES.values())
+    """Returns list of curated benchmark profiles with clear demo tagging."""
+    profiles = []
+    for p in SAMPLE_PROFILES.values():
+        p_copy = dict(p)
+        p_copy["is_demo"] = True
+        p_copy["data_source"] = "benchmark"
+        profiles.append(p_copy)
+    return profiles
+
 
 @app.get("/api/profile")
-def get_profile(username: str = Query("shrutirai29")):
-    """Returns complete Developer Intelligence Profile (JSON)."""
-    if username in SAMPLE_PROFILES:
-        return SAMPLE_PROFILES[username]
-    live = fetch_live_github(username)
-    if live:
-        return live
-    return JSONResponse(status_code=404, content={"error": f"GitHub user '{username}' could not be reached. Try a benchmark persona."})
+def get_profile(username: str = Query("shrutirai29"), benchmark: bool = Query(False), refresh: bool = Query(False)):
+    """
+    Returns complete Developer Intelligence Profile.
+    Strictly isolated: never returns another user's data on failure.
+    """
+    clean_u = username.strip().lstrip("@").lower()
+    if not clean_u:
+        return JSONResponse(status_code=400, content={"error": "INVALID_USERNAME", "message": "GitHub username cannot be empty."})
+
+    # If benchmark mode explicitly requested
+    if benchmark and clean_u in SAMPLE_PROFILES:
+        res = dict(SAMPLE_PROFILES[clean_u])
+        res["is_demo"] = True
+        res["data_source"] = "benchmark"
+        res["verified_identity"] = True
+        return res
+
+    # Perform live fetch
+    live_result = fetch_live_github(clean_u, bypass_cache=refresh)
+    if isinstance(live_result, dict):
+        if "error" in live_result:
+            status_code = live_result.get("status", 404)
+            # Only provide benchmark persona if benchmark mode was explicitly requested
+            if benchmark and clean_u in SAMPLE_PROFILES:
+                res = dict(SAMPLE_PROFILES[clean_u])
+                res["is_demo"] = True
+                res["data_source"] = "benchmark"
+                res["verified_identity"] = True
+                return res
+            return JSONResponse(status_code=status_code, content=live_result)
+        return live_result
+
+    if benchmark and clean_u in SAMPLE_PROFILES:
+        res = dict(SAMPLE_PROFILES[clean_u])
+        res["is_demo"] = True
+        res["data_source"] = "benchmark"
+        res["verified_identity"] = True
+        return res
+
+    return JSONResponse(
+        status_code=404,
+        content={"error": "USER_NOT_FOUND", "message": f"GitHub user '{username}' could not be reached or does not exist."}
+    )
+
 
 @app.get("/api/contributions")
-def get_contributions(username: str = Query("shrutirai29")):
-    """Returns authentic GitHub contribution calendar and 7x24 rhythm matrix."""
+def get_contributions(username: str = Query("shrutirai29"), refresh: bool = Query(False)):
+    """Returns authentic GitHub contribution calendar and 7x24 rhythm matrix with caching."""
     clean_u = username.strip().lstrip("@").lower()
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+    now = time.time()
+
+    if not refresh and clean_u in CONTRIBUTIONS_CACHE:
+        entry = CONTRIBUTIONS_CACHE[clean_u]
+        if now - entry.get("cached_at", 0) < CACHE_TTL_SECONDS:
+            return entry["data"]
+
+    headers = get_github_headers()
+    headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     
     total_commits = 0
     weeks = []
-    
+    week_dates = []
+
     try:
         res = requests.get(f"https://github.com/users/{clean_u}/contributions", headers=headers, timeout=8)
         if res.status_code == 200:
@@ -1217,13 +1456,11 @@ def get_contributions(username: str = Query("shrutirai29")):
                 by_date = {d: int(lvl) for d, lvl in matches}
                 sorted_dates = sorted(by_date.keys())
                 
-                week_dates = []
                 current_week = []
                 current_start = None
                 
                 for d in sorted_dates:
                     dt = datetime.datetime.strptime(d, "%Y-%m-%d")
-                    # GitHub contribution columns align to Sunday (weekday 6 in Python)
                     if dt.weekday() == 6 and current_week:
                         while len(current_week) < 7:
                             current_week.append(0)
@@ -1250,13 +1487,14 @@ def get_contributions(username: str = Query("shrutirai29")):
     hour_totals = [0] * 24
     
     try:
-        ev_res = requests.get(f"https://api.github.com/users/{clean_u}/events?per_page=100", headers={"User-Agent": "CodeDNA-Analytics"}, timeout=8)
+        ev_headers = get_github_headers()
+        ev_res = requests.get(f"https://api.github.com/users/{clean_u}/events?per_page=100", headers=ev_headers, timeout=8)
         events = ev_res.json() if ev_res.status_code == 200 and isinstance(ev_res.json(), list) else []
         for e in events:
             c_at = e.get("created_at")
             if c_at:
                 dt = datetime.datetime.fromisoformat(c_at.replace("Z", "+00:00"))
-                d = dt.weekday() # 0=Mon, 6=Sun
+                d = dt.weekday()
                 h = dt.hour
                 commits = len(e.get("payload", {}).get("commits", []))
                 weight = max(1, commits)
@@ -1281,20 +1519,27 @@ def get_contributions(username: str = Query("shrutirai29")):
         else:
             break
 
-    active_weeks_count = streak_count or sum(1 for w in weeks if sum(w) > 0) or 14
+    active_weeks_count = streak_count or sum(1 for w in weeks if sum(w) > 0)
+    consistency_val = min(98.0, max(10.0, round(10.0 + active_weeks_count * 2.5, 1))) if active_weeks_count > 0 else 10.0
 
-    return {
+    contrib_data = {
         "username": clean_u,
         "total_contributions": total_commits,
         "weeks": weeks[-30:] if len(weeks) >= 30 else weeks,
         "all_weeks": weeks,
-        "week_dates": week_dates[-30:] if len(week_dates) >= 30 else week_dates if 'week_dates' in locals() else [],
+        "week_dates": week_dates[-30:] if len(week_dates) >= 30 else week_dates,
         "matrix": scaled_matrix,
         "peak_time": peak_time_str,
         "most_active_day": peak_day,
         "current_streak_weeks": active_weeks_count,
-        "consistency_score": min(98, max(65, int(active_weeks_count * 2.2)))
+        "consistency_score": consistency_val
     }
+
+    CONTRIBUTIONS_CACHE[clean_u] = {
+        "data": contrib_data,
+        "cached_at": now
+    }
+    return contrib_data
 
 
 @app.get("/api/simulate")
@@ -1338,13 +1583,21 @@ except Exception as _e1:
 
 @app.get("/api/diagnostic")
 def get_diagnostic():
-    import sys, os
+    """Sanitized public service diagnostics without leaking internal host paths."""
     return {
+        "status": "healthy",
+        "version": "v2.4.0",
         "agent_loaded": TrainedCodeDNAAgent is not None,
-        "error": TRAINED_AGENT_ERROR,
-        "cwd": os.getcwd(),
-        "files_in_cwd": os.listdir(".") if os.path.exists(".") else [],
-        "sys_path": sys.path[:5]
+        "endpoints": [
+            "/api/profile",
+            "/api/profiles",
+            "/api/contributions",
+            "/api/simulate",
+            "/api/chat",
+            "/api/career/analyze-match",
+            "/api/career/rejection-email",
+            "/api/career/courses"
+        ]
     }
 
 
@@ -1359,13 +1612,14 @@ async def chat_post(request: Request):
         data = await request.json()
     except Exception:
         data = {}
-    message = str(data.get("message", "")).strip()
-    history = data.get("history", [])
+    message = str(data.get("message", "")).strip()[:2000]
+    raw_history = data.get("history", [])
+    history = raw_history[-15:] if isinstance(raw_history, list) else []
 
     if TrainedCodeDNAAgent is None:
         return {
-            "response": f"AI Assistant is initializing or encountered an environment loading issue: {TRAINED_AGENT_ERROR}",
-            "topic": "Environment Error",
+            "response": "The CodeDNA AI Assistant is currently operating in offline mode. Please refer to benchmark profiles or retry shortly.",
+            "topic": "Assistant Offline",
             "confidence": 0.0,
             "in_scope": False,
             "intent": "error"
@@ -1379,8 +1633,8 @@ def chat_get(message: str = Query(default="hi", description="User question")):
     """GET endpoint for CodeDNA Trained AI Assistant for quick testing."""
     if TrainedCodeDNAAgent is None:
         return {
-            "response": f"AI Assistant is initializing or encountered an environment loading issue: {TRAINED_AGENT_ERROR}",
-            "topic": "Environment Error",
+            "response": "The CodeDNA AI Assistant is currently operating in offline mode. Please refer to benchmark profiles or retry shortly.",
+            "topic": "Assistant Offline",
             "confidence": 0.0,
             "in_scope": False,
             "intent": "error"
@@ -1403,7 +1657,13 @@ async def simulate_career_path_post(request: Request):
     else:
         skill_list = []
     
-    baseline = float(data.get("base_score", data.get("baseline", 68.0)))
+    try:
+        raw_base = data.get("base_score", data.get("baseline", 68.0))
+        baseline = float(raw_base)
+        if not (10.0 <= baseline <= 100.0) or math.isnan(baseline):
+            baseline = 68.0
+    except Exception:
+        baseline = 68.0
     lift_per_skill = {"SQL": 7.5, "Docker": 6.0, "AWS": 5.5, "FastAPI": 4.5, "Kubernetes": 6.5, "Statistics": 5.0, "PyTorch": 7.0}
     total_lift = sum(lift_per_skill.get(s, 4.0) for s in skill_list)
     projected = min(98.0, round(baseline + total_lift, 1))
@@ -1415,6 +1675,517 @@ async def simulate_career_path_post(request: Request):
         "delta": round(projected - baseline, 1),
         "disclaimer": "Scenario model estimate based on vector space similarity; not an employment guarantee."
     }
+
+# =====================================================================
+# CAREER & RESUME ANALYZER API (INTEGRATED SKILLBRIDGE ENGINE)
+# =====================================================================
+@app.post("/api/career/analyze-match")
+async def analyze_career_match(
+    request: Request,
+    resume_file: Optional[UploadFile] = File(None)
+):
+    """
+    Evaluates resume against job description.
+    Accepts JSON body or multipart file upload (PDF, DOCX, TXT).
+    """
+    resume_text = ""
+    job_description = ""
+    target_role = ""
+    guest_token = ""
+
+    # Check if multipart or JSON
+    content_type = request.headers.get("content-type", "")
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+        job_description = str(form.get("job_description", "")).strip()
+        target_role = str(form.get("target_role") or form.get("job_title") or "").strip()
+        guest_token = str(form.get("guest_token") or form.get("user_id") or "").strip()
+        
+        uploaded_file = form.get("resume_file") or form.get("file")
+        if uploaded_file and hasattr(uploaded_file, "filename") and uploaded_file.filename:
+            filename = uploaded_file.filename.lower()
+            if not any(filename.endswith(ext) for ext in [".pdf", ".docx", ".txt"]):
+                return JSONResponse(status_code=400, content={"error": "INVALID_FILE_TYPE", "message": "Only PDF, DOCX, and TXT files are accepted."})
+
+            file_bytes = await uploaded_file.read()
+            if len(file_bytes) > 10 * 1024 * 1024:
+                return JSONResponse(status_code=400, content={"error": "FILE_TOO_LARGE", "message": "Uploaded resume exceeds the 10MB size limit."})
+
+            try:
+                resume_text = extract_text_from_bytes(file_bytes, uploaded_file.filename)
+            except Exception as e:
+                return JSONResponse(status_code=400, content={"error": "PARSER_ERROR", "message": str(e)})
+        else:
+            resume_text = str(form.get("resume_text", "")).strip()
+    else:
+        try:
+            data = await request.json()
+        except Exception:
+            data = {}
+        resume_text = str(data.get("resume_text", "")).strip()
+        job_description = str(data.get("job_description", "")).strip()
+        target_role = str(data.get("target_role") or data.get("job_title") or "").strip()
+        guest_token = str(data.get("guest_token") or data.get("user_id") or "").strip()
+
+    if not resume_text:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "MISSING_RESUME", "message": "Please provide your resume text or upload a valid resume document (PDF, DOCX, TXT)."}
+        )
+    if not job_description:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "MISSING_JOB_DESCRIPTION", "message": "Please paste the target job description to match against."}
+        )
+
+    # Perform evaluation
+    result = CareerMatcher.match_resume_to_job(resume_text, job_description, target_role)
+
+    # Map aliases for complete client compatibility
+    result["job_title"] = target_role or "Software Engineer"
+    result["technical_alignment"] = result["dimension_scores"]["technical"]
+    result["experience_score"] = result["dimension_scores"]["experience"]
+    result["domain_relevance"] = result["dimension_scores"]["soft_skills"]
+    result["keyword_coverage"] = result["dimension_scores"]["education"]
+    result["actionable_tips"] = result["tips"]
+    result["recommended_courses"] = result["course_recommendations"]
+
+    # Persist in database
+    if is_valid_guest_token(guest_token):
+        try:
+            saved_id = db_manager.save_career_analysis({
+                "guest_token": guest_token,
+                "job_title": target_role or "Software Engineer",
+                "job_description": job_description,
+                "resume_text": resume_text,
+                "match_score": result["match_score"],
+                "technical_score": result["dimension_scores"]["technical"],
+                "experience_score": result["dimension_scores"]["experience"],
+                "education_score": result["dimension_scores"]["education"],
+                "soft_skills_score": result["dimension_scores"]["soft_skills"],
+                "found_skills": result["found_skills"],
+                "missing_skills": result["missing_skills"],
+                "ai_tips": result["tips"],
+                "verdict": result["verdict"]
+            })
+            result["saved_id"] = saved_id
+            result["analysis_id"] = saved_id
+        except Exception:
+            pass
+
+    return result
+
+
+@app.post("/api/career/rejection-email")
+async def analyze_rejection_email(request: Request):
+    """Classifies interview or rejection correspondence into actionable next steps."""
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    
+    email_text = str(data.get("email_text", "")).strip()
+    target_role = str(data.get("target_role") or data.get("job_title") or "").strip()
+    guest_token = str(data.get("guest_token") or data.get("user_id") or "").strip()
+
+    if not email_text:
+        return JSONResponse(status_code=400, content={"error": "MISSING_EMAIL_TEXT", "message": "Please paste the email content to analyze."})
+
+    result = CareerMatcher.classify_rejection_email(email_text, target_role)
+    result["category"] = result.get("decision", "Rejection")
+    result["reasons"] = result.get("possible_reasons", [])
+
+    if guest_token and guest_token != "guest_session":
+        try:
+            saved_id = db_manager.save_email_analysis({
+                "guest_token": guest_token,
+                "target_role": target_role,
+                "decision": result["decision"],
+                "confidence": result["confidence"],
+                "summary": result["summary"],
+                "possible_reasons": result["possible_reasons"],
+                "next_steps": result["next_steps"],
+                "raw_email_excerpt": email_text[:500]
+            })
+            result["saved_id"] = saved_id
+            result["analysis_id"] = saved_id
+        except Exception:
+            pass
+
+    return result
+
+
+@app.get("/api/career/courses")
+def get_courses(
+    skills: Optional[str] = Query(None),
+    skill: Optional[str] = Query(None),
+    role: Optional[str] = Query(None)
+):
+    """Returns curated course recommendations matching missing or requested skills."""
+    raw = skills or skill or "python,docker,react"
+    skill_list = [s.strip() for s in raw.split(",") if s.strip()]
+    catalog = get_courses_for_skills(skill_list)
+    
+    # Flatten all courses for frontend consumer while preserving skill map keys for direct lookup
+    all_courses = []
+    for s_courses in catalog.values():
+        all_courses.extend(s_courses)
+    catalog["courses"] = all_courses
+    catalog["skills_queried"] = skill_list
+    return catalog
+
+
+def is_valid_guest_token(token: Optional[str]) -> bool:
+    """Validates that a guest token has secure formatting and is not a generic placeholder."""
+    if not token or not isinstance(token, str):
+        return False
+    clean = token.strip()
+    if clean in ("guest_session", "null", "undefined", "[object Object]", "guest_undefined"):
+        return False
+    # Enforces 6 to 64 alphanumeric characters, underscores, and hyphens without injection symbols
+    return bool(re.match(r"^[a-zA-Z0-9\-_]{6,64}$", clean))
+
+
+@app.get("/api/career/saved-courses")
+def get_user_saved_courses(
+    guest_token: Optional[str] = Query(None),
+    user_id: Optional[str] = Query(None)
+):
+    """Retrieves saved/bookmarked courses for the specific user/guest token."""
+    token = guest_token or user_id
+    if not is_valid_guest_token(token):
+        return []
+    return db_manager.get_saved_courses(guest_token=token)
+
+
+@app.post("/api/career/saved-courses")
+async def save_user_course(request: Request):
+    """Bookmarks a course for learning."""
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    token = data.get("guest_token") or data.get("user_id")
+    if not is_valid_guest_token(token):
+        return JSONResponse(status_code=400, content={"error": "INVALID_TOKEN", "message": "A valid guest token is required to bookmark courses."})
+    saved_id = db_manager.save_course(data)
+    return {"status": "success", "id": saved_id}
+
+
+@app.delete("/api/career/saved-courses/{course_id}")
+def delete_user_saved_course(
+    course_id: int,
+    guest_token: Optional[str] = Query(None),
+    user_id: Optional[str] = Query(None)
+):
+    """Removes a bookmarked course ensuring strict ownership."""
+    token = guest_token or user_id
+    if not is_valid_guest_token(token):
+        return JSONResponse(status_code=400, content={"error": "MISSING_TOKEN", "message": "Ownership token required."})
+    success = db_manager.delete_saved_course(course_id, guest_token=token)
+    return {"status": "success" if success else "not_found"}
+
+
+@app.get("/api/career/history")
+def get_user_career_history(
+    guest_token: Optional[str] = Query(None),
+    user_id: Optional[str] = Query(None)
+):
+    """Retrieves prior resume-to-job analysis history for the specific user/guest token."""
+    token = guest_token or user_id
+    if not is_valid_guest_token(token):
+        return []
+    return db_manager.get_career_analyses(guest_token=token)
+
+
+@app.delete("/api/career/history/{analysis_id}")
+def delete_user_career_analysis(
+    analysis_id: int,
+    guest_token: Optional[str] = Query(None),
+    user_id: Optional[str] = Query(None)
+):
+    """Deletes a prior analysis record ensuring strict ownership."""
+    token = guest_token or user_id
+    if not is_valid_guest_token(token):
+        return JSONResponse(status_code=400, content={"error": "MISSING_TOKEN", "message": "Ownership token required."})
+    success = db_manager.delete_career_analysis(analysis_id, guest_token=token)
+    return {"status": "success" if success else "not_found"}
+
+
+# =====================================================================
+# CAREER INTELLIGENCE COMPREHENSIVE ENGINE ENDPOINTS
+# =====================================================================
+def _build_profile_context(username: str) -> Dict[str, Any]:
+    """Helper to synthesize GitHub profile metadata for Career Intelligence."""
+    clean_user = (username or "").strip().lower()
+    if not clean_user:
+        return {}
+
+    # 1. Check SQLite database
+    db_user = db_manager.get_user_by_username(clean_user)
+    if db_user:
+        u_id = db_user["id"]
+        repos_df = db_manager.get_repositories(u_id)
+        langs_df = db_manager.get_languages(u_id)
+        metrics = db_manager.get_developer_metrics(u_id) or {}
+
+        repos_list = []
+        if not repos_df.empty:
+            for _, r in repos_df.iterrows():
+                repos_list.append({
+                    "name": r.get("name", ""),
+                    "description": r.get("description", "") or "",
+                    "stargazers_count": int(r.get("stargazers_count", 0)),
+                    "primary_language": r.get("primary_language", ""),
+                    "topics": [t.strip() for t in str(r.get("topics", "")).split(",") if t.strip()]
+                })
+
+        langs_list = []
+        if not langs_df.empty:
+            for _, l in langs_df.iterrows():
+                langs_list.append({
+                    "language_name": l.get("language_name", ""),
+                    "bytes_count": int(l.get("bytes_count", 0))
+                })
+
+        return {
+            "username": db_user.get("username", clean_user),
+            "user": dict(db_user),
+            "repositories": repos_list,
+            "languages": langs_list,
+            "scores": {
+                "technical_depth": metrics.get("technical_depth", 40.0),
+                "technical_breadth": metrics.get("technical_breadth", 35.0),
+                "consistency": metrics.get("consistency_index", 30.0),
+                "project_complexity": metrics.get("project_complexity_avg", 40.0),
+                "collaboration": metrics.get("collaboration_score", 30.0),
+                "adaptability": metrics.get("technology_adaptability", 45.0),
+                "overall": metrics.get("developer_intelligence_score", 45.0),
+                "archetype": metrics.get("archetype_name", "Versatile Software Engineer")
+            }
+        }
+
+    # 2. Check Benchmark Profiles
+    sample = SAMPLE_PROFILES.get(clean_user)
+    if sample:
+        langs_list = []
+        for k, v in sample.get("languages", {}).items():
+            langs_list.append({"language_name": k, "bytes_count": v * 15000})
+
+        # Repositories from dna_nodes or top_repos
+        repos_list = []
+        for node in sample.get("dna_nodes", []):
+            repos_list.append({
+                "name": f"{node.get('id', 'project')}-service",
+                "description": f"Engineered {node.get('name')} system with high performance patterns",
+                "stargazers_count": 5,
+                "primary_language": node.get("name", "Multi-language"),
+                "topics": [node.get("id", "")]
+            })
+
+        return {
+            "username": sample.get("username", clean_user),
+            "repositories": repos_list,
+            "languages": langs_list,
+            "scores": {
+                "technical_depth": sample.get("dimensions", {}).get("technical_depth", 70.0),
+                "technical_breadth": sample.get("dimensions", {}).get("technical_breadth", 70.0),
+                "consistency": sample.get("dimensions", {}).get("consistency", 70.0),
+                "project_complexity": sample.get("dimensions", {}).get("project_complexity", 70.0),
+                "collaboration": sample.get("dimensions", {}).get("collaboration", 65.0),
+                "adaptability": sample.get("dimensions", {}).get("adaptability", 75.0),
+                "overall": sample.get("score", 70.0),
+                "archetype": sample.get("archetype", "Versatile Software Engineer")
+            }
+        }
+
+    # 3. Default basic context
+    return {
+        "username": clean_user,
+        "repositories": [],
+        "languages": [],
+        "scores": {}
+    }
+
+
+@app.post("/api/career/intelligence/analyze")
+async def analyze_career_intelligence(
+    request: Request,
+    resume_file: Optional[UploadFile] = File(None)
+):
+    """
+    Generates a comprehensive 10-section Career Intelligence Report.
+    Synthesizes GitHub profile, inspected code, parsed resume, and user questionnaire.
+    """
+    username = ""
+    resume_text = ""
+    target_role_override = ""
+    guest_token = ""
+    preferences_data: Dict[str, Any] = {}
+
+    content_type = request.headers.get("content-type", "")
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+        username = str(form.get("username", "")).strip()
+        target_role_override = str(form.get("target_role") or form.get("target_direction") or "").strip()
+        guest_token = str(form.get("guest_token") or form.get("user_id") or "").strip()
+        
+        # User preferences questionnaire from form
+        prefs_raw = form.get("preferences") or form.get("user_preferences")
+        if prefs_raw and isinstance(prefs_raw, str):
+            try:
+                preferences_data = json.loads(prefs_raw)
+            except Exception:
+                preferences_data = {}
+        elif not preferences_data:
+            # Check individual fields
+            if form.get("targetRole"): preferences_data["targetRole"] = str(form.get("targetRole"))
+            if form.get("primaryGoal"): preferences_data["primaryGoal"] = str(form.get("primaryGoal"))
+            if form.get("stage"): preferences_data["stage"] = str(form.get("stage"))
+
+        uploaded_file = form.get("resume_file") or form.get("file")
+        if uploaded_file and hasattr(uploaded_file, "filename") and uploaded_file.filename:
+            filename = uploaded_file.filename.lower()
+            if not any(filename.endswith(ext) for ext in [".pdf", ".docx", ".txt"]):
+                return JSONResponse(status_code=400, content={"error": "INVALID_FILE_TYPE", "message": "Only PDF, DOCX, and TXT files are accepted."})
+
+            file_bytes = await uploaded_file.read()
+            if len(file_bytes) > 10 * 1024 * 1024:
+                return JSONResponse(status_code=400, content={"error": "FILE_TOO_LARGE", "message": "Uploaded resume exceeds the 10MB size limit."})
+
+            try:
+                resume_text = extract_text_from_bytes(file_bytes, uploaded_file.filename)
+            except Exception as e:
+                return JSONResponse(status_code=400, content={"error": "PARSER_ERROR", "message": str(e)})
+        else:
+            resume_text = str(form.get("resume_text", "")).strip()
+    else:
+        try:
+            data = await request.json()
+        except Exception:
+            data = {}
+        username = str(data.get("username", "")).strip()
+        resume_text = str(data.get("resume_text", "")).strip()
+        target_role_override = str(data.get("target_role") or data.get("target_direction") or "").strip()
+        guest_token = str(data.get("guest_token") or data.get("user_id") or "").strip()
+        preferences_data = data.get("preferences") or data.get("user_preferences") or {}
+
+    # Extract GitHub profile context if username supplied
+    github_context = _build_profile_context(username) if username else {}
+
+    # Generate the complete 10-section report
+    report = CareerIntelligenceEngine.analyze(
+        github_profile=github_context,
+        resume_text=resume_text,
+        user_preferences=preferences_data,
+        target_role_override=target_role_override
+    )
+
+    # Scoped persistence if valid guest token
+    saved_id = None
+    if is_valid_guest_token(guest_token):
+        try:
+            saved_id = db_manager.save_intelligence_report({
+                "guest_token": guest_token,
+                "username": username,
+                "report": report
+            })
+            report["metadata"]["saved_report_id"] = saved_id
+        except Exception:
+            pass
+
+    return {
+        "status": "success",
+        "saved_id": saved_id,
+        "report": report
+    }
+
+
+@app.post("/api/career/intelligence/explain")
+async def explain_career_intelligence(request: Request):
+    """
+    Answers user questions strictly grounded in their generated Career Intelligence Report.
+    """
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+
+    question = str(data.get("question", "")).strip()
+    if not question:
+        return JSONResponse(status_code=400, content={"error": "MISSING_QUESTION", "message": "Please enter a question to ask about your report."})
+
+    report = data.get("report")
+    report_id = data.get("report_id")
+    guest_token = str(data.get("guest_token") or data.get("user_id") or "").strip()
+
+    # If report not provided in body, load from DB
+    if not report and report_id and is_valid_guest_token(guest_token):
+        try:
+            record = db_manager.get_intelligence_report_by_id(int(report_id), guest_token=guest_token)
+            if record:
+                report = record.get("report")
+        except Exception:
+            pass
+
+    if not report or not isinstance(report, dict):
+        return JSONResponse(status_code=400, content={"error": "MISSING_REPORT", "message": "Report data is required to provide grounded explanations."})
+
+    explanation = CareerIntelligenceEngine.explain_report(report, question)
+    return explanation
+
+
+@app.get("/api/career/intelligence/history")
+def get_career_intelligence_history(
+    guest_token: Optional[str] = Query(None),
+    user_id: Optional[str] = Query(None)
+):
+    """
+    Retrieves previous Career Intelligence reports for the guest session.
+    """
+    token = guest_token or user_id
+    if not is_valid_guest_token(token):
+        return []
+    return db_manager.get_intelligence_reports(guest_token=token)
+
+
+@app.get("/api/career/intelligence/report/{report_id}")
+def get_career_intelligence_report(
+    report_id: int,
+    guest_token: Optional[str] = Query(None),
+    user_id: Optional[str] = Query(None)
+):
+    """
+    Retrieves a single full Career Intelligence Report by ID with strict ownership validation.
+    """
+    token = guest_token or user_id
+    if not is_valid_guest_token(token):
+        return JSONResponse(status_code=400, content={"error": "MISSING_TOKEN", "message": "Ownership token required."})
+
+    record = db_manager.get_intelligence_report_by_id(report_id, guest_token=token)
+    if not record:
+        return JSONResponse(status_code=404, content={"error": "NOT_FOUND", "message": "Report not found or access denied."})
+
+    return record
+
+
+@app.delete("/api/career/intelligence/report/{report_id}")
+def delete_career_intelligence_report(
+    report_id: int,
+    guest_token: Optional[str] = Query(None),
+    user_id: Optional[str] = Query(None)
+):
+    """
+    Deletes a single Career Intelligence Report ensuring strict user/guest ownership.
+    """
+    token = guest_token or user_id
+    if not is_valid_guest_token(token):
+        return JSONResponse(status_code=400, content={"error": "MISSING_TOKEN", "message": "Ownership token required."})
+
+    success = db_manager.delete_intelligence_report(report_id, guest_token=token)
+    return {"status": "success" if success else "not_found"}
+
+
 
 # =====================================================================
 # WORLD-CLASS FRONTEND SINGLE-PAGE INTELLIGENCE APPLICATION
@@ -3427,10 +4198,10 @@ def index_html():
         function formatBotMarkdown(str) {{
             if (!str) return '';
             let html = escapeHtml(str);
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="c-head font-bold">$1</strong>');
-            html = html.replace(/^[•\-]\s+(.*)$/gm, '<li class="ml-3">$1</li>');
-            html = html.replace(/\$\$(.*?)\$\$/g, '<div class="p-1.5 my-1 rounded glass-card font-mono text-[11px] text-center c-accent">$1</div>');
-            html = html.replace(/^(\d+\.)\s+(.*)$/gm, '<div class="ml-1 my-0.5"><strong class="c-accent">$1</strong> $2</div>');
+            html = html.replace(/\\*\\*(.*?)\\*\\*/g, '<strong class="c-head font-bold">$1</strong>');
+            html = html.replace(/^[•\\-]\\s+(.*)$/gm, '<li class="ml-3">$1</li>');
+            html = html.replace(/\\$\\$(.*?)\\$\\$/g, '<div class="p-1.5 my-1 rounded glass-card font-mono text-[11px] text-center c-accent">$1</div>');
+            html = html.replace(/^(\\d+\\.)\\s+(.*)$/gm, '<div class="ml-1 my-0.5"><strong class="c-accent">$1</strong> $2</div>');
             html = html.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded glass-sub font-mono text-[10px] c-accent font-bold">$1</code>');
             html = html.split('\\n\\n').join('<div class="h-2"></div>');
             html = html.split('\\n').join('<br>');

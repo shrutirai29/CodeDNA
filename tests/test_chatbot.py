@@ -80,37 +80,39 @@ def test_trained_agent_out_of_scope_rejection():
         "Can you help me do my calculus homework?"
     ]
 
-    for q in off_topic_questions:
-        res = TrainedCodeDNAAgent.answer(q)
-        assert res["in_scope"] is False, f"Expected '{q}' to be rejected as out of scope"
-        assert "CodeDNA Assistant" in res["response"]
+    with patch("ml.gemini_service.query_gemini", return_value=None):
+        for q in off_topic_questions:
+            res = TrainedCodeDNAAgent.answer(q)
+            assert res["in_scope"] is False, f"Expected '{q}' to be rejected as out of scope"
+            assert "CodeDNA Assistant" in res["response"]
 
 
 def test_chat_api_endpoint():
     """Test /api/chat endpoint with valid and off-topic requests."""
-    # Test POST /api/chat with valid question
-    payload = {"message": "What is CodeDNA?"}
-    response = client.post("/api/chat", json=payload)
-    assert response.status_code == 200
-    data = response.json()
-    assert "response" in data
-    assert data["in_scope"] is True
-    assert data["confidence"] > 0.3
-    assert data["intent"] in ("platform_overview", "gemini_generative")
+    with patch("ml.gemini_service.query_gemini", return_value=None):
+        # Test POST /api/chat with valid question
+        payload = {"message": "What is CodeDNA?"}
+        response = client.post("/api/chat", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert "response" in data
+        assert data["in_scope"] is True
+        assert data["confidence"] > 0.3
+        assert data["intent"] in ("platform_overview", "gemini_generative")
 
-    # Test POST /api/chat with off-topic question
-    payload_off = {"message": "What is the capital of Spain?"}
-    response_off = client.post("/api/chat", json=payload_off)
-    assert response_off.status_code == 200
-    data_off = response_off.json()
-    assert data_off["in_scope"] is False
+        # Test POST /api/chat with off-topic question
+        payload_off = {"message": "What is the capital of Spain?"}
+        response_off = client.post("/api/chat", json=payload_off)
+        assert response_off.status_code == 200
+        data_off = response_off.json()
+        assert data_off["in_scope"] is False
 
-    # Test GET /api/chat?message=hello
-    res_get = client.get("/api/chat?message=hello")
-    assert res_get.status_code == 200
-    data_get = res_get.json()
-    assert data_get["in_scope"] is True
-    assert data_get["intent"] in ("greeting", "gemini_generative")
+        # Test GET /api/chat?message=hello
+        res_get = client.get("/api/chat?message=hello")
+        assert res_get.status_code == 200
+        data_get = res_get.json()
+        assert data_get["in_scope"] is True
+        assert data_get["intent"] in ("greeting", "gemini_generative")
 
 
 def test_gemini_generative_response():

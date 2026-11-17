@@ -437,3 +437,335 @@ class DatabaseManager:
 
     def get_technology_trends(self, user_id: int) -> pd.DataFrame:
         return self.execute_query("SELECT * FROM technology_trends WHERE user_id = ? ORDER BY period_year DESC, period_quarter DESC", (user_id,))
+
+    # -------------------------------------------------------------
+    # CAREER ANALYZER & SKILLBRIDGE OPERATIONS
+    # -------------------------------------------------------------
+    def save_career_analysis(self, data: Dict[str, Any]) -> int:
+        """Saves a resume-to-job match analysis."""
+        sql = """
+        INSERT INTO career_analyses (
+            user_id, guest_token, job_title, job_description, resume_text,
+            match_score, technical_score, experience_score, education_score, soft_skills_score,
+            found_skills, missing_skills, ai_tips, verdict
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        raw_uid = data.get("user_id")
+        user_id = raw_uid if isinstance(raw_uid, int) else None
+        guest_token = data.get("guest_token") or (str(raw_uid) if isinstance(raw_uid, str) and raw_uid.startswith("guest_") else None)
+        job_title = data.get("job_title") or data.get("target_role") or "Software Engineer"
+        tips = data.get("ai_tips") or data.get("tips") or data.get("actionable_tips") or []
+
+        params = (
+            user_id,
+            guest_token,
+            job_title,
+            data.get("job_description", ""),
+            data.get("resume_text", ""),
+            float(data.get("match_score", 0.0)),
+            float(data.get("technical_score", 0.0)),
+            float(data.get("experience_score", 0.0)),
+            float(data.get("education_score", 0.0)),
+            float(data.get("soft_skills_score", 0.0)),
+            json.dumps(data.get("found_skills", [])),
+            json.dumps(data.get("missing_skills", [])),
+            json.dumps(tips),
+            data.get("verdict", "")
+        )
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            conn.commit()
+            return cursor.lastrowid
+
+    def get_career_analyses(self, user_id: Optional[int] = None, guest_token: Optional[str] = None, limit: int = 20) -> List[Dict[str, Any]]:
+        """Retrieves saved career analyses for a user or guest session."""
+        if user_id is not None:
+            sql = "SELECT * FROM career_analyses WHERE user_id = ? ORDER BY created_at DESC LIMIT ?"
+            params = (user_id, limit)
+        elif guest_token:
+            sql = "SELECT * FROM career_analyses WHERE guest_token = ? ORDER BY created_at DESC LIMIT ?"
+            params = (guest_token, limit)
+        else:
+            return []
+
+        results = []
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            for row in cursor.fetchall():
+                results.append({
+                    "id": row["id"],
+                    "job_title": row["job_title"],
+                    "target_role": row["job_title"],
+                    "job_description_snippet": row["job_description"][:160] + "..." if len(row["job_description"]) > 160 else row["job_description"],
+                    "match_score": row["match_score"],
+                    "technical_alignment": row["technical_score"],
+                    "experience_score": row["experience_score"],
+                    "domain_relevance": row["soft_skills_score"],
+                    "keyword_coverage": row["education_score"],
+                    "dimension_scores": {
+                        "technical": row["technical_score"],
+                        "experience": row["experience_score"],
+                        "education": row["education_score"],
+                        "soft_skills": row["soft_skills_score"]
+                    },
+                    "found_skills": json.loads(row["found_skills"]) if row["found_skills"] else [],
+                    "missing_skills": json.loads(row["missing_skills"]) if row["missing_skills"] else [],
+                    "ai_tips": json.loads(row["ai_tips"]) if row["ai_tips"] else [],
+                    "actionable_tips": json.loads(row["ai_tips"]) if row["ai_tips"] else [],
+                    "tips": json.loads(row["ai_tips"]) if row["ai_tips"] else [],
+                    "verdict": row["verdict"],
+                    "created_at": row["created_at"]
+                })
+        return results
+
+    def delete_career_analysis(self, analysis_id: int, user_id: Optional[int] = None, guest_token: Optional[str] = None) -> bool:
+        """Deletes a career analysis ensuring proper user/guest ownership."""
+        if user_id is not None:
+            sql = "DELETE FROM career_analyses WHERE id = ? AND user_id = ?"
+            params = (analysis_id, user_id)
+        elif guest_token:
+            sql = "DELETE FROM career_analyses WHERE id = ? AND guest_token = ?"
+            params = (analysis_id, guest_token)
+        else:
+            return False
+
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            conn.commit()
+            return cursor.rowcount > 0
+
+    def save_course(self, data: Dict[str, Any]) -> int:
+        """Bookmarks a recommended course."""
+        sql = """
+        INSERT INTO saved_courses (
+            user_id, guest_token, skill, title, platform, provider, duration, level, url, is_free, is_completed
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        raw_uid = data.get("user_id")
+        user_id = raw_uid if isinstance(raw_uid, int) else None
+        guest_token = data.get("guest_token") or (str(raw_uid) if isinstance(raw_uid, str) and raw_uid.startswith("guest_") else None)
+        title = data.get("title") or data.get("course_title") or ""
+        skill = data.get("skill") or data.get("skill_name") or ""
+        url = data.get("url") or data.get("course_url") or ""
+        provider = data.get("provider") or data.get("platform") or ""
+
+        params = (
+            user_id,
+            guest_token,
+            skill,
+            title,
+            provider,
+            provider,
+            data.get("duration", ""),
+            data.get("level", ""),
+            url,
+            1 if data.get("is_free") else 0,
+            1 if data.get("is_completed") else 0
+        )
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            conn.commit()
+            return cursor.lastrowid
+
+    def get_saved_courses(self, user_id: Optional[int] = None, guest_token: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Retrieves saved courses for a user or guest session."""
+        if user_id is not None:
+            sql = "SELECT * FROM saved_courses WHERE user_id = ? ORDER BY saved_at DESC"
+            params = (user_id,)
+        elif guest_token:
+            sql = "SELECT * FROM saved_courses WHERE guest_token = ? ORDER BY saved_at DESC"
+            params = (guest_token,)
+        else:
+            return []
+
+        results = []
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            for row in cursor.fetchall():
+                results.append({
+                    "id": row["id"],
+                    "skill": row["skill"],
+                    "skill_name": row["skill"],
+                    "title": row["title"],
+                    "course_title": row["title"],
+                    "platform": row["platform"],
+                    "provider": row["provider"],
+                    "duration": row["duration"],
+                    "level": row["level"],
+                    "url": row["url"],
+                    "course_url": row["url"],
+                    "is_free": bool(row["is_free"]),
+                    "is_completed": bool(row["is_completed"]),
+                    "saved_at": row["saved_at"]
+                })
+        return results
+
+    def delete_saved_course(self, course_id: int, user_id: Optional[int] = None, guest_token: Optional[str] = None) -> bool:
+        """Deletes a bookmarked course."""
+        if user_id is not None:
+            sql = "DELETE FROM saved_courses WHERE id = ? AND user_id = ?"
+            params = (course_id, user_id)
+        elif guest_token:
+            sql = "DELETE FROM saved_courses WHERE id = ? AND guest_token = ?"
+            params = (course_id, guest_token)
+        else:
+            return False
+
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            conn.commit()
+            return cursor.rowcount > 0
+
+    def save_email_analysis(self, data: Dict[str, Any]) -> int:
+        """Persists rejection/interview email classification."""
+        sql = """
+        INSERT INTO email_analyses (
+            user_id, guest_token, target_role, decision, confidence, summary, possible_reasons, next_steps, raw_email_excerpt
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        params = (
+            data.get("user_id"),
+            data.get("guest_token"),
+            data.get("target_role", ""),
+            data.get("decision", ""),
+            int(data.get("confidence", 0)),
+            data.get("summary", ""),
+            json.dumps(data.get("possible_reasons", [])),
+            json.dumps(data.get("next_steps", [])),
+            data.get("raw_email_excerpt", "")[:500]
+        )
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            conn.commit()
+            return cursor.lastrowid
+
+    # -------------------------------------------------------------
+    # CAREER INTELLIGENCE COMPREHENSIVE REPORTS
+    # -------------------------------------------------------------
+    def save_intelligence_report(self, data: Dict[str, Any]) -> int:
+        """Persists a complete 10-section Career Intelligence Report."""
+        sql = """
+        INSERT INTO career_intelligence_reports (
+            user_id, guest_token, username, target_direction, overall_confidence, report_json, summary_excerpt
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        """
+        raw_uid = data.get("user_id")
+        user_id = raw_uid if isinstance(raw_uid, int) else None
+        guest_token = data.get("guest_token") or (str(raw_uid) if isinstance(raw_uid, str) and raw_uid.startswith("guest_") else None)
+        report_obj = data.get("report") or {}
+        summary_text = ""
+        if isinstance(report_obj, dict):
+            sec1 = report_obj.get("section_1_executive_summary") or {}
+            summary_text = sec1.get("headline", "") or sec1.get("narrative", "")
+        
+        report_json_str = json.dumps(report_obj) if not isinstance(data.get("report_json"), str) else data["report_json"]
+
+        params = (
+            user_id,
+            guest_token,
+            data.get("username", ""),
+            data.get("target_direction", report_obj.get("metadata", {}).get("target_direction_title", "")),
+            float(data.get("overall_confidence", report_obj.get("metadata", {}).get("overall_confidence", 0.0))),
+            report_json_str,
+            summary_text[:300]
+        )
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            conn.commit()
+            return cursor.lastrowid
+
+    def get_intelligence_reports(
+        self,
+        user_id: Optional[int] = None,
+        guest_token: Optional[str] = None,
+        limit: int = 15
+    ) -> List[Dict[str, Any]]:
+        """Retrieves past intelligence report summaries for a user or guest session."""
+        if user_id is not None:
+            sql = "SELECT id, username, target_direction, overall_confidence, summary_excerpt, created_at FROM career_intelligence_reports WHERE user_id = ? ORDER BY created_at DESC LIMIT ?"
+            params = (user_id, limit)
+        elif guest_token:
+            sql = "SELECT id, username, target_direction, overall_confidence, summary_excerpt, created_at FROM career_intelligence_reports WHERE guest_token = ? ORDER BY created_at DESC LIMIT ?"
+            params = (guest_token, limit)
+        else:
+            return []
+
+        results = []
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            for row in cursor.fetchall():
+                results.append({
+                    "id": row["id"],
+                    "username": row["username"],
+                    "target_direction": row["target_direction"],
+                    "overall_confidence": row["overall_confidence"],
+                    "summary_excerpt": row["summary_excerpt"],
+                    "created_at": row["created_at"]
+                })
+        return results
+
+    def get_intelligence_report_by_id(
+        self,
+        report_id: int,
+        user_id: Optional[int] = None,
+        guest_token: Optional[str] = None
+    ) -> Optional[Dict[str, Any]]:
+        """Retrieves full intelligence report JSON by ID with strict ownership validation."""
+        if user_id is not None:
+            sql = "SELECT * FROM career_intelligence_reports WHERE id = ? AND user_id = ?"
+            params = (report_id, user_id)
+        elif guest_token:
+            sql = "SELECT * FROM career_intelligence_reports WHERE id = ? AND guest_token = ?"
+            params = (report_id, guest_token)
+        else:
+            return None
+
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            row = cursor.fetchone()
+            if not row:
+                return None
+            try:
+                report_data = json.loads(row["report_json"])
+            except Exception:
+                report_data = {}
+            return {
+                "id": row["id"],
+                "username": row["username"],
+                "target_direction": row["target_direction"],
+                "overall_confidence": row["overall_confidence"],
+                "report": report_data,
+                "created_at": row["created_at"]
+            }
+
+    def delete_intelligence_report(
+        self,
+        report_id: int,
+        user_id: Optional[int] = None,
+        guest_token: Optional[str] = None
+    ) -> bool:
+        """Deletes an intelligence report ensuring strict user or guest ownership."""
+        if user_id is not None:
+            sql = "DELETE FROM career_intelligence_reports WHERE id = ? AND user_id = ?"
+            params = (report_id, user_id)
+        elif guest_token:
+            sql = "DELETE FROM career_intelligence_reports WHERE id = ? AND guest_token = ?"
+            params = (report_id, guest_token)
+        else:
+            return False
+
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, params)
+            conn.commit()
+            return cursor.rowcount > 0

@@ -1,31 +1,103 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useDeveloperStore } from '../../store/useDeveloperStore';
-import { Sparkles, Zap, RotateCcw, Rocket } from 'lucide-react';
+import { Zap, RotateCcw, Rocket, Target } from 'lucide-react';
 import { TiltCard } from '../common/TiltCard';
-import { RockerSwitch } from '../common/RockerSwitch';
+import { ScoringService } from '../../services/scoringService';
 
 interface SimSkill {
   id: string;
   name: string;
   category: string;
-  scoreBonus: number;
-  fitBonus: number;
   unlockedRole: string;
   color: string;
+  roleWeights: Record<string, number>;
 }
 
 const AVAILABLE_SIM_SKILLS: SimSkill[] = [
-  { id: 'docker_k8s', name: 'Docker + Kubernetes', category: 'DevOps / Cloud', scoreBonus: 2.8, fitBonus: 8.5, unlockedRole: 'Cloud-Native Architect', color: '#2496ED' },
-  { id: 'pytorch_ai', name: 'PyTorch + LLM Serving', category: 'Applied AI', scoreBonus: 3.2, fitBonus: 9.4, unlockedRole: 'Applied AI Engineer', color: '#EE4C2C' },
-  { id: 'rust_systems', name: 'Rust Systems Core', category: 'Systems Engineering', scoreBonus: 2.6, fitBonus: 7.2, unlockedRole: 'Systems & Kernel Specialist', color: '#DEA584' },
-  { id: 'redis_cache', name: 'Redis + Distributed Caching', category: 'Backend Architecture', scoreBonus: 1.8, fitBonus: 5.8, unlockedRole: 'High-Concurrency Backend', color: '#DC382D' },
-  { id: 'graphql_apis', name: 'GraphQL + Apollo Federation', category: 'API Architecture', scoreBonus: 1.5, fitBonus: 4.6, unlockedRole: 'Full-Stack Platform Engineer', color: '#E10098' },
-  { id: 'cicd_actions', name: 'GitHub Actions CI/CD Pipeline', category: 'Automation', scoreBonus: 1.6, fitBonus: 5.2, unlockedRole: 'DevOps Automation Lead', color: '#10B981' }
+  {
+    id: 'docker_k8s',
+    name: 'Docker + Kubernetes',
+    category: 'DevOps / Cloud',
+    unlockedRole: 'Cloud-Native Architect',
+    color: '#2496ED',
+    roleWeights: {
+      'Full-Stack Developer': 7.5,
+      'Backend Engineer': 6.0,
+      'DevOps & Cloud Engineer': 11.2,
+      'Data Scientist / ML Engineer': 5.0,
+      'Systems & Software Engineer': 4.5
+    }
+  },
+  {
+    id: 'pytorch_ai',
+    name: 'PyTorch + LLM Serving',
+    category: 'Applied AI',
+    unlockedRole: 'Applied AI Engineer',
+    color: '#EE4C2C',
+    roleWeights: {
+      'Data Scientist / ML Engineer': 12.0,
+      'Backend Engineer': 5.0,
+      'Full-Stack Developer': 5.5,
+      'Systems & Software Engineer': 4.0
+    }
+  },
+  {
+    id: 'rust_systems',
+    name: 'Rust Systems Core',
+    category: 'Systems Engineering',
+    unlockedRole: 'Systems & Kernel Specialist',
+    color: '#DEA584',
+    roleWeights: {
+      'Systems & Software Engineer': 13.5,
+      'Backend Engineer': 6.5,
+      'Full-Stack Developer': 4.0,
+      'DevOps & Cloud Engineer': 4.0
+    }
+  },
+  {
+    id: 'redis_cache',
+    name: 'Redis + Distributed Caching',
+    category: 'Backend Architecture',
+    unlockedRole: 'High-Concurrency Backend',
+    color: '#DC382D',
+    roleWeights: {
+      'Backend Engineer': 8.5,
+      'Full-Stack Developer': 6.0,
+      'DevOps & Cloud Engineer': 4.5,
+      'Data Scientist / ML Engineer': 3.5
+    }
+  },
+  {
+    id: 'graphql_apis',
+    name: 'GraphQL + Apollo Federation',
+    category: 'API Architecture',
+    unlockedRole: 'Full-Stack Platform Engineer',
+    color: '#E10098',
+    roleWeights: {
+      'Full-Stack Developer': 7.0,
+      'Frontend Engineer': 6.5,
+      'Backend Engineer': 5.5
+    }
+  },
+  {
+    id: 'cicd_actions',
+    name: 'GitHub Actions CI/CD Pipeline',
+    category: 'Automation',
+    unlockedRole: 'DevOps Automation Lead',
+    color: '#10B981',
+    roleWeights: {
+      'DevOps & Cloud Engineer': 9.5,
+      'Full-Stack Developer': 6.5,
+      'Backend Engineer': 5.5,
+      'Frontend Engineer': 5.0
+    }
+  }
 ];
 
 export const SkillSimulator: React.FC = () => {
   const { profile } = useDeveloperStore();
+  const availableRoles = profile.careers.map(c => c.role);
+  const [targetRole, setTargetRole] = useState<string>(availableRoles[0] || 'Full-Stack Developer');
   const [selectedSkills, setSelectedSkills] = useState<string[]>(['docker_k8s']);
 
   const toggleSkill = (id: string) => {
@@ -37,33 +109,43 @@ export const SkillSimulator: React.FC = () => {
   const resetSkills = () => setSelectedSkills([]);
   const equipAll = () => setSelectedSkills(AVAILABLE_SIM_SKILLS.map(s => s.id));
 
-  // Compute simulated projections
-  const totalScoreDelta = Number(
-    selectedSkills.reduce((sum, id) => {
-      const found = AVAILABLE_SIM_SKILLS.find(s => s.id === id);
-      return sum + (found ? found.scoreBonus : 0);
-    }, 0).toFixed(1)
-  );
+  // Base role fit for selected target role
+  const targetCareerObj = profile.careers.find(c => c.role === targetRole) || profile.careers[0];
+  const baseFit = targetCareerObj ? targetCareerObj.fit : (profile.careers[0]?.fit || 50.0);
 
+  // Dynamic role-requirement recalculation (Phase 5)
   const totalFitDelta = Number(
     selectedSkills.reduce((sum, id) => {
       const found = AVAILABLE_SIM_SKILLS.find(s => s.id === id);
-      return sum + (found ? found.fitBonus : 0);
+      if (!found) return sum;
+      const weightForRole = found.roleWeights[targetRole] ?? 1.0;
+      return sum + weightForRole;
     }, 0).toFixed(1)
   );
 
-  const simulatedScore = Math.min(99.6, Number((profile.developer_score + totalScoreDelta).toFixed(1)));
-  const baseFullStackFit = profile.careers[0]?.fit || 89.5;
-  const simulatedFit = Math.min(99.2, Number((baseFullStackFit + totalFitDelta).toFixed(1)));
+  const simulatedFit = Math.min(99.0, Number((baseFit + totalFitDelta).toFixed(1)));
+
+  // Recalculate Developer Intelligence Score using canonical DIS formula
+  const simulatedBreadth = Math.min(99, profile.dimensions.technical_breadth + selectedSkills.length * 2.5);
+  const simulatedComplexity = Math.min(99, profile.dimensions.project_complexity + selectedSkills.length * 1.8);
+
+  const simulatedDimensions = {
+    ...profile.dimensions,
+    technical_breadth: simulatedBreadth,
+    project_complexity: simulatedComplexity
+  };
+
+  const simulatedScoring = ScoringService.calculateDeveloperScore(simulatedDimensions);
+  const scoreDelta = Number((simulatedScoring.score - profile.developer_score).toFixed(1));
 
   return (
     <TiltCard
-      maxTilt={5}
+      maxTilt={4}
       scale={1.008}
       className="p-6 rounded-2xl flex flex-col justify-between relative group"
     >
       {/* 3D Cyber Ambient Highlights */}
-      <div className="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-gradient-to-br from-indigo-500/15 via-cyan-500/10 to-emerald-500/15 blur-3xl pointer-events-none" />
+      <div className="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-gradient-to-br from-indigo-500/15 via-cyan-500/15 to-emerald-500/15 blur-3xl pointer-events-none" />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4" style={{ transform: 'translateZ(12px)' }}>
@@ -76,7 +158,7 @@ export const SkillSimulator: React.FC = () => {
               Developer Skill Sandbox & Level-Up Simulator
             </h2>
             <p className="text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8]">
-              Simulate stack acquisitions & project real-time score lifts
+              Simulate stack acquisitions & project role-requirement readiness
             </p>
           </div>
         </div>
@@ -99,148 +181,103 @@ export const SkillSimulator: React.FC = () => {
         </div>
       </div>
 
-      {/* Real-time Projection HUD */}
-      <div
-        className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 rounded-xl glass-panel mb-5 font-mono shadow-2xs"
-        style={{ transform: 'translateZ(20px)' }}
-      >
-        {/* Score Lift */}
-        <div className="space-y-1">
-          <span className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-semibold block uppercase">
-            Projected Intelligence Score
-          </span>
-          <div className="flex items-baseline gap-2">
-            <motion.span
-              key={simulatedScore}
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              className="text-2xl font-black text-[#111827] dark:text-[#F8FAFC]"
+      {/* Target Role Selector */}
+      <div className="flex flex-wrap items-center gap-2 p-3 rounded-xl glass-panel mb-4 text-xs font-mono">
+        <span className="text-[#64748B] dark:text-[#94A3B8] flex items-center gap-1 font-semibold">
+          <Target size={13} className="text-[#6366F1]" />
+          Target Career Role:
+        </span>
+        <div className="flex flex-wrap gap-1.5">
+          {availableRoles.slice(0, 5).map(role => (
+            <button
+              key={role}
+              onClick={() => setTargetRole(role)}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                targetRole === role
+                  ? 'bg-[#6366F1] text-white shadow-xs'
+                  : 'glass-pill text-[#64748B] dark:text-[#94A3B8] hover:text-[#111827] dark:hover:text-[#F8FAFC]'
+              }`}
             >
-              {simulatedScore}
-            </motion.span>
-            <span className="text-xs text-[#64748B] dark:text-[#94A3B8]">/ 100</span>
-            {totalScoreDelta > 0 && (
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                +{totalScoreDelta}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Career Fit Lift */}
-        <div className="space-y-1">
-          <span className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-semibold block uppercase">
-            Top Role Fit (Full-Stack)
-          </span>
-          <div className="flex items-baseline gap-2">
-            <motion.span
-              key={simulatedFit}
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              className="text-2xl font-black text-indigo-600 dark:text-indigo-400"
-            >
-              {simulatedFit}%
-            </motion.span>
-            {totalFitDelta > 0 && (
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                +{totalFitDelta}% Lift
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Unlocked Potential Tier */}
-        <div className="space-y-1">
-          <span className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-semibold block uppercase">
-            Simulated Tier Insignia
-          </span>
-          <div className="flex items-center gap-1.5 pt-0.5">
-            <span className="px-2 py-0.5 rounded-md bg-gradient-to-r from-indigo-500/10 via-cyan-500/10 to-emerald-500/10 border border-indigo-400/40 text-[11px] font-bold text-indigo-600 dark:text-indigo-300">
-              {simulatedScore >= 92 ? '★ PRINCIPAL ARCHITECT' : profile.tier}
-            </span>
-            {selectedSkills.length > 0 && (
-              <span className="text-[10px] text-emerald-500 font-bold">
-                ({selectedSkills.length} Equipped)
-              </span>
-            )}
-          </div>
+              {role}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Interactive Skill Nodes Tree */}
-      <div className="space-y-2 mb-2" style={{ transform: 'translateZ(14px)' }}>
-        <span className="text-[11px] font-mono font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider block mb-2">
-          Click any skill to toggle simulation:
-        </span>
+      {/* Available Stack Acquisition Chips */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
+        {AVAILABLE_SIM_SKILLS.map((skill) => {
+          const isSelected = selectedSkills.includes(skill.id);
+          const roleWeight = skill.roleWeights[targetRole] || 3.5;
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-          {AVAILABLE_SIM_SKILLS.map((skill) => {
-            const isEquipped = selectedSkills.includes(skill.id);
-            return (
-              <div
-                key={skill.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => toggleSkill(skill.id)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    toggleSkill(skill.id);
-                  }
-                }}
-                className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden group flex flex-col justify-between cursor-pointer ${
-                  isEquipped
-                    ? 'glass-panel border-indigo-500/50 dark:border-indigo-500/60 shadow-xs'
-                    : 'glass-panel hover:border-indigo-400/40'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2 mb-1.5 w-full">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: skill.color }}
-                    />
-                    <span className="font-mono text-xs font-bold text-[#111827] dark:text-[#F8FAFC]">
-                      {skill.name}
-                    </span>
-                  </div>
-
-                  <RockerSwitch
-                    checked={isEquipped}
-                    onChange={() => toggleSkill(skill.id)}
-                    leftLabel="off"
-                    rightLabel="on"
-                    size="xs"
-                    title={`Toggle ${skill.name}`}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8] w-full pt-1 border-t border-[#E2E8F0]/60 dark:border-[#1E293B]/60">
-                  <span>{skill.category}</span>
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                    +{skill.fitBonus}% fit
-                  </span>
-                </div>
+          return (
+            <div
+              key={skill.id}
+              onClick={() => toggleSkill(skill.id)}
+              className={`p-3.5 rounded-xl border transition-all cursor-pointer select-none relative overflow-hidden ${
+                isSelected
+                  ? 'border-[#6366F1] bg-indigo-50/70 dark:bg-indigo-950/40 shadow-xs'
+                  : 'glass-panel hover:border-slate-300 dark:hover:border-slate-700'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2 mb-1.5">
+                <span className="font-mono text-xs font-bold text-[#111827] dark:text-[#F8FAFC]">
+                  {skill.name}
+                </span>
+                <span
+                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: skill.color }}
+                />
               </div>
-            );
-          })}
-        </div>
+
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#64748B] dark:text-[#94A3B8]">
+                <span>{skill.category}</span>
+                <span className={`font-bold ${isSelected ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500'}`}>
+                  +{roleWeight}% fit
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Footer Level-Up Advice */}
-      <div
-        className="mt-4 pt-3 border-t border-[#E2E8F0] dark:border-[#1E293B] flex flex-wrap items-center justify-between text-xs font-mono text-[#64748B] dark:text-[#94A3B8]"
-        style={{ transform: 'translateZ(10px)' }}
-      >
-        <span className="flex items-center gap-1.5">
-          <Sparkles size={13} className="text-amber-500" />
-          Interactive Roadmap Simulation:
-        </span>
-        <span className="font-bold text-[#111827] dark:text-[#F8FAFC]">
-          {selectedSkills.length > 0
-            ? `Achieving these unlocks: ${AVAILABLE_SIM_SKILLS.find(s => selectedSkills.includes(s.id))?.unlockedRole || 'Architect'}`
-            : 'Select skills above to view target growth trajectories'}
-        </span>
+      {/* Dynamic Simulated Outcome Cards */}
+      <div className="p-4 rounded-xl glass-panel border border-indigo-500/20 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+        <div className="space-y-1">
+          <span className="text-[10px] text-[#64748B] dark:text-[#94A3B8] uppercase block">
+            Projected {targetRole} Fit
+          </span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+              {simulatedFit}%
+            </span>
+            <span className="text-[11px] text-emerald-500 font-semibold">
+              (+{totalFitDelta}% from base {baseFit}%)
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {selectedSkills.length > 0
+              ? `Acquiring ${selectedSkills.length} target skills satisfies core competency requirements for ${targetRole}.`
+              : 'Select skills above to simulate role fit increase.'}
+          </p>
+        </div>
+
+        <div className="space-y-1">
+          <span className="text-[10px] text-[#64748B] dark:text-[#94A3B8] uppercase block">
+            Projected Overall DIS Score
+          </span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-[#6366F1] dark:text-[#818CF8]">
+              {simulatedScoring.score}
+            </span>
+            <span className="text-[11px] text-indigo-500 font-semibold">
+              (+{scoreDelta} pts • {simulatedScoring.tier})
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            Simulated percentile: Top {Math.max(1, 100 - simulatedScoring.percentile)}% based on broader multi-stack footprint.
+          </p>
+        </div>
       </div>
     </TiltCard>
   );

@@ -12,9 +12,12 @@ export interface DimensionMetric {
   id: string;
   name: string;
   score: number;
+  weight?: number;
   trend: string;
   explanation: string;
   iconName: string;
+  evidence?: string;
+  formulaDescription?: string;
 }
 
 export interface TechnologyNode {
@@ -57,16 +60,63 @@ export interface RepositoryItem {
   technologies: string[];
   lastUpdated: string;
   url?: string;
+  hasReadme?: boolean;
+  hasLicense?: boolean;
+  licenseName?: string;
+  hasCi?: boolean;
+  healthScore?: number;
+  healthStatus?: 'HEALTHY' | 'FAIR' | 'ACTION_REQUIRED';
+  isArchived?: boolean;
 }
+
+export type MilestoneType = 'score_snapshot' | 'repository_milestone';
 
 export interface GrowthMilestone {
   year: string;
-  score: number;
-  depth: number;
-  complexity: number;
+  score?: number; // Present ONLY when an authentic measurement or historical snapshot exists
+  depth?: number;
+  complexity?: number;
+  hasScoreMeasurement: boolean;
+  milestoneType: MilestoneType;
   milestone: string;
   technologies: string[];
   description: string;
+  repoCount?: number;
+  timestamp?: string;
+}
+
+export interface ScoreSnapshot {
+  id: string; // Stable: snapshot_{username}_{date}
+  username: string;
+  date: string; // YYYY-MM-DD
+  timestamp: string; // ISO string
+  score: number;
+  depth: number;
+  complexity: number;
+  firstScannedAt?: string;
+  scanCount?: number;
+}
+
+export type DataConfidenceTier = 'HIGH_CONFIDENCE' | 'MODERATE_CONFIDENCE' | 'PRELIMINARY_EVIDENCE' | 'INSUFFICIENT_EVIDENCE';
+
+export interface DataQualityReport {
+  tier: DataConfidenceTier;
+  tierLabel: string;
+  coveragePercent: number;
+  isLive: boolean;
+  sourceReliability: 'AUTHENTIC_GITHUB_API' | 'BENCHMARK_VERIFIED_RECORD' | 'CACHED_RECORD';
+  scannedRepos: number;
+  calendarCommits: number;
+  rateLimitStatus: string;
+  verifiedSignals: string[];
+  unverifiedSignals?: string[];
+  signalBreakdown: {
+    identityVerified: boolean;
+    repositoryEvidence: boolean;
+    activitySpectrum: boolean;
+    multiStackEvidence: boolean;
+  };
+  freshnessTimestamp?: string;
 }
 
 export interface AchievementBadge {
@@ -91,6 +141,13 @@ export interface SocialLink {
 }
 
 export interface DeveloperProfile {
+  github_id?: number;
+  node_id?: string;
+  html_url?: string;
+  is_demo?: boolean;
+  verified_identity?: boolean;
+  data_source?: 'live' | 'benchmark' | 'cached';
+  fetched_at?: string;
   username: string;
   name: string;
   avatar_url: string;
@@ -132,4 +189,5 @@ export interface DeveloperProfile {
   weekDates?: string[]; // Date of Sunday for each week
   achievements: AchievementBadge[];
   motivationNotes: string[];
+  dataQuality?: DataQualityReport;
 }

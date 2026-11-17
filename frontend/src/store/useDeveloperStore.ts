@@ -13,6 +13,19 @@ export type NavTab =
   | 'growth' 
   | 'export';
 
+export type AppView = 'landing' | 'launcher' | 'codedna' | 'analyzer' | 'workspace';
+export type AnalyzerTab = 'intelligence' | 'match' | 'email' | 'builder' | 'catalog';
+
+export interface UserPreferences {
+  displayName: string;
+  githubUsername: string;
+  stage: 'student' | 'beginner' | 'working_dev' | 'career_switcher' | 'other';
+  primaryGoal: 'placement' | 'internship' | 'job_change' | 'open_source' | 'skill_upgrade';
+  targetRole: string;
+  desiredSkills: string[];
+  isOnboarded: boolean;
+}
+
 interface DeveloperStore {
   profile: DeveloperProfile;
   comparisonProfile: DeveloperProfile;
@@ -26,18 +39,41 @@ interface DeveloperStore {
   isSettingsOpen: boolean;
   chatMessages: ChatMessage[];
   isChatLoading: boolean;
+  searchError: { type: string; message: string; username: string } | null;
+  activeSearchId: number;
+  currentView: AppView;
+  analyzerTab: AnalyzerTab;
+  guestToken: string;
+  careerMatchResult: any | null;
+  intelligenceReport: any | null;
+  setIntelligenceReport: (report: any | null) => void;
+  userPreferences: UserPreferences;
+  savedCourses: any[];
+  careerHistory: any[];
+  isOnboardingOpen: boolean;
 
   // Actions
+  clearSearchError: () => void;
+  setCurrentView: (view: AppView) => void;
+  setAnalyzerTab: (tab: AnalyzerTab) => void;
+  setCareerMatchResult: (res: any) => void;
+  setUserPreferences: (prefs: Partial<UserPreferences>) => void;
+  setSavedCourses: (courses: any[]) => void;
+  setCareerHistory: (history: any[]) => void;
+  setIsOnboardingOpen: (open: boolean) => void;
   setActiveTab: (tab: NavTab) => void;
   toggleSidebar: () => void;
   toggleTheme: () => void;
   toggleCopilot: () => void;
   toggleSettings: () => void;
   setSearchQuery: (query: string) => void;
-  searchDeveloper: (username: string) => Promise<void>;
+  searchDeveloper: (username: string, isBenchmarkExplicit?: boolean) => Promise<void>;
   setComparisonDeveloper: (username: string) => Promise<void>;
   sendCopilotMessage: (text: string) => Promise<void>;
+  reviewRepository: (repoName: string) => Promise<void>;
 }
+
+let searchSeqCounter = 0;
 
 export const useDeveloperStore = create<DeveloperStore>((set, get) => {
   const savedTheme = localStorage.getItem('codedna_theme');
@@ -62,7 +98,7 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
     profile: defaultProfile,
     comparisonProfile: defaultComparison,
     activeTab: 'overview',
-    isSidebarCollapsed: false,
+    isSidebarCollapsed: typeof window !== 'undefined' ? window.innerWidth < 1024 : false,
     isDarkMode: isDark,
     isSearching: false,
     loadingStep: 0,
@@ -79,6 +115,65 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
       }
     ],
     isChatLoading: false,
+    searchError: null,
+    activeSearchId: 0,
+    currentView: (localStorage.getItem('codedna_view') as AppView) || 'landing',
+    analyzerTab: 'intelligence',
+    intelligenceReport: null,
+    setIntelligenceReport: (report) => set({ intelligenceReport: report }),
+    guestToken: (() => {
+      let token = localStorage.getItem('codedna_guest_token');
+      if (!token) {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+          token = 'guest_' + crypto.randomUUID();
+        } else if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+          const buf = new Uint8Array(16);
+          crypto.getRandomValues(buf);
+          token = 'guest_' + Array.from(buf, b => b.toString(16).padStart(2, '0')).join('');
+        } else {
+          token = 'guest_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 12);
+        }
+        localStorage.setItem('codedna_guest_token', token);
+      }
+      return token;
+    })(),
+    careerMatchResult: null,
+    userPreferences: (() => {
+      try {
+        const saved = localStorage.getItem('codedna_user_prefs');
+        if (saved) return JSON.parse(saved);
+      } catch {
+        // Fallback
+      }
+      return {
+        displayName: 'Developer',
+        githubUsername: 'shrutirai29',
+        stage: 'student',
+        primaryGoal: 'placement',
+        targetRole: 'Full-Stack Developer',
+        desiredSkills: ['Docker', 'FastAPI', 'Kubernetes'],
+        isOnboarded: false
+      };
+    })(),
+    savedCourses: [],
+    careerHistory: [],
+    isOnboardingOpen: false,
+
+    clearSearchError: () => set({ searchError: null }),
+    setCurrentView: (view: AppView) => {
+      localStorage.setItem('codedna_view', view);
+      set({ currentView: view });
+    },
+    setAnalyzerTab: (tab: AnalyzerTab) => set({ analyzerTab: tab }),
+    setCareerMatchResult: (res: any) => set({ careerMatchResult: res }),
+    setUserPreferences: (prefs: Partial<UserPreferences>) => {
+      const updated = { ...get().userPreferences, ...prefs };
+      localStorage.setItem('codedna_user_prefs', JSON.stringify(updated));
+      set({ userPreferences: updated });
+    },
+    setSavedCourses: (courses: any[]) => set({ savedCourses: courses }),
+    setCareerHistory: (history: any[]) => set({ careerHistory: history }),
+    setIsOnboardingOpen: (open: boolean) => set({ isOnboardingOpen: open }),
 
     setActiveTab: (tab: NavTab) => set({ activeTab: tab }),
 
@@ -108,36 +203,66 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
 
     setSearchQuery: () => {},
 
-    searchDeveloper: async (username: string) => {
-      if (!username.trim()) return;
-      set({ isSearching: true, loadingStep: 1, loadingMessage: 'CONNECTING TO GITHUB...' });
+    searchDeveloper: async (username: string, isBenchmarkExplicit: boolean = false) => {
+      const cleanU = username.trim().replace(/^@/, '');
+      if (!cleanU) return;
 
-      await new Promise(r => setTimeout(r, 220));
-      set({ loadingStep: 2, loadingMessage: 'FETCHING PROFILE...' });
+      const reqId = ++searchSeqCounter;
+      set({
+        isSearching: true,
+        searchError: null,
+        activeSearchId: reqId,
+        loadingStep: 1,
+        loadingMessage: 'RESOLVING GITHUB IDENTITY...'
+      });
 
-      await new Promise(r => setTimeout(r, 240));
-      set({ loadingStep: 3, loadingMessage: 'SCANNING REPOSITORIES...' });
+      await new Promise(r => setTimeout(r, 120));
+      if (get().activeSearchId !== reqId) return;
+      set({ loadingStep: 2, loadingMessage: 'FETCHING REPOSITORIES...' });
 
-      await new Promise(r => setTimeout(r, 260));
-      set({ loadingStep: 4, loadingMessage: 'ANALYZING LANGUAGES...' });
-
-      await new Promise(r => setTimeout(r, 280));
-      set({ loadingStep: 5, loadingMessage: 'CALCULATING DEVELOPER DNA...' });
+      await new Promise(r => setTimeout(r, 120));
+      if (get().activeSearchId !== reqId) return;
+      set({ loadingStep: 3, loadingMessage: 'ANALYZING ARCHITECTURES & TECH...' });
 
       try {
-        const newProfile = await GithubService.fetchProfile(username);
+        const newProfile = await GithubService.fetchProfile(cleanU, isBenchmarkExplicit);
 
-        await new Promise(r => setTimeout(r, 220));
+        // Concurrency guard: verify this is still the active search
+        if (get().activeSearchId !== reqId) return;
+
         set({
           profile: newProfile,
           isSearching: false,
+          searchError: null,
           loadingStep: 6,
           loadingMessage: 'ANALYSIS COMPLETE'
         });
-      } catch {
+      } catch (err: any) {
+        if (get().activeSearchId !== reqId) return;
+
+        const rawMsg = err?.message || '';
+        let errType = 'UNKNOWN';
+        let userMessage = `Unable to analyze profile for "@${cleanU}". Please try again.`;
+
+        if (rawMsg.includes('USER_NOT_FOUND') || rawMsg.includes('not found')) {
+          errType = 'USER_NOT_FOUND';
+          userMessage = `GitHub user "@${cleanU}" does not exist. Please check the spelling.`;
+        } else if (rawMsg.includes('RATE_LIMIT_EXCEEDED') || rawMsg.includes('rate limit')) {
+          errType = 'RATE_LIMIT_EXCEEDED';
+          userMessage = `GitHub API hourly rate limit reached for this IP. Explore verified benchmark profiles or try again shortly.`;
+        } else if (rawMsg.includes('NETWORK') || rawMsg.includes('reach')) {
+          errType = 'NETWORK_ERROR';
+          userMessage = `Unable to connect to GitHub. Please check your internet connection.`;
+        }
+
         set({
-          profile: null as unknown as DeveloperProfile,
+          profile: null as any,
           isSearching: false,
+          searchError: {
+            type: errType,
+            message: userMessage,
+            username: cleanU
+          },
           loadingStep: 0,
           loadingMessage: ''
         });
@@ -145,8 +270,10 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
       }
 
       setTimeout(() => {
-        set({ loadingStep: 0, loadingMessage: '' });
-      }, 400);
+        if (get().activeSearchId === reqId) {
+          set({ loadingStep: 0, loadingMessage: '' });
+        }
+      }, 300);
     },
 
     setComparisonDeveloper: async (username: string) => {
@@ -183,6 +310,11 @@ export const useDeveloperStore = create<DeveloperStore>((set, get) => {
         chatMessages: [...state.chatMessages, botMsg],
         isChatLoading: false
       }));
+    },
+
+    reviewRepository: async (repoName: string) => {
+      set({ isCopilotOpen: true });
+      await get().sendCopilotMessage(`Review repository "${repoName}": analyze architecture, security, and maintainability.`);
     }
   };
 });

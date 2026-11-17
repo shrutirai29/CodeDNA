@@ -208,3 +208,97 @@ CREATE INDEX IF NOT EXISTS idx_commits_date ON commits(commit_date);
 CREATE INDEX IF NOT EXISTS idx_metrics_user ON developer_metrics(user_id);
 CREATE INDEX IF NOT EXISTS idx_tech_trends_user ON technology_trends(user_id);
 CREATE INDEX IF NOT EXISTS idx_career_pred_user ON career_predictions(user_id);
+
+
+-- 13. CAREER USERS & AUTHENTICATION TABLE
+CREATE TABLE IF NOT EXISTS career_users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT,
+    target_role TEXT DEFAULT 'Full-Stack Developer',
+    headline TEXT DEFAULT '',
+    bio TEXT DEFAULT '',
+    years_experience INTEGER DEFAULT 0,
+    skills TEXT DEFAULT '[]',
+    github_username TEXT DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 14. RESUME & JOB ANALYSES TABLE
+CREATE TABLE IF NOT EXISTS career_analyses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    guest_token TEXT,
+    job_title TEXT DEFAULT 'Software Engineer',
+    job_description TEXT NOT NULL,
+    resume_text TEXT NOT NULL,
+    match_score REAL NOT NULL,
+    technical_score REAL DEFAULT 0.0,
+    experience_score REAL DEFAULT 0.0,
+    education_score REAL DEFAULT 0.0,
+    soft_skills_score REAL DEFAULT 0.0,
+    found_skills TEXT DEFAULT '[]',
+    missing_skills TEXT DEFAULT '[]',
+    ai_tips TEXT DEFAULT '[]',
+    verdict TEXT DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES career_users(id) ON DELETE CASCADE
+);
+
+-- 15. SAVED COURSES TABLE
+CREATE TABLE IF NOT EXISTS saved_courses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    guest_token TEXT,
+    skill TEXT NOT NULL,
+    title TEXT NOT NULL,
+    platform TEXT DEFAULT '',
+    provider TEXT DEFAULT '',
+    duration TEXT DEFAULT '',
+    level TEXT DEFAULT '',
+    url TEXT DEFAULT '',
+    is_free BOOLEAN DEFAULT 0,
+    is_completed BOOLEAN DEFAULT 0,
+    saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES career_users(id) ON DELETE CASCADE
+);
+
+-- 16. REJECTION EMAIL ANALYSES TABLE
+CREATE TABLE IF NOT EXISTS email_analyses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    guest_token TEXT,
+    target_role TEXT DEFAULT '',
+    decision TEXT NOT NULL,
+    confidence INTEGER DEFAULT 0,
+    summary TEXT NOT NULL,
+    possible_reasons TEXT DEFAULT '[]',
+    next_steps TEXT DEFAULT '[]',
+    raw_email_excerpt TEXT DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES career_users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_career_analyses_user ON career_analyses(user_id);
+CREATE INDEX IF NOT EXISTS idx_career_analyses_guest ON career_analyses(guest_token);
+CREATE INDEX IF NOT EXISTS idx_saved_courses_user ON saved_courses(user_id);
+CREATE INDEX IF NOT EXISTS idx_email_analyses_user ON email_analyses(user_id);
+
+-- 17. CAREER INTELLIGENCE COMPREHENSIVE REPORTS TABLE
+CREATE TABLE IF NOT EXISTS career_intelligence_reports (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    guest_token TEXT,
+    username TEXT DEFAULT '',
+    target_direction TEXT DEFAULT '',
+    overall_confidence REAL DEFAULT 0.0,
+    report_json TEXT NOT NULL,
+    summary_excerpt TEXT DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES career_users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_intel_reports_guest ON career_intelligence_reports(guest_token);
+CREATE INDEX IF NOT EXISTS idx_intel_reports_user ON career_intelligence_reports(user_id);
+

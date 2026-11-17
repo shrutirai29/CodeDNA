@@ -39,16 +39,18 @@ class DeveloperIntelligenceScorer:
         # 1. TECHNICAL DEPTH (0 - 100)
         # Evaluated by dominant language byte mass, top repo size, and codebase depth.
         # -------------------------------------------------------------
-        depth_score = 40.0
+        depth_score = 10.0
         if not languages_df.empty:
-            lang_totals = languages_df.groupby("language_name")["bytes_count"].sum()
-            total_bytes = lang_totals.sum()
-            if total_bytes > 0:
-                top_lang_bytes = lang_totals.max()
-                top_ratio = top_lang_bytes / total_bytes
-                # High ratio in a primary stack indicates specialization
-                depth_score = float(np.clip(30.0 + (top_ratio * 40.0) + min(30.0, np.log10(total_bytes + 1) * 4.5), 10.0, 100.0))
-                evidence.append(f"Top language represents {round(top_ratio * 100, 1)}% of detected code ({lang_totals.idxmax()}).")
+            valid_langs = languages_df.dropna(subset=["language_name"]) if "language_name" in languages_df.columns else pd.DataFrame()
+            if not valid_langs.empty and "bytes_count" in valid_langs.columns:
+                valid_langs["bytes_count"] = pd.to_numeric(valid_langs["bytes_count"], errors="coerce").fillna(0).clip(lower=0)
+                lang_totals = valid_langs.groupby("language_name")["bytes_count"].sum()
+                total_bytes = lang_totals.sum()
+                if total_bytes > 0:
+                    top_lang_bytes = lang_totals.max()
+                    top_ratio = top_lang_bytes / total_bytes
+                    depth_score = float(np.clip(30.0 + (top_ratio * 40.0) + min(30.0, np.log10(total_bytes + 1) * 4.5), 10.0, 100.0))
+                    evidence.append(f"Top language represents {round(top_ratio * 100, 1)}% of detected code ({lang_totals.idxmax()}).")
         
         if depth_score >= 75:
             strengths.append("High Technical Depth: Substantial codebase volume and mastery in primary technology.")
@@ -59,14 +61,16 @@ class DeveloperIntelligenceScorer:
         # 2. TECHNICAL BREADTH (0 - 100)
         # Evaluated by language entropy and unique language count.
         # -------------------------------------------------------------
-        breadth_score = 35.0
+        breadth_score = 10.0
         if not languages_df.empty:
-            unique_langs = languages_df["language_name"].nunique()
-            lang_totals = languages_df.groupby("language_name")["bytes_count"].sum()
-            entropy = DataPreprocessor.calculate_entropy(lang_totals)
-            # Breadth scales with unique languages and balanced entropy
-            breadth_score = float(np.clip((entropy * 60.0) + min(40.0, unique_langs * 8.0), 10.0, 100.0))
-            evidence.append(f"Active in {unique_langs} distinct programming languages with an entropy index of {round(entropy, 2)}.")
+            valid_langs = languages_df.dropna(subset=["language_name"]) if "language_name" in languages_df.columns else pd.DataFrame()
+            if not valid_langs.empty:
+                unique_langs = valid_langs["language_name"].nunique()
+                if unique_langs > 0:
+                    lang_totals = valid_langs.groupby("language_name")["bytes_count"].sum() if "bytes_count" in valid_langs.columns else pd.Series([1]*unique_langs)
+                    entropy = DataPreprocessor.calculate_entropy(lang_totals)
+                    breadth_score = float(np.clip((entropy * 60.0) + min(40.0, unique_langs * 8.0), 10.0, 100.0))
+                    evidence.append(f"Active in {unique_langs} distinct programming languages with an entropy index of {round(entropy, 2)}.")
         
         if breadth_score >= 75:
             strengths.append("Broad Technical Footprint: Capable of multi-language polyglot development.")
@@ -77,20 +81,24 @@ class DeveloperIntelligenceScorer:
         # 3. CONSISTENCY (0 - 100)
         # Evaluated by active months, commit gaps, and distribution smoothness.
         # -------------------------------------------------------------
-        consistency_score = 45.0
+        consistency_score = 10.0
         if not commits_df.empty:
-            clean_c = DataPreprocessor.clean_commits(commits_df)
-            active_months = clean_c["year_month"].nunique()
-            monthly_counts = clean_c["year_month"].value_counts()
-            mean_c = monthly_counts.mean()
-            std_c = monthly_counts.std() if len(monthly_counts) > 1 else 0.0
-            cv = (std_c / mean_c) if mean_c > 0 else 1.0 # Coefficient of variation
+            try:
+                clean_c = DataPreprocessor.clean_commits(commits_df)
+                if not clean_c.empty and "year_month" in clean_c.columns:
+                    active_months = clean_c["year_month"].nunique()
+                    monthly_counts = clean_c["year_month"].value_counts()
+                    mean_c = monthly_counts.mean()
+                    std_c = monthly_counts.std() if len(monthly_counts) > 1 else 0.0
+                    cv = (std_c / mean_c) if mean_c > 0 else 1.0 # Coefficient of variation
 
-            # Low CV and high active months yield high consistency
-            month_factor = min(50.0, active_months * 3.0)
-            stability_factor = max(0.0, 50.0 - (cv * 20.0))
-            consistency_score = float(np.clip(month_factor + stability_factor, 15.0, 100.0))
-            evidence.append(f"Active in {active_months} distinct calendar months with contribution volatility CV of {round(cv, 2)}.")
+                    # Low CV and high active months yield high consistency
+                    month_factor = min(50.0, active_months * 3.0)
+                    stability_factor = max(0.0, 50.0 - (cv * 20.0))
+                    consistency_score = float(np.clip(month_factor + stability_factor, 10.0, 100.0))
+                    evidence.append(f"Active in {active_months} distinct calendar months with contribution volatility CV of {round(cv, 2)}.")
+            except Exception:
+                consistency_score = 10.0
 
         if consistency_score >= 75:
             strengths.append("Exemplary Consistency: Highly disciplined contribution cadence over extended periods.")
@@ -101,15 +109,17 @@ class DeveloperIntelligenceScorer:
         # 4. PROJECT COMPLEXITY (0 - 100)
         # Evaluated by repo architectures, test suites, Docker, CI/CD, and size.
         # -------------------------------------------------------------
-        complexity_score = 45.0
+        complexity_score = 10.0
         if not repos_df.empty:
-            comp_mean = repos_df["complexity_score"].mean() if "complexity_score" in repos_df.columns else 50.0
-            has_ci_pct = (repos_df["has_ci"].sum() / len(repos_df)) if "has_ci" in repos_df.columns else 0.0
-            has_docker_pct = (repos_df["has_docker"].sum() / len(repos_df)) if "has_docker" in repos_df.columns else 0.0
-            has_tests_pct = (repos_df["has_tests"].sum() / len(repos_df)) if "has_tests" in repos_df.columns else 0.0
+            valid_comp = pd.to_numeric(repos_df["complexity_score"], errors="coerce").dropna() if "complexity_score" in repos_df.columns else pd.Series(dtype=float)
+            comp_mean = float(valid_comp.mean()) if not valid_comp.empty and not np.isnan(valid_comp.mean()) else 50.0
+            has_ci_pct = float(repos_df["has_ci"].fillna(False).sum() / len(repos_df)) if "has_ci" in repos_df.columns else 0.0
+            has_docker_pct = float(repos_df["has_docker"].fillna(False).sum() / len(repos_df)) if "has_docker" in repos_df.columns else 0.0
+            has_tests_pct = float(repos_df["has_tests"].fillna(False).sum() / len(repos_df)) if "has_tests" in repos_df.columns else 0.0
 
             ci_bonus = (has_ci_pct + has_docker_pct + has_tests_pct) * 10.0
-            complexity_score = float(np.clip(comp_mean * 0.7 + ci_bonus + 15.0, 20.0, 100.0))
+            raw_comp = comp_mean * 0.7 + ci_bonus + 15.0
+            complexity_score = float(np.clip(raw_comp if not np.isnan(raw_comp) else 10.0, 10.0, 100.0))
             evidence.append(f"Average project complexity of {round(comp_mean, 1)}/100 with CI/CD & test automation across {round((has_ci_pct+has_tests_pct)/2*100, 1)}% of repos.")
 
         if complexity_score >= 75:
@@ -121,14 +131,16 @@ class DeveloperIntelligenceScorer:
         # 5. COLLABORATION (0 - 100)
         # Evaluated by PRs, issues, forks, and followers.
         # -------------------------------------------------------------
-        collab_score = 35.0
+        collab_score = 10.0
         pr_count = len(prs_df) if not prs_df.empty else 0
         merged_pr_count = prs_df["is_merged"].sum() if not prs_df.empty and "is_merged" in prs_df.columns else 0
-        followers = user_meta.get("followers", 0)
-        
-        pr_factor = min(40.0, pr_count * 8.0 + merged_pr_count * 5.0)
-        audience_factor = min(30.0, np.log10(followers + 1) * 12.0)
-        collab_score = float(np.clip(25.0 + pr_factor + audience_factor, 15.0, 100.0))
+        raw_followers = user_meta.get("followers", 0)
+        followers = max(0, int(raw_followers)) if isinstance(raw_followers, (int, float)) and not np.isnan(raw_followers) else 0
+
+        if pr_count > 0 or followers > 0:
+            pr_factor = min(40.0, pr_count * 8.0 + merged_pr_count * 5.0)
+            audience_factor = min(30.0, np.log10(followers + 1) * 12.0)
+            collab_score = float(np.clip(10.0 + pr_factor + audience_factor, 10.0, 100.0))
         evidence.append(f"Recorded {pr_count} pull requests ({merged_pr_count} merged) and an audience of {followers} followers.")
 
         if collab_score >= 70:
@@ -140,17 +152,23 @@ class DeveloperIntelligenceScorer:
         # 6. TECHNOLOGY ADAPTABILITY (0 - 100)
         # Evaluated by introduction of recent technologies and topic diversity.
         # -------------------------------------------------------------
-        adaptability_score = 50.0
+        adaptability_score = 10.0
         if not repos_df.empty:
-            recent_active = repos_df["is_active_recent"].sum() if "is_active_recent" in repos_df.columns else 1
+            recent_active = repos_df["is_active_recent"].fillna(False).sum() if "is_active_recent" in repos_df.columns else 0
             recent_ratio = recent_active / max(1, len(repos_df))
-            adaptability_score = float(np.clip(40.0 + (recent_ratio * 40.0) + min(20.0, breadth_score * 0.2), 20.0, 100.0))
+            adaptability_score = float(np.clip(40.0 + (recent_ratio * 40.0) + min(20.0, breadth_score * 0.2), 10.0, 100.0))
             evidence.append(f"{round(recent_ratio * 100, 1)}% of repositories sustained activity within the last 6 months.")
 
         # -------------------------------------------------------------
         # 7. OVERALL DEVELOPER INTELLIGENCE SCORE (DIS)
         # Weighted composite score
         # -------------------------------------------------------------
+        d_scores = [depth_score, breadth_score, consistency_score, complexity_score, collab_score, adaptability_score]
+        depth_score, breadth_score, consistency_score, complexity_score, collab_score, adaptability_score = [
+            float(np.clip(s, 10.0, 100.0)) if isinstance(s, (int, float)) and not np.isnan(s) else 10.0
+            for s in d_scores
+        ]
+
         overall_score = (
             depth_score * cls.DIMENSION_WEIGHTS["technical_depth"] +
             breadth_score * cls.DIMENSION_WEIGHTS["technical_breadth"] +

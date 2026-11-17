@@ -827,6 +827,18 @@ Object.values(BENCHMARK_PROFILES).forEach(profile => {
     profile.rhythm.matrix = AnalyticsService.generateRhythmMatrix(profile.username);
   }
 
+  // Feature F: Profile Confidence & Data Quality Provenance
+  profile.dataQuality = AnalyticsService.calculateDataQuality({
+    repoCount: profile.stats.repositories,
+    hasCalendar: true,
+    hasEvents: true,
+    hasLanguages: profile.tech_dna.length > 0,
+    isLive: false,
+    sourceType: 'BENCHMARK_VERIFIED_RECORD',
+    rateLimitStatus: 'Verified Benchmark Persona & Live Sync Ready',
+    calendarCommits: profile.stats.contributions
+  });
+
   profile.achievements = AnalyticsService.calculateAchievements({
     weekStreak: profile.stats.week_streak,
     technologies: profile.tech_dna,
@@ -838,7 +850,7 @@ Object.values(BENCHMARK_PROFILES).forEach(profile => {
   profile.motivationNotes = AnalyticsService.getMotivationalNotes();
 });
 
-const KNOWN_PROJECT_DESCRIPTIONS: Record<string, string> = {
+export const KNOWN_PROJECT_DESCRIPTIONS: Record<string, string> = {
   'CodeDNA': 'AI-powered developer intelligence platform analyzing GitHub activity and technical DNA.',
   'study-roulette': 'Study With Me Roulette - Turn your study sessions into fun, focused challenges',
   'code4nature': 'Environmental sustainability awareness platform and eco-impact calculator.',
@@ -948,34 +960,84 @@ export class GithubService {
     return links;
   }
 
-  public static async fetchProfile(username: string): Promise<DeveloperProfile> {
+  // Client-side isolated TTL cache (15 minutes)
+  private static profileCache: Map<string, { profile: DeveloperProfile; timestamp: number }> = new Map();
+  private static CACHE_TTL_MS = 15 * 60 * 1000;
+
+  public static async fetchProfile(username: string, isBenchmarkExplicit: boolean = false, bypassCache: boolean = false): Promise<DeveloperProfile> {
     const cleanUsername = username.trim().replace(/^@/, '').toLowerCase();
+    if (!cleanUsername) {
+      throw new Error('INVALID_USERNAME');
+    }
+
+    // Check client-side isolated cache
+    if (!bypassCache) {
+      const cached = this.profileCache.get(cleanUsername);
+      if (cached && Date.now() - cached.timestamp < this.CACHE_TTL_MS) {
+        return JSON.parse(JSON.stringify(cached.profile));
+      }
+    }
+
+    // If explicit benchmark profile requested and available
+    if (isBenchmarkExplicit && BENCHMARK_PROFILES[cleanUsername]) {
+      const bm = JSON.parse(JSON.stringify(BENCHMARK_PROFILES[cleanUsername]));
+      bm.data_source = 'benchmark';
+      bm.is_demo = true;
+      bm.verified_identity = true;
+      return bm;
+    }
+
+    // 1. Primary: Unified server-side ingestion API (supports GITHUB_TOKEN & server cache)
+    try {
+      const apiRes = await fetch(`/api/profile?username=${encodeURIComponent(cleanUsername)}${isBenchmarkExplicit ? '&benchmark=true' : ''}${bypassCache ? '&refresh=true' : ''}`);
+      if (apiRes.ok) {
+        const apiData = await apiRes.json();
+        if (apiData && apiData.username && apiData.username.toLowerCase() === cleanUsername) {
+          const profile = this.normalizeApiProfile(apiData, cleanUsername);
+          this.profileCache.set(cleanUsername, { profile, timestamp: Date.now() });
+          return profile;
+        }
+      } else if (apiRes.status === 404) {
+        throw new Error('USER_NOT_FOUND');
+      } else if (apiRes.status === 429) {
+        throw new Error('RATE_LIMIT_EXCEEDED');
+      }
+    } catch (apiErr: any) {
+      if (apiErr?.message === 'USER_NOT_FOUND' || apiErr?.message === 'RATE_LIMIT_EXCEEDED') {
+        throw apiErr;
+      }
+      // If server-side proxy is unavailable or errored, proceed to direct GitHub client-side fetch
+    }
 
     try {
-      // 1. Fetch live profile from GitHub API
-      const userRes = await fetch(`https://api.github.com/users/${cleanUsername}`);
+      // 2. Direct GitHub API client-side fallback
+      const userRes = await fetch(`https://api.github.com/users/${encodeURIComponent(cleanUsername)}`);
       
-      // If user endpoint fails (e.g. 404 or rate-limited 403), use benchmark fallback if available
       if (!userRes.ok) {
-        if (BENCHMARK_PROFILES[cleanUsername]) {
-          return JSON.parse(JSON.stringify(BENCHMARK_PROFILES[cleanUsername]));
-        }
         if (userRes.status === 404) {
           throw new Error('USER_NOT_FOUND');
         }
-        throw new Error('User fetch error');
+        if (userRes.status === 403) {
+          throw new Error('RATE_LIMIT_EXCEEDED');
+        }
+        throw new Error(`GITHUB_API_ERROR_${userRes.status}`);
       }
       const user = await userRes.json();
 
-      // 1b. Fetch GitHub-connected social accounts
+      // Ensure returned username matches requested identity
+      if (user.login.toLowerCase() !== cleanUsername) {
+        throw new Error('IDENTITY_MISMATCH');
+      }
+
+      // Fetch GitHub-connected social accounts
       let socialAccounts: any[] = [];
       try {
-        const socialRes = await fetch(`https://api.github.com/users/${cleanUsername}/social_accounts`);
+        const socialRes = await fetch(`https://api.github.com/users/${encodeURIComponent(cleanUsername)}/social_accounts`);
         if (socialRes.ok) {
           socialAccounts = await socialRes.json();
         }
       } catch {
-        // Fallback to user fields / benchmark social links
+        // Fallback
       }
 
       const socialLinks = this.extractSocialLinks(
@@ -984,11 +1046,32 @@ export class GithubService {
         BENCHMARK_PROFILES[cleanUsername]?.social_links
       );
 
-      // 2. Fetch live public repositories (up to 100)
-      const reposRes = await fetch(`https://api.github.com/users/${cleanUsername}/repos?per_page=100&sort=updated`);
-      const repos = reposRes.ok ? await reposRes.json() : [];
+      // Fetch live public repositories (up to 100, paginated if public_repos > 100)
+      let repos: any[] = [];
+      try {
+        const reposRes = await fetch(`https://api.github.com/users/${encodeURIComponent(cleanUsername)}/repos?per_page=100&sort=updated`);
+        if (reposRes.ok) {
+          const firstPage = await reposRes.json();
+          if (Array.isArray(firstPage)) {
+            repos = firstPage;
+            if (firstPage.length === 100 && (user.public_repos || 0) > 100) {
+              try {
+                const p2Res = await fetch(`https://api.github.com/users/${encodeURIComponent(cleanUsername)}/repos?per_page=100&page=2&sort=updated`);
+                if (p2Res.ok) {
+                  const p2Data = await p2Res.json();
+                  if (Array.isArray(p2Data)) repos = repos.concat(p2Data);
+                }
+              } catch {
+                // Keep first page
+              }
+            }
+          }
+        }
+      } catch {
+        // Fallback
+      }
 
-      // 3. Extract languages and technologies from public repositories
+      // Extract languages and technologies strictly from public repositories (no fake languages)
       const rawTechs: { [key: string]: number } = {};
       repos.forEach((r: any) => {
         if (r.language) {
@@ -996,22 +1079,12 @@ export class GithubService {
         }
         if (r.topics && Array.isArray(r.topics)) {
           r.topics.forEach((top: string) => {
-            rawTechs[top] = (rawTechs[top] || 0) + 2;
+            if (typeof top === 'string') {
+              rawTechs[top] = (rawTechs[top] || 0) + 2;
+            }
           });
         }
       });
-
-      if (cleanUsername === 'shrutirai29') {
-        rawTechs['React'] = (rawTechs['React'] || 0) + 6;
-        rawTechs['FastAPI'] = (rawTechs['FastAPI'] || 0) + 4;
-        rawTechs['TailwindCSS'] = (rawTechs['TailwindCSS'] || 0) + 5;
-      }
-
-      if (Object.keys(rawTechs).length === 0) {
-        rawTechs['JavaScript'] = 4;
-        rawTechs['Python'] = 3;
-        rawTechs['Git'] = 2;
-      }
 
       const techNodes = TechnologyService.buildConstellation(rawTechs);
 
@@ -1019,72 +1092,41 @@ export class GithubService {
       const followers = typeof user.followers === 'number' ? user.followers : 0;
       const following = typeof user.following === 'number' ? user.following : 0;
 
-      // 4. Fetch authentic contributions & 7x24 events rhythm
+      // Fetch authentic contributions & 7x24 events rhythm
       let contribWeeks: number[][] = [];
       let weekDates: string[] = [];
       let rhythmMatrix: number[][] = [];
-      let peakTime = '09:00 - 11:00';
-      let mostActiveDay = 'Sunday';
+      let peakTime = 'Not recorded';
+      let mostActiveDay = 'Not recorded';
       let totalContributions = 0;
-      let streakWeeks = 14;
-      let consistencyScore = 88;
+      let streakWeeks = 0;
+      let consistencyScore = 10;
 
       try {
-        const contribRes = await fetch(`/api/contributions?username=${cleanUsername}`);
+        const contribRes = await fetch(`/api/contributions?username=${encodeURIComponent(cleanUsername)}`);
         if (contribRes.ok) {
           const cd = await contribRes.json();
           if (cd.weeks && cd.weeks.length > 0) contribWeeks = cd.weeks;
           if (cd.week_dates && cd.week_dates.length > 0) weekDates = cd.week_dates;
           if (cd.matrix && cd.matrix.length > 0) rhythmMatrix = cd.matrix;
-          if (cd.total_contributions > 0) totalContributions = cd.total_contributions;
+          if (typeof cd.total_contributions === 'number') totalContributions = cd.total_contributions;
           if (cd.peak_time) peakTime = cd.peak_time;
           if (cd.most_active_day) mostActiveDay = cd.most_active_day;
-          if (cd.current_streak_weeks) streakWeeks = cd.current_streak_weeks;
-          if (cd.consistency_score) consistencyScore = cd.consistency_score;
+          if (typeof cd.current_streak_weeks === 'number') streakWeeks = cd.current_streak_weeks;
+          if (typeof cd.consistency_score === 'number') consistencyScore = cd.consistency_score;
         }
       } catch {
-        // Handled below
-      }
-
-      // Robust fallback if API didn't return weeks or network was offline
-      if (contribWeeks.length === 0) {
-        if (REAL_GITHUB_BENCHMARK_DATA[cleanUsername]?.weeks) {
-          const bm = REAL_GITHUB_BENCHMARK_DATA[cleanUsername];
-          contribWeeks = bm.weeks;
-          if (totalContributions === 0) totalContributions = bm.total_contributions;
-          if (rhythmMatrix.length === 0) rhythmMatrix = bm.matrix;
-          peakTime = bm.peak_time;
-          mostActiveDay = bm.most_active_day;
-          streakWeeks = bm.streak_weeks;
-        } else {
-          contribWeeks = AnalyticsService.generateContributionWeeks(totalContributions || 588, 30);
-        }
-      }
-
-      if (rhythmMatrix.length === 0) {
-        if (REAL_GITHUB_BENCHMARK_DATA[cleanUsername]?.matrix) {
-          rhythmMatrix = REAL_GITHUB_BENCHMARK_DATA[cleanUsername].matrix;
-        } else {
-          rhythmMatrix = AnalyticsService.generateRhythmMatrix(cleanUsername);
-        }
-      }
-
-      if (totalContributions === 0) {
-        if (REAL_GITHUB_BENCHMARK_DATA[cleanUsername]) {
-          totalContributions = REAL_GITHUB_BENCHMARK_DATA[cleanUsername].total_contributions;
-        } else {
-          totalContributions = Math.max(15, repoCount * 8 + followers * 3);
-        }
+        // Authentic 0 metrics maintained
       }
 
       // Objective 6-dimension scoring based on empirical metrics
-      const depth = Math.min(96, Math.max(62, Math.round(72 + Math.min(repoCount, 25) * 0.5 + Math.min(followers, 30) * 0.3)));
-      const breadth = Math.min(95, Math.max(55, Math.round(58 + Math.min(techNodes.length, 10) * 3.5)));
-      const consistency = Math.min(96, Math.max(60, Math.round(68 + Math.min(streakWeeks, 30) * 0.8)));
-      const complexity = Math.min(94, Math.max(62, Math.round(66 + Math.min(repoCount, 20) * 0.9)));
-      const collaboration = Math.min(95, Math.max(50, Math.round(55 + Math.min(followers, 50) * 0.6 + Math.min(following, 30) * 0.3)));
-      const adaptability = Math.min(96, Math.max(65, Math.round(68 + Math.min(techNodes.length, 10) * 2.8)));
-      const impact = Math.min(95, Math.max(50, Math.round(56 + Math.min(followers, 100) * 0.4)));
+      const depth = repoCount === 0 && followers === 0 ? 10 : Math.min(96, Math.max(10, Math.round(10 + Math.min(repoCount, 25) * 2.5 + Math.min(followers, 30) * 0.5)));
+      const breadth = techNodes.length === 0 ? 10 : Math.min(95, Math.max(10, Math.round(10 + Math.min(techNodes.length, 10) * 8.0)));
+      const consistency = streakWeeks === 0 ? 10 : Math.min(96, Math.max(10, Math.round(10 + Math.min(streakWeeks, 30) * 2.8)));
+      const complexity = repoCount === 0 ? 10 : Math.min(94, Math.max(10, Math.round(10 + Math.min(repoCount, 20) * 4.0)));
+      const collaboration = followers === 0 && following === 0 ? 10 : Math.min(95, Math.max(10, Math.round(10 + Math.min(followers, 50) * 1.2 + Math.min(following, 30) * 0.5)));
+      const adaptability = techNodes.length === 0 && repoCount === 0 ? 10 : Math.min(96, Math.max(10, Math.round(10 + Math.min(techNodes.length, 10) * 7.5 + Math.min(repoCount, 5) * 1.5)));
+      const impact = followers === 0 ? 10 : Math.min(95, Math.max(10, Math.round(10 + Math.min(followers, 100) * 0.8)));
 
       const dims = {
         technical_depth: depth,
@@ -1098,20 +1140,7 @@ export class GithubService {
 
       const scoring = ScoringService.calculateDeveloperScore(dims);
 
-      // Audit authentic repository list (do not truncate to only 6)
-      const mappedRepos = repos.map((r: any) => ({
-        id: String(r.id),
-        name: r.name,
-        description: r.description || KNOWN_PROJECT_DESCRIPTIONS[r.name] || 'Public GitHub engineering repository.',
-        stars: typeof r.stargazers_count === 'number' ? r.stargazers_count : 0,
-        forks: typeof r.forks_count === 'number' ? r.forks_count : 0,
-        technologies: r.language ? [r.language] : ['Code'],
-        url: r.html_url
-      }));
-
-      const auditedRepos = RepositoryService.auditRepositories(
-        mappedRepos.length > 0 ? mappedRepos : (BENCHMARK_PROFILES[cleanUsername]?.repositories || [])
-      );
+      const auditedRepos = RepositoryService.auditRepositories(repos);
 
       const careers = CareerService.calculateRoles(
         techNodes.map(t => t.name),
@@ -1119,28 +1148,47 @@ export class GithubService {
         breadth
       );
 
-      const nextBestSkill = CareerService.getNextBestSkill(careers);
+      const nextBestSkill = CareerService.getNextBestSkill(careers, techNodes.map(t => t.name));
 
-      const archetypeBadge = cleanUsername === 'shrutirai29'
-        ? {
-            title: 'FULL-STACK ARCHITECT',
-            description: 'Versatile developer with strong frontend, backend and system design skills.',
-            badge: 'ELITE SENIOR',
-            skills: ['Frontend', 'Backend', 'DevOps', 'Open Source']
-          }
-        : {
-            title: 'FULL-STACK BUILDER',
-            description: 'Versatile builder crafting software across multiple layers of the stack.',
-            badge: scoring.tier,
-            skills: techNodes.slice(0, 4).map(t => t.name)
-          };
+      AnalyticsService.recordProfileSnapshot(cleanUsername, scoring.score, depth, complexity);
 
-      return {
+      const growthTimeline = AnalyticsService.getEmpiricalGrowthTimeline(
+        cleanUsername,
+        repos,
+        scoring.score,
+        depth,
+        complexity
+      );
+
+      const dataQuality = AnalyticsService.calculateDataQuality({
+        repoCount,
+        hasCalendar: contribWeeks.length > 0,
+        hasEvents: rhythmMatrix.length > 0,
+        hasLanguages: techNodes.length > 0,
+        isLive: true,
+        calendarCommits: totalContributions
+      });
+
+      const archetypeBadge = {
+        title: depth >= 80 ? 'SYSTEM ARCHITECT' : (breadth >= 75 ? 'POLYGLOT EXPLORER' : 'SOFTWARE BUILDER'),
+        description: 'Verified GitHub engineer evaluated through empirical codebase activity.',
+        badge: scoring.tier,
+        skills: techNodes.slice(0, 4).map(t => t.name)
+      };
+
+      const resultProfile: DeveloperProfile = {
+        github_id: typeof user.id === 'number' ? user.id : undefined,
+        node_id: user.node_id,
+        html_url: user.html_url,
+        is_demo: false,
+        verified_identity: true,
+        data_source: 'live',
+        fetched_at: new Date().toISOString(),
         username: user.login,
         name: user.name || user.login,
         avatar_url: user.avatar_url,
-        bio: user.bio ? user.bio.trim() : (cleanUsername === 'shrutirai29' ? 'Btech CSE student at Rashtriya Raksha University' : 'Passionate software developer building open source technology.'),
-        tags: cleanUsername === 'shrutirai29' ? ['Full-Stack Developer', 'Cybersecurity', 'Open Source Contributor', 'Problem Solver'] : ['Software Developer', 'GitHub Contributor', 'Problem Solver'],
+        bio: user.bio ? user.bio.trim() : `Public GitHub developer with ${repoCount} public repositories across ${techNodes.length} detected technologies.`,
+        tags: techNodes.length > 0 ? techNodes.slice(0, 4).map(t => t.name) : ['Software Developer', 'GitHub Contributor'],
         social_links: socialLinks,
         stats: {
           repositories: repoCount,
@@ -1150,26 +1198,27 @@ export class GithubService {
           following: following
         },
         developer_score: scoring.score,
-        score_change: 4.5,
+        score_change: 0,
         percentile_rank: scoring.percentile,
         tier: scoring.tier,
         archetype: archetypeBadge,
         dimensions: dims,
         dimensionMetrics: scoring.metrics,
-        tech_dna: techNodes.length > 0 ? techNodes : (BENCHMARK_PROFILES[cleanUsername]?.tech_dna || []),
+        tech_dna: techNodes,
         careers,
         next_best_skill: nextBestSkill,
         repositories: auditedRepos,
-        growth_timeline: AnalyticsService.getGrowthTimeline(scoring.score),
+        growth_timeline: growthTimeline,
         rhythm: {
           peak_time: peakTime,
           most_active_day: mostActiveDay,
           current_streak_weeks: streakWeeks,
           consistency_score: consistencyScore,
-          matrix: rhythmMatrix.length > 0 ? rhythmMatrix : AnalyticsService.generateRhythmMatrix(user.login)
+          matrix: rhythmMatrix
         },
-        contributionWeeks: contribWeeks.length > 0 ? contribWeeks : (REAL_GITHUB_BENCHMARK_DATA[cleanUsername]?.weeks || AnalyticsService.generateContributionWeeks(totalContributions, 30)),
+        contributionWeeks: contribWeeks,
         weekDates: weekDates.length > 0 ? weekDates : undefined,
+        dataQuality,
         achievements: AnalyticsService.calculateAchievements({
           weekStreak: streakWeeks,
           technologies: techNodes,
@@ -1180,15 +1229,179 @@ export class GithubService {
         }),
         motivationNotes: AnalyticsService.getMotivationalNotes()
       };
+
+      this.profileCache.set(cleanUsername, { profile: resultProfile, timestamp: Date.now() });
+      return resultProfile;
+
     } catch (err: any) {
-      if (err?.message === 'USER_NOT_FOUND') {
+      // Re-throw explicit identity errors
+      if (err?.message === 'USER_NOT_FOUND' || err?.message === 'RATE_LIMIT_EXCEEDED' || err?.message === 'INVALID_USERNAME') {
         throw err;
       }
-      // Graceful benchmark fallback
-      if (BENCHMARK_PROFILES[cleanUsername]) {
+      // If it is a known benchmark username and was requested, return that benchmark only
+      if (isBenchmarkExplicit && BENCHMARK_PROFILES[cleanUsername]) {
         return JSON.parse(JSON.stringify(BENCHMARK_PROFILES[cleanUsername]));
       }
-      return JSON.parse(JSON.stringify(BENCHMARK_PROFILES.shrutirai29));
+      // NEVER silently substitute another user's profile!
+      throw new Error(`Failed to load GitHub profile for "${username}": ${err?.message || 'Network error'}`);
     }
+  }
+
+  /**
+   * Normalizes server-side API profile response into DeveloperProfile
+   */
+  private static normalizeApiProfile(apiData: any, _username: string): DeveloperProfile {
+    const rawDims = apiData.dimensions || {};
+    const dims = {
+      technical_depth: typeof rawDims.technical_depth === 'number' ? rawDims.technical_depth : 10,
+      technical_breadth: typeof rawDims.technical_breadth === 'number' ? rawDims.technical_breadth : 10,
+      consistency: typeof rawDims.consistency === 'number' ? rawDims.consistency : 10,
+      project_complexity: typeof rawDims.project_complexity === 'number' ? rawDims.project_complexity : 10,
+      collaboration: typeof rawDims.collaboration === 'number' ? rawDims.collaboration : 10,
+      adaptability: typeof rawDims.adaptability === 'number' ? rawDims.adaptability : 10,
+      impact: typeof rawDims.impact === 'number' ? rawDims.impact : 10
+    };
+
+    const scoring = ScoringService.calculateDeveloperScore(dims);
+
+    const techNodes: any[] = (apiData.dna_nodes || []).map((t: any) => ({
+      id: t.id || t.name.toLowerCase(),
+      name: t.name,
+      type: t.type || 'primary',
+      parent: t.parent,
+      usage: t.usage || 20,
+      projects: t.projects || 1,
+      repositories: t.projects || 1,
+      momentum: t.momentum || 'STABLE',
+      activity: t.activity || 'Moderate',
+      color: t.color || '#6366F1'
+    }));
+
+    const repos: any[] = (apiData.projects || []).map((p: any) => ({
+      id: p.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      name: p.name,
+      description: p.description || '',
+      stars: p.stars || 0,
+      forks: p.forks || 0,
+      complexity: p.complexity === 'VERY HIGH' ? 95 : (p.complexity === 'HIGH' ? 82 : 65),
+      complexityGrade: p.complexity === 'VERY HIGH' ? 'A+' : (p.complexity === 'HIGH' ? 'A' : 'B'),
+      status: p.activity || 'ACTIVE',
+      technologies: p.tech ? p.tech.split(' • ') : ['Codebase'],
+      lastUpdated: p.age || 'Recent',
+      isArchived: Boolean(p.is_archived)
+    }));
+
+    const careers: any[] = (apiData.careers || []).map((c: any) => ({
+      role: c.role,
+      fit: c.fit,
+      strengths: c.strengths || [],
+      gaps: c.gaps || []
+    }));
+
+    const nbs = apiData.next_best_skill || {
+      skill: 'Docker + Kubernetes',
+      currentFit: 85,
+      potentialImprovement: 8.0,
+      explanation: 'Learning containerization and modern cloud deployment enhances career fit.',
+      roadmap: ['Docker containerization', 'CI/CD pipeline integration', 'Managed cloud orchestration']
+    };
+
+    const growthTimeline: any[] = (apiData.growth_timeline || []).map((m: any) => ({
+      year: String(m.year),
+      score: typeof m.score === 'number' ? m.score : undefined,
+      depth: m.depth,
+      complexity: m.complexity,
+      hasScoreMeasurement: Boolean(m.has_score_measurement),
+      milestoneType: m.milestone_type || (m.has_score_measurement ? 'score_snapshot' : 'repository_milestone'),
+      milestone: m.milestone || `${m.year} Milestones`,
+      technologies: m.technologies || [],
+      description: m.description || m.note || ''
+    }));
+
+    const dq = apiData.data_quality || {};
+
+    return {
+      github_id: apiData.github_id,
+      node_id: apiData.node_id,
+      html_url: apiData.html_url || `https://github.com/${apiData.username}`,
+      is_demo: Boolean(apiData.is_demo),
+      verified_identity: true,
+      data_source: apiData.data_source || 'live',
+      fetched_at: apiData.fetched_at || new Date().toISOString(),
+      username: apiData.username,
+      name: apiData.name || apiData.username,
+      avatar_url: apiData.avatar_url || `https://github.com/${apiData.username}.png`,
+      bio: apiData.bio || '',
+      tags: apiData.tags || (techNodes.length > 0 ? techNodes.slice(0, 4).map(t => t.name) : ['Software Developer']),
+      social_links: [
+        { platform: 'github', name: 'GitHub', url: `https://github.com/${apiData.username}` }
+      ],
+      stats: {
+        repositories: apiData.public_repos ?? repos.length,
+        contributions: apiData.total_contributions ?? 0,
+        week_streak: apiData.rhythm?.current_streak_weeks ?? 0,
+        followers: apiData.followers ?? 0,
+        following: apiData.following ?? 0
+      },
+      developer_score: apiData.score || scoring.score,
+      score_change: 0,
+      percentile_rank: scoring.percentile,
+      tier: scoring.tier,
+      archetype: {
+        title: apiData.archetype || 'SOFTWARE BUILDER',
+        description: apiData.archetype_tagline || 'Verified developer profile analyzed from GitHub repository footprints.',
+        badge: apiData.archetype_badge || scoring.tier,
+        skills: techNodes.slice(0, 4).map(t => t.name)
+      },
+      dimensions: dims,
+      dimensionMetrics: scoring.metrics,
+      tech_dna: techNodes,
+      careers,
+      next_best_skill: {
+        skill: nbs.skill,
+        currentFit: nbs.currentFit || 80,
+        potentialImprovement: nbs.potentialImprovement || 8.0,
+        explanation: nbs.why || nbs.explanation || 'Accelerates systems engineering and technical versatility.',
+        roadmap: nbs.roadmap || ['Phase 1: Core Fundamentals', 'Phase 2: Project Architecture', 'Phase 3: Production Deployment']
+      },
+      repositories: repos,
+      growth_timeline: growthTimeline,
+      rhythm: {
+        peak_time: apiData.rhythm?.peak_time || '14:00 - 18:00',
+        most_active_day: apiData.rhythm?.most_active_day || 'Wednesday',
+        current_streak_weeks: apiData.rhythm?.current_streak_weeks || 0,
+        consistency_score: dims.consistency,
+        matrix: apiData.rhythm?.matrix || []
+      },
+      contributionWeeks: apiData.contributionWeeks || [],
+      achievements: AnalyticsService.calculateAchievements({
+        weekStreak: apiData.rhythm?.current_streak_weeks || 0,
+        technologies: techNodes,
+        repositories: repos,
+        dimensions: dims,
+        followers: apiData.followers || 0,
+        contributions: apiData.total_contributions || 0
+      }),
+      motivationNotes: AnalyticsService.getMotivationalNotes(),
+      dataQuality: {
+        tier: dq.tier?.includes('High') ? 'HIGH_CONFIDENCE' : (dq.tier?.includes('Moderate') ? 'MODERATE_CONFIDENCE' : 'PRELIMINARY_EVIDENCE'),
+        tierLabel: dq.tier || 'Preliminary Evidence',
+        coveragePercent: dq.coverage_percent || 50,
+        isLive: Boolean(dq.is_live),
+        sourceReliability: 'AUTHENTIC_GITHUB_API',
+        scannedRepos: dq.scanned_repos ?? repos.length,
+        calendarCommits: dq.total_stars ?? 0,
+        rateLimitStatus: dq.rate_limit_status || 'Live API Synchronized',
+        verifiedSignals: dq.verified_signals || [`Authentic GitHub Identity Verified (@${apiData.username})`],
+        unverifiedSignals: dq.unverified_signals || undefined,
+        signalBreakdown: {
+          identityVerified: true,
+          repositoryEvidence: repos.length > 0,
+          activitySpectrum: (apiData.total_contributions || 0) > 0,
+          multiStackEvidence: techNodes.length > 1
+        },
+        freshnessTimestamp: apiData.fetched_at
+      }
+    };
   }
 }

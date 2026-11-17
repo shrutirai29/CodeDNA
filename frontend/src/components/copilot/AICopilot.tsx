@@ -61,7 +61,7 @@ export const AICopilot: React.FC = () => {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           whileHover={{ scale: 1.05 }}
-          className="!fixed bottom-24 md:bottom-6 right-4 md:right-6 z-40 px-4 py-2.5 rounded-full bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white shadow-xl shadow-indigo-500/30 flex items-center gap-2 font-mono text-xs font-bold hover:shadow-indigo-500/50 transition-all cursor-pointer"
+          className="!fixed bottom-5 md:bottom-6 right-4 md:right-6 z-40 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white shadow-xl shadow-indigo-500/30 flex items-center gap-2 font-mono text-xs font-bold hover:shadow-indigo-500/50 transition-all cursor-pointer"
         >
           <Sparkles size={16} className="animate-spin" style={{ animationDuration: '4s' }} />
           ✨ CodeDNA Copilot

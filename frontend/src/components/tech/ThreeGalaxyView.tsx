@@ -8,7 +8,21 @@ interface ThreeGalaxyViewProps {
   nodes: TechnologyNode[];
   selectedNode: TechnologyNode | null;
   onSelectNode: (node: TechnologyNode | null) => void;
+  onWebGLUnavailable?: () => void;
 }
+
+// Safely test WebGL context creation before attempting 3D initialization
+const isWebGLAvailable = (): boolean => {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+    );
+  } catch {
+    return false;
+  }
+};
 
 // Compute high-contrast line color for Light & Dark Modes
 const getVisibleLineColor = (hex: string, isDark: boolean): number => {
@@ -32,7 +46,8 @@ const getVisibleLineColor = (hex: string, isDark: boolean): number => {
 export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
   nodes,
   selectedNode,
-  onSelectNode
+  onSelectNode,
+  onWebGLUnavailable
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -112,6 +127,11 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
     });
   }, [isDarkMode]);
 
+  const onWebGLUnavailableRef = useRef(onWebGLUnavailable);
+  useEffect(() => {
+    onWebGLUnavailableRef.current = onWebGLUnavailable;
+  }, [onWebGLUnavailable]);
+
   const controlsRef = useRef<{
     zoomIn: () => void;
     zoomOut: () => void;
@@ -136,6 +156,7 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
     const galaxyGroup = new THREE.Group();
     scene.add(galaxyGroup);
 
+    const initialDark = useDeveloperStore.getState().isDarkMode;
     const camera = new THREE.PerspectiveCamera(46, width / height, 0.1, 1000);
     const DEFAULT_ZOOM = 86;
     const MIN_ZOOM = 34;
@@ -146,29 +167,41 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
     let targetPanY = 0;
     camera.position.set(0, 0, DEFAULT_ZOOM);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    if (!isWebGLAvailable()) {
+      onWebGLUnavailableRef.current?.();
+      return;
+    }
+
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    } catch {
+      onWebGLUnavailableRef.current?.();
+      return;
+    }
+
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
 
     // 2. Crisp 3D Lighting (Low metalness so spheres are bright and vibrant in Light & Dark Mode)
-    const ambientLight = new THREE.AmbientLight(0xffffff, isDarkMode ? 1.8 : 2.3);
+    const ambientLight = new THREE.AmbientLight(0xffffff, initialDark ? 1.8 : 2.3);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, isDarkMode ? 1.6 : 1.9);
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, initialDark ? 1.6 : 1.9);
     dirLight1.position.set(35, 55, 60);
     scene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0x818cf8, isDarkMode ? 1.0 : 0.8);
+    const dirLight2 = new THREE.DirectionalLight(0x818cf8, initialDark ? 1.0 : 0.8);
     dirLight2.position.set(-40, -30, 40);
     scene.add(dirLight2);
 
     // 3. Central Core Node (Developer Identity Core)
     const coreGeo = new THREE.SphereGeometry(3.8, 32, 32);
     const coreMat = new THREE.MeshStandardMaterial({
-      color: isDarkMode ? 0x6366f1 : 0x4f46e5,
-      emissive: isDarkMode ? 0x4f46e5 : 0x3730a3,
-      emissiveIntensity: isDarkMode ? 0.55 : 0.35,
+      color: initialDark ? 0x6366f1 : 0x4f46e5,
+      emissive: initialDark ? 0x4f46e5 : 0x3730a3,
+      emissiveIntensity: initialDark ? 0.55 : 0.35,
       roughness: 0.25,
       metalness: 0.15
     });
@@ -177,19 +210,19 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
 
     // Glowing Central Orbital Rings
     const ringMat1 = new THREE.MeshBasicMaterial({
-      color: isDarkMode ? 0x818cf8 : 0x4f46e5,
+      color: initialDark ? 0x818cf8 : 0x4f46e5,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: isDarkMode ? 0.55 : 0.45
+      opacity: initialDark ? 0.55 : 0.45
     });
     const ring1 = new THREE.Mesh(new THREE.RingGeometry(5.5, 6.0, 48), ringMat1);
     galaxyGroup.add(ring1);
 
     const ringMat2 = new THREE.MeshBasicMaterial({
-      color: isDarkMode ? 0x06b6d4 : 0x0284c7,
+      color: initialDark ? 0x06b6d4 : 0x0284c7,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: isDarkMode ? 0.45 : 0.38
+      opacity: initialDark ? 0.45 : 0.38
     });
     const ring2 = new THREE.Mesh(new THREE.RingGeometry(7.3, 7.7, 48), ringMat2);
     ring2.rotation.x = Math.PI / 3;
@@ -230,7 +263,7 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
       const material = new THREE.MeshStandardMaterial({
         color: colorVal,
         emissive: colorVal,
-        emissiveIntensity: isDarkMode ? 0.42 : 0.28,
+        emissiveIntensity: initialDark ? 0.42 : 0.28,
         roughness: 0.28,
         metalness: 0.12
       });
@@ -244,7 +277,7 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
       const haloMat = new THREE.MeshBasicMaterial({
         color: colorVal,
         transparent: true,
-        opacity: isDarkMode ? 0.18 : 0.14,
+        opacity: initialDark ? 0.18 : 0.14,
         depthWrite: false
       });
       const halo = new THREE.Mesh(haloGeo, haloMat);
@@ -252,11 +285,11 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
       galaxyGroup.add(halo);
 
       // Laser line from Core (0,0,0) to Node
-      const lineColor = getVisibleLineColor(n.color || '#6366f1', isDarkMode);
+      const lineColor = getVisibleLineColor(n.color || '#6366f1', initialDark);
       const lineMat = new THREE.LineBasicMaterial({
         color: lineColor,
         transparent: true,
-        opacity: isDarkMode ? 0.55 : 0.72
+        opacity: initialDark ? 0.55 : 0.72
       });
       const lineGeo = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(0, 0, 0),
@@ -299,9 +332,9 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
         );
         if (parentMatch) {
           const interMat = new THREE.LineBasicMaterial({
-            color: isDarkMode ? 0x22d3ee : 0x0284c7,
+            color: initialDark ? 0x22d3ee : 0x0284c7,
             transparent: true,
-            opacity: isDarkMode ? 0.8 : 0.85
+            opacity: initialDark ? 0.8 : 0.85
           });
           const interGeo = new THREE.BufferGeometry().setFromPoints([
             child.mesh.position.clone(),
@@ -723,6 +756,19 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
       if (mount.contains(renderer.domElement)) {
         mount.removeChild(renderer.domElement);
       }
+            scene.traverse((obj) => {
+        if ((obj as THREE.Mesh).geometry) {
+          (obj as THREE.Mesh).geometry.dispose();
+        }
+        if ((obj as THREE.Mesh).material) {
+          const mat = (obj as THREE.Mesh).material;
+          if (Array.isArray(mat)) {
+            mat.forEach(m => m.dispose());
+          } else {
+            mat.dispose();
+          }
+        }
+      });
       renderer.dispose();
     };
   }, [nodes]);
@@ -796,83 +842,56 @@ export const ThreeGalaxyView: React.FC<ThreeGalaxyViewProps> = ({
         })}
       </div>
 
-      {/* Top-Left Mode & Auto-Spin Controls */}
-      <div className="absolute top-3 left-3 flex items-center gap-1.5 p-1 rounded-xl bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 shadow-sm z-30 font-mono text-[11px]">
+      {/* Unified Minimalist 3D Controls Bar */}
+      <div className="absolute top-3 right-3 flex items-center gap-1.5 p-1 rounded-xl bg-white/95 dark:bg-[#0D1117]/95 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 shadow-xs z-30 font-mono text-[11px]">
         <button
-          onClick={() => setInteractionMode('rotate')}
-          className={`px-2.5 py-1 rounded-lg flex items-center gap-1 font-bold transition-all cursor-pointer ${
-            interactionMode === 'rotate'
-              ? 'bg-indigo-600 text-white shadow-2xs'
-              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-          title="Drag background to rotate 3D galaxy"
+          onClick={() => setInteractionMode(interactionMode === 'rotate' ? 'pan' : 'rotate')}
+          className="px-2 py-1 rounded-lg flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          title={interactionMode === 'rotate' ? 'Mode: Rotate (Click to switch to Pan)' : 'Mode: Pan (Click to switch to Rotate)'}
         >
-          <Orbit size={12} />
-          Rotate
+          {interactionMode === 'rotate' ? <Orbit size={13} className="text-indigo-500" /> : <Move size={13} className="text-indigo-500" />}
+          <span>{interactionMode === 'rotate' ? 'Rotate' : 'Pan'}</span>
         </button>
-        <button
-          onClick={() => setInteractionMode('pan')}
-          className={`px-2.5 py-1 rounded-lg flex items-center gap-1 font-bold transition-all cursor-pointer ${
-            interactionMode === 'pan'
-              ? 'bg-indigo-600 text-white shadow-2xs'
-              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-          title="Drag background to move/pan entire galaxy"
-        >
-          <Move size={12} />
-          Move
-        </button>
-        <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+
         <button
           onClick={() => setAutoRotate(!autoRotate)}
-          className="px-2 py-1 rounded-lg flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          title={autoRotate ? 'Pause Auto-Spin' : 'Resume Auto-Spin'}
+          className="p-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          title={autoRotate ? 'Pause Rotation' : 'Resume Rotation'}
         >
-          {autoRotate ? <Pause size={12} className="text-amber-500" /> : <Play size={12} className="text-emerald-500" />}
-          <span className="hidden sm:inline">{autoRotate ? 'Spinning' : 'Paused'}</span>
+          {autoRotate ? <Pause size={13} className="text-amber-500" /> : <Play size={13} className="text-emerald-500" />}
         </button>
-      </div>
 
-      {/* Top-Right Zoom & Reset Controls */}
-      <div className="absolute top-3 right-3 flex items-center gap-1 p-1 rounded-xl bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 shadow-sm z-30 font-mono">
+        <div className="w-[1px] h-3.5 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+
         <button
           onClick={handleZoomIn}
           className="p-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          title="Zoom In (Scroll Up)"
+          title="Zoom In"
         >
-          <ZoomIn size={14} />
+          <ZoomIn size={13} />
         </button>
 
-        <span className="px-1.5 text-[11px] font-extrabold text-slate-800 dark:text-slate-200 min-w-11 text-center">
+        <span className="px-1 text-[10px] font-bold text-slate-700 dark:text-slate-300 min-w-8 text-center">
           {zoomLevelPercent}%
         </span>
 
         <button
           onClick={handleZoomOut}
           className="p-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          title="Zoom Out (Scroll Down)"
+          title="Zoom Out"
         >
-          <ZoomOut size={14} />
+          <ZoomOut size={13} />
         </button>
 
-        <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+        <div className="w-[1px] h-3.5 bg-slate-200 dark:bg-slate-700 mx-0.5" />
 
         <button
           onClick={handleResetView}
-          className="px-2 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 text-[10px] font-bold cursor-pointer"
-          title="Reset All Positions & Zoom (Double Click)"
+          className="p-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          title="Reset View"
         >
-          <RotateCcw size={12} />
-          Reset
+          <RotateCcw size={13} />
         </button>
-      </div>
-
-      {/* Bottom Interactive Guide Banner */}
-      <div className="absolute bottom-3 left-3 right-3 sm:right-auto text-[11px] font-mono px-3 py-1.5 rounded-lg bg-white/90 dark:bg-[#0D1117]/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex flex-wrap items-center gap-2 pointer-events-none z-30 shadow-xs">
-        <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping shrink-0" />
-        <span>
-          <strong>Drag any Node / Label</strong> to move it • <strong>Drag Space</strong> to {interactionMode === 'pan' ? 'Pan' : 'Rotate'} • <strong>Scroll</strong> to Zoom
-        </span>
       </div>
     </div>
   );
