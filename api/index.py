@@ -1,10 +1,18 @@
+import sys
+import os
+from pathlib import Path
+
+# Ensure project root is at top of sys.path for Vercel Serverless environment
+_PROJECT_ROOT = str(Path(__file__).resolve().parent.parent)
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+
 import re
 import math
 import time
 import json
 import datetime
 import hashlib
-import os
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, Query, Request, UploadFile, File, Form
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -13,7 +21,11 @@ from analytics.career_intelligence import CareerIntelligenceEngine
 from analytics.file_parser import extract_text_from_bytes
 from analytics.courses_db import get_courses_for_skills, COURSES_DB
 from database.database import DatabaseManager
-db_manager = DatabaseManager()
+
+try:
+    db_manager = DatabaseManager()
+except Exception:
+    db_manager = None
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -43,7 +55,13 @@ app.add_middleware(
 )
 
 # Mount React Vite frontend dist assets if compiled
-FRONTEND_DIST = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "dist"))
+_CANDIDATE_DIST_DIRS = [
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")),
+    os.path.abspath(os.path.join(os.getcwd(), "frontend", "dist")),
+    os.path.abspath("frontend/dist"),
+    os.path.abspath("/var/task/frontend/dist"),
+]
+FRONTEND_DIST = next((d for d in _CANDIDATE_DIST_DIRS if os.path.exists(d)), _CANDIDATE_DIST_DIRS[0])
 if os.path.exists(os.path.join(FRONTEND_DIST, "assets")):
     app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIST, "assets")), name="frontend_assets")
 

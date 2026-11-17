@@ -14,15 +14,29 @@ class DatabaseManager:
 
     def __init__(self, db_path: Optional[str] = None):
         if db_path is None:
-            # Default to data/developer_intelligence.db relative to project root
-            base_dir = Path(__file__).resolve().parent.parent
-            self.db_path = str(base_dir / "data" / "developer_intelligence.db")
+            # In Vercel / serverless runtime, filesystem outside /tmp is strictly read-only
+            is_serverless = bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") or os.path.exists("/var/task"))
+            if is_serverless:
+                self.db_path = "/tmp/developer_intelligence.db"
+            else:
+                base_dir = Path(__file__).resolve().parent.parent
+                self.db_path = str(base_dir / "data" / "developer_intelligence.db")
         else:
             self.db_path = db_path
 
-        # Ensure directory exists
-        Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
-        self._init_database()
+        # Ensure directory exists with fallback to /tmp or in-memory
+        try:
+            if self.db_path != ":memory:":
+                Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
+            self._init_database()
+        except Exception:
+            try:
+                self.db_path = "/tmp/developer_intelligence.db"
+                Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
+                self._init_database()
+            except Exception:
+                self.db_path = ":memory:"
+                self._init_database()
 
     def get_connection(self) -> sqlite3.Connection:
         conn = sqlite3.connect(self.db_path)
@@ -36,15 +50,18 @@ class DatabaseManager:
         schema_file = current_dir / "schema.sql"
         queries_file = current_dir / "queries.sql"
 
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            if schema_file.exists():
-                with open(schema_file, "r", encoding="utf-8") as f:
-                    cursor.executescript(f.read())
-            if queries_file.exists():
-                with open(queries_file, "r", encoding="utf-8") as f:
-                    cursor.executescript(f.read())
-            conn.commit()
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                if schema_file.exists():
+                    with open(schema_file, "r", encoding="utf-8") as f:
+                        cursor.executescript(f.read())
+                if queries_file.exists():
+                    with open(queries_file, "r", encoding="utf-8") as f:
+                        cursor.executescript(f.read())
+                conn.commit()
+        except Exception:
+            pass
 
     def execute_query(self, query: str, params: tuple = ()) -> pd.DataFrame:
         """Executes a SQL query and returns results as a pandas DataFrame."""
